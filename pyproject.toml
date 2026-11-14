@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "resolveiq"
+version = "0.1.0"
+description = "AI support ticket intelligence platform: grounded reply drafting, ticket classification and escalation risk prediction."
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Manas Saxena" }]
+keywords = ["rag", "nlp", "mlops", "customer-support", "machine-learning"]
+classifiers = [
+    "Programming Language :: Python :: 3.12",
+]
+# Runtime dependencies are pinned in requirements.txt so the environment can be
+# reproduced exactly. The package itself is installed with `pip install -e .`.
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+extend-exclude = [".chroma", "mlruns"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "N", "RUF"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["resolveiq"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra"
+
+[tool.coverage.run]
+source = ["resolveiq"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+]

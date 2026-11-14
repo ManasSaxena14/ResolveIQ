@@ -1,0 +1,19 @@
+# Development and CI dependencies.
+#
+# CI installs only this file: it contains the lightweight runtime libraries the
+# tests import directly, plus tooling. Heavy model libraries (torch,
+# sentence-transformers, chromadb, mlflow) are replaced by test doubles, so CI
+# runs quickly and never downloads models. For local development install both
+# files: `pip install -r requirements.txt -r requirements-dev.txt`.
+PyYAML==6.0.3
+pydantic==2.14.3
+python-dotenv==1.2.4
+httpx==0.28.1
+numpy==2.5.4
+pypdf==7.1.0
+rank-bm25==0.2.2
+
+pytest==9.2.0
+pytest-cov==7.1.0
+ruff==0.17.5
+pre-commit==4.7.0
