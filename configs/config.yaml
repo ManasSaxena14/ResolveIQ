@@ -1,0 +1,56 @@
+# ResolveIQ configuration.
+# Values are starting points. Replace each one with the value your own
+# measurements justify and record the reason in docs/rag_pipeline.md.
+
+project:
+  name: ResolveIQ
+  company_name: Altura
+
+rag:
+  # bge-small supports 512 tokens per input, so 500-token chunks are embedded
+  # without truncation (all-MiniLM-L6-v2 stops at 256).
+  embedding_model: BAAI/bge-small-en-v1.5
+  query_prefix: "Represent this sentence for searching relevant passages: "
+  collection: altura_kb
+  chunk_tokens: 500
+  chunk_overlap: 50
+  top_k: 5
+  candidate_k: 20          # pool size for hybrid fusion and reranking
+  hybrid: true
+  rerank: false
+  reranker_model: cross-encoder/ms-marco-MiniLM-L-6-v2
+  refusal_threshold: 0.35  # set from the retrieval score histogram
+  rrf_k: 60
+
+llm:
+  provider: ollama         # ollama | gemini | groq | openrouter
+  temperature: 0.1
+  max_tokens: 512
+  timeout_seconds: 60
+  # Hosted model names change often. Check the provider documentation before
+  # switching and update the model name here, not in code.
+  providers:
+    ollama:
+      model: llama3.2
+      base_url: http://localhost:11434
+    gemini:
+      model: gemini-2.5-flash
+      base_url: https://generativelanguage.googleapis.com/v1beta
+      api_key_env: GEMINI_API_KEY
+    groq:
+      model: llama-3.1-8b-instant
+      base_url: https://api.groq.com/openai/v1
+      api_key_env: GROQ_API_KEY
+    openrouter:
+      model: meta-llama/llama-3.2-3b-instruct:free
+      base_url: https://openrouter.ai/api/v1
+      api_key_env: OPENROUTER_API_KEY
+
+paths:
+  kb_dir: data/kb
+  index_dir: .chroma
+  results_dir: results
+
+tracking:
+  enabled: true
+  tracking_uri: sqlite:///mlflow.db
