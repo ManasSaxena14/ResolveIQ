@@ -19,7 +19,9 @@ rag:
   hybrid: true
   rerank: false
   reranker_model: cross-encoder/ms-marco-MiniLM-L-6-v2
-  refusal_threshold: 0.35  # set from the retrieval score histogram
+  # Chosen from the dev-split histogram of best similarity scores. bge scores sit
+  # in a compressed high range, so the generic 0.35 starting value never refused.
+  refusal_threshold: 0.62
   rrf_k: 60
 
 llm:
