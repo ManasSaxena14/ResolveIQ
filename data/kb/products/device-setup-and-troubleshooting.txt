@@ -1,0 +1,23 @@
+DEVICE SETUP AND TROUBLESHOOTING
+
+General first steps
+
+Before contacting support about a device problem, try these steps in order:
+1. Restart the device completely, not just the screen.
+2. Install all available software and firmware updates.
+3. Check cables, chargers and power outlets with another device.
+4. Remove recently installed apps or accessories.
+
+Many common problems, such as freezing, poor Wi-Fi connections and battery drain, are fixed by these steps.
+
+Smart home hub pairing
+
+Altura smart home hubs pair with devices using the Altura Home app. Keep the device within 3 meters of the hub during pairing. If pairing fails, hold the reset button on the device for 10 seconds until the light flashes blue, then try again. A hub supports up to 64 connected devices.
+
+Laptop battery not charging
+
+Use the original charger, because many laptops do not charge with low-power phone chargers. If the battery still does not charge, run the built-in battery health check from the manufacturer's support app.
+
+Factory reset
+
+A factory reset erases all data. Back up your data first and sign out of all accounts before resetting a device you plan to return or trade in.
