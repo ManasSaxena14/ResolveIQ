@@ -1,0 +1,41 @@
+question_id,split,in_scope,question,expected_answer,source_file,source_page
+Q01,dev,1,How long do I have to return a laptop I bought?,30 days from delivery; 60 days for Altura Plus members.,returns/return-policy.md,1
+Q02,dev,1,I returned my headphones last week. When will I get my money back on my credit card?,The refund is issued within 3 business days of the return arriving; card refunds then take 5 to 10 business days to appear.,returns/refund-timelines.md,1
+Q03,dev,1,How much does next-day delivery cost and what is the order cut-off?,$24.99; orders must be placed before 2 p.m. local time Monday to Friday.,shipping/shipping-options-and-costs.md,1
+Q04,dev,1,My tracking number has not updated in a week. What should I do?,If tracking has not updated for 5 business days contact support with the order number so a trace is opened with the carrier.,shipping/delayed-or-lost-packages.md,1
+Q05,dev,1,I see two charges on my card for the same order. Was I charged twice?,A pending authorization hold can appear next to the real charge and drops off in 3 to 7 business days; two completed charges should be reported with the order number and card details and are refunded within 5 business days.,billing/double-charges-and-pending-authorizations.md,1
+Q06,dev,1,Can I still cancel my order? I placed it 30 minutes ago.,Yes. Orders can be cancelled free within 1 hour or while the status is Received from Account > Orders > Cancel order.,orders/changing-or-cancelling-an-order.md,1
+Q07,dev,1,How long is the password reset link valid?,30 minutes.,account/password-reset-and-login-issues.md,1
+Q08,dev,1,My account is locked after too many sign-in attempts. How long do I have to wait?,After 5 failed attempts the account is locked for 15 minutes; resetting the password unlocks it immediately.,account/password-reset-and-login-issues.md,1
+Q09,dev,1,How much does Altura Plus cost?,$9.99 per month or $99 per year.,membership/altura-plus-membership.md,1
+Q10,dev,1,If I cancel my monthly Altura Plus membership do I get a refund for the rest of the month?,No. Partial months are not refunded; benefits continue until the end of the billing period.,membership/cancelling-altura-plus.md,1
+Q11,dev,1,Does the warranty cover a cracked screen after I dropped my phone?,No. Accidental damage is not covered by the warranty; it is only covered by an Altura Care plan.,warranty/warranty-coverage.md,1
+Q12,dev,1,What is the service fee for an accidental damage claim with Altura Care?,$49 per accidental damage claim; up to 2 claims per year.,warranty/altura-care-protection-plans.md,1
+Q13,dev,1,Do you ship to Canada and who pays the import duties?,Yes. Delivery takes 7 to 14 business days and the customer pays duties and taxes to the carrier on delivery.,shipping/international-shipping.md,1
+Q14,dev,1,Can I use two promo codes on one order?,No. Only one promo code can be used per order.,billing/promo-codes-and-gift-cards.md,1
+Q15,dev,1,The price of my TV dropped a week after it was delivered. Can I get the difference back?,Yes. A one-time price adjustment is available within 14 days of delivery and refunded to the original payment method.,billing/price-adjustments.md,1
+Q16,dev,1,What payment methods do you accept?,"Visa, Mastercard, American Express, Discover, PayPal, Apple Pay, Google Pay and Altura gift cards; no cash on delivery, checks or bank transfers.",billing/payment-methods.md,1
+Q17,dev,1,How do I get an invoice that shows my company VAT number?,Add the company name and VAT ID in the Business details section at checkout before placing the order.,billing/invoices-and-receipts.md,1
+Q18,dev,1,My package shows as delivered but I cannot find it. What should I do?,"Wait 48 hours, check with neighbors and reception, then file a claim within 30 days of the delivery date.",shipping/delayed-or-lost-packages.md,1
+Q19,dev,1,My new speaker arrived in a dented box and does not turn on. What should I do?,Report shipping damage within 7 days of delivery with photos of the item and box and keep the packaging.,returns/damaged-or-defective-items.md,1
+Q20,dev,1,What are your phone support hours?,Monday to Friday 8 a.m. to 8 p.m. ET and Saturday and Sunday 9 a.m. to 5 p.m. ET; live chat is available 24/7.,support/contact-and-support-hours.md,1
+Q21,dev,1,How long does a trade-in quote stay valid?,14 days.,products/trade-in-program.txt,1
+Q22,dev,1,How long will a pickup point hold my order?,"7 days, after which it is returned and fully refunded.",store/pickup-points.html,1
+Q23,dev,1,Do you sell my personal data to other companies?,No. Altura does not sell personal data to third parties.,policies/privacy-and-data-use.html,1
+Q24,dev,0,Who is the CEO of Altura?,,,
+Q25,dev,0,What is the return window at Voltmart?,,,
+Q26,dev,0,Can you recommend a good recipe for vegetable lasagna?,,,
+Q27,dev,0,How do I file my personal income tax return?,,,
+Q28,dev,0,Does Altura offer internships for software engineers?,,,
+Q29,dev,0,What is the weather forecast for New York tomorrow?,,,
+Q30,dev,0,How many employees does Altura have?,,,
+Q31,holdout,1,How long does it take to export my account data?,The export is a JSON file ready within 48 hours and a download link is emailed.,account/deleting-your-account-and-data.md,1
+Q32,holdout,1,How many backup codes do I get with two-factor authentication?,10 single-use backup codes.,account/two-factor-authentication.md,1
+Q33,holdout,1,Is there a restocking fee if I return an opened drone?,Yes. 10 percent unless the drone is defective or arrived damaged.,returns/return-policy.md,1
+Q34,holdout,1,Can I split my payment into installments?,Orders between $100 and $3000 can be paid in 4 interest-free installments charged every two weeks.,billing/payment-methods.md,1
+Q35,holdout,1,How many devices can one smart home hub support?,Up to 64 connected devices.,products/device-setup-and-troubleshooting.txt,1
+Q36,holdout,1,Are the prices on your store shown with tax included?,No. Prices are in US dollars excluding sales tax which is added at checkout.,policies/terms-of-sale.html,1
+Q37,holdout,1,How quickly will a supervisor get back to me if I escalate my case?,Within 1 business day.,support/escalations-and-complaints.md,1
+Q38,holdout,0,What is the Altura stock price today?,,,
+Q39,holdout,0,Which programming language is the Altura website built with?,,,
+Q40,holdout,0,Can I book a hotel room through Altura?,,,
