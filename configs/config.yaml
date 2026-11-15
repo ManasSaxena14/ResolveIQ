@@ -66,7 +66,7 @@ classifier:
   max_length: 256          # set from the token length histogram of subject + body
   learning_rate: 5.0e-5
   batch_size: 16
-  epochs: 3
+  epochs: 5                # the queue task converges slowly; early stopping picks the epoch
   weight_decay: 0.01
   warmup_ratio: 0.1
   class_weights: true      # weighted loss, because queue sizes are imbalanced

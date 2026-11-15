@@ -197,11 +197,12 @@ def main() -> None:
         rows.append(
             _format_row(f"DistilBERT, {name}", s["metrics"], minutes(s["meta"]["train_seconds"]))
         )
-    rows.append(
-        f"| DistilBERT, mean of {len(seeds)} seeds | {statistics.mean(accuracies):.4f} | "
-        f"{statistics.mean(macro_f1s):.4f} +/- {spread:.4f} | | "
-        f"{minutes(statistics.mean(seed_seconds))} per seed |"
-    )
+    if len(seeds) > 1:
+        rows.append(
+            f"| DistilBERT, mean of {len(seeds)} seeds | {statistics.mean(accuracies):.4f} | "
+            f"{statistics.mean(macro_f1s):.4f} +/- {spread:.4f} | | "
+            f"{minutes(statistics.mean(seed_seconds))} per seed |"
+        )
     report = "\n".join(
         [
             "# Ticket classifier: test results",
