@@ -15,8 +15,55 @@ To use a different knowledge base, replace the contents of `data/kb/` (PDF, TXT,
 and HTML are supported) and rebuild the index with `make index`. Check that the license of
 any public documentation allows reuse before copying it into the repository.
 
-## Ticket dataset (Phase 2)
+## Ticket dataset (`data/raw/`, `data/processed/`)
 
-The labeled ticket dataset used for the classifier and the escalation risk model is
-downloaded into `data/raw/`, which is excluded from version control. Download
-instructions, the dataset version and its license will be documented here in Phase 2.
+| Item | Value |
+|---|---|
+| Source | [Tobi-Bueck/customer-support-tickets](https://huggingface.co/datasets/Tobi-Bueck/customer-support-tickets) on the Hugging Face Hub |
+| File | `aa_dataset-tickets-multi-lang-5-2-50-version.csv` |
+| Revision | `ddf1c81a5475992c4fa6752bf1e8b4e31f07bbeb` (pinned in `configs/config.yaml`) |
+| SHA-256 | `f187c090e59581c2bbf3aa1377c8db4dd647464ecf2ae51bf8966e42e0ed6bc0` |
+| Downloaded | 2026-11-15 |
+| License | CC BY-NC 4.0 (non-commercial use with attribution) |
+| Nature | Synthetic customer support emails labeled with queue, priority, type and tags |
+
+The dataset is not redistributed in this repository. Recreate it with:
+
+```bash
+make data    # scripts/download_data.py, then scripts/prepare_tickets.py
+```
+
+### Preparation
+
+1. Keep English tickets only (16,338 of 28,587 rows).
+2. Build the model input as subject plus body. Escaped line breaks (`\n`, `<br>`) are
+   restored and whitespace is normalized.
+3. Mask emails, URLs, phone numbers and long digit strings
+   (`src/resolveiq/privacy.py`). The source data is already anonymized with placeholders
+   such as `<tel_num>`; masking is applied as a safety net.
+4. Remove duplicates after normalizing case and punctuation (1 removed). Texts that
+   appear with conflicting labels would be dropped entirely (none found).
+5. Split 70/15/15 into train, validation and test, stratified by queue with seed 42.
+   The dataset has no timestamps, so a time-based split is not possible.
+
+The `answer` and `tag_*` columns are never used as model inputs: answers are written
+after the ticket arrives, and tags largely restate the queue.
+
+### Label: routing queue
+
+| Queue | Train | Test |
+|---|---|---|
+| Technical Support | 3,315 | 711 |
+| Product Support | 2,151 | 461 |
+| Customer Service | 1,686 | 362 |
+| IT Support | 1,360 | 291 |
+| Billing and Payments | 1,117 | 239 |
+| Returns and Exchanges | 574 | 123 |
+| Service Outages and Maintenance | 464 | 100 |
+| Sales and Pre-Sales | 359 | 77 |
+| Human Resources | 244 | 52 |
+| General Inquiry | 165 | 35 |
+
+The classes are imbalanced by a factor of 20, so macro F1 is the headline metric and
+both models use class-balanced weighting. Full counts, cleaning statistics and token
+lengths are in `results/classifier/data_profile.json`.

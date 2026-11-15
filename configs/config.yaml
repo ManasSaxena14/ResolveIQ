@@ -48,6 +48,32 @@ llm:
       base_url: https://openrouter.ai/api/v1
       api_key_env: OPENROUTER_API_KEY
 
+classifier:
+  dataset:
+    repo_id: Tobi-Bueck/customer-support-tickets
+    revision: ddf1c81a5475992c4fa6752bf1e8b4e31f07bbeb   # pinned for reproducibility
+    filename: aa_dataset-tickets-multi-lang-5-2-50-version.csv
+    raw_path: data/raw/customer_support_tickets.csv
+    language: en
+    label_column: queue
+  split:
+    train: 0.70
+    validation: 0.15
+    test: 0.15
+    seed: 42
+  processed_dir: data/processed
+  model_name: distilbert-base-uncased
+  max_length: 256          # set from the token length histogram of subject + body
+  learning_rate: 5.0e-5
+  batch_size: 16
+  epochs: 3
+  weight_decay: 0.01
+  warmup_ratio: 0.1
+  class_weights: true      # weighted loss, because queue sizes are imbalanced
+  seeds: [42, 7, 1234]
+  review_threshold: 0.70   # replaced by the calibrated value from the validation set
+  output_dir: models/classifier
+
 paths:
   kb_dir: data/kb
   index_dir: .chroma

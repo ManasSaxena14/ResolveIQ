@@ -82,6 +82,45 @@ class LLMConfig(_StrictModel):
         return self.providers[self.provider]
 
 
+class DatasetConfig(_StrictModel):
+    repo_id: str
+    revision: str
+    filename: str
+    raw_path: Path
+    language: str
+    label_column: str
+
+
+class SplitConfig(_StrictModel):
+    train: float = Field(gt=0, lt=1)
+    validation: float = Field(gt=0, lt=1)
+    test: float = Field(gt=0, lt=1)
+    seed: int
+
+    @model_validator(mode="after")
+    def _check_total(self) -> SplitConfig:
+        if abs(self.train + self.validation + self.test - 1.0) > 1e-6:
+            raise ValueError("classifier.split fractions must add up to 1")
+        return self
+
+
+class ClassifierConfig(_StrictModel):
+    dataset: DatasetConfig
+    split: SplitConfig
+    processed_dir: Path
+    model_name: str
+    max_length: int = Field(gt=0, le=512)
+    learning_rate: float = Field(gt=0)
+    batch_size: int = Field(gt=0)
+    epochs: int = Field(gt=0)
+    weight_decay: float = Field(ge=0)
+    warmup_ratio: float = Field(ge=0, lt=1)
+    class_weights: bool
+    seeds: list[int] = Field(min_length=1)
+    review_threshold: float = Field(ge=0, le=1)
+    output_dir: Path
+
+
 class PathsConfig(_StrictModel):
     kb_dir: Path
     index_dir: Path
@@ -97,6 +136,7 @@ class Settings(_StrictModel):
     project: ProjectConfig
     rag: RagConfig
     llm: LLMConfig
+    classifier: ClassifierConfig
     paths: PathsConfig
     tracking: TrackingConfig
 
