@@ -16,6 +16,7 @@ All notable changes to this project are documented in this file.
   - Final test-set evaluation with comparison table, per-class report, confusion matrix,
     calibration curve and error analysis
   - Model card and a script to publish the model to the Hugging Face Hub
+  - Results for three training seeds (42, 7, 1234) with mean and spread
 
 - RAG assistant (Phase 1)
   - Knowledge base of 31 synthetic help center articles for the fictional retailer Altura

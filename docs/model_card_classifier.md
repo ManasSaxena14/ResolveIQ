@@ -57,7 +57,8 @@ Test split of 2,451 tickets, scored once.
 | Model | Accuracy | Macro F1 |
 |---|---|---|
 | TF-IDF + logistic regression baseline | 0.6091 | 0.6333 |
-| This model | 0.4725 | 0.5213 |
+| This model (seed 42) | 0.4725 | 0.5213 |
+| Mean of 3 seeds (42, 7, 1234) | 0.4747 | 0.5192 +/- 0.0025 |
 
 This model is **below the baseline**. Validation macro F1 was still improving when
 training stopped, so the model is undertrained. A hand review of errors also found that

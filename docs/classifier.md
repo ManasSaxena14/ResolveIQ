@@ -42,7 +42,7 @@ with logistic regression and balanced class weights.
 | Warmup | 10% of steps, then linear decay | Stable start from pre-trained weights |
 | Weight decay | 0.01, not on biases and layer norms | Standard AdamW practice |
 | Class imbalance | Class-weighted cross-entropy | Queues differ in size by a factor of 20 |
-| Seeds | 42, 7, 1234 | Seed 42 is reported below; seeds 7 and 1234 add the mean and spread |
+| Seeds | 42, 7, 1234 | Mean and spread show how much the result depends on initialization |
 
 Batches group tickets of similar length and are padded per batch, which removes most
 padding and keeps training practical on a laptop GPU.
@@ -60,16 +60,29 @@ model in `classifier_meta.json` and checked again on the test split.
 
 All numbers come from `results/classifier/metrics.json`, produced by
 `scripts/evaluate_classifier.py` in a single run on the frozen test split (2,451
-tickets). The DistilBERT checkpoint was chosen on the validation split.
+tickets). Each DistilBERT checkpoint was chosen on the validation split, and the
+production checkpoint is the seed with the highest validation macro F1 (seed 42).
 
 | Model | Accuracy | Macro F1 | Weighted F1 | Weakest class (F1) | Training time |
 |---|---|---|---|---|---|
 | TF-IDF + logistic regression | 0.6091 | **0.6333** | 0.6100 | IT Support (0.5142) | 30 s |
 | DistilBERT, seed 42 (5 epochs) | 0.4725 | 0.5213 | 0.4722 | Customer Service (0.3774) | 72.9 min |
+| DistilBERT, seed 7 (5 epochs) | 0.4782 | 0.5200 | 0.4797 | Customer Service (0.3861) | 56.4 min |
+| DistilBERT, seed 1234 (5 epochs) | 0.4733 | 0.5164 | 0.4724 | Customer Service (0.3629) | 82.6 min |
+| DistilBERT, mean of 3 seeds | 0.4747 | 0.5192 +/- 0.0025 | 0.4748 | | 70.6 min per seed |
 
-Validation macro F1 of DistilBERT per epoch: 0.271, 0.371, 0.452, 0.496, 0.540.
+The spread across seeds is small (0.25 macro F1 points), so the gap to the baseline is
+not an artifact of one unlucky initialization.
 
-Per-queue F1 on the test split:
+Validation macro F1 of DistilBERT per epoch:
+
+| Seed | Epoch 1 | Epoch 2 | Epoch 3 | Epoch 4 | Epoch 5 |
+|---|---|---|---|---|---|
+| 42 | 0.271 | 0.371 | 0.452 | 0.496 | 0.540 |
+| 7 | 0.274 | 0.343 | 0.430 | 0.503 | 0.531 |
+| 1234 | 0.305 | 0.374 | 0.416 | 0.472 | 0.512 |
+
+Per-queue F1 on the test split, for the production checkpoint (seed 42):
 
 | Queue | Test tickets | Baseline | DistilBERT |
 |---|---|---|---|
@@ -90,10 +103,10 @@ Plots: [confusion matrix](../results/classifier/confusion_matrix.png) and
 ### The fine-tuned model does not beat the baseline
 
 The success target was DistilBERT exceeding the baseline by at least 5 macro F1 points.
-It did not: it is 11.2 points below. The evidence points to two causes.
+It did not: averaged over three seeds it is 11.4 points below. The evidence points to two causes.
 
 1. **Undertraining.** Validation macro F1 was still rising by 4 to 5 points per epoch
-   when training stopped at epoch 5, and training loss was still falling (0.70). Training
+   when training stopped at epoch 5 for all three seeds, and training loss was still falling (0.70). Training
    ran on an 8 GB Apple M3 under heavy memory pressure, so more epochs were not
    practical locally. A GPU run with more epochs is the first follow-up.
 2. **A task that favors keyword features.** The dataset is synthetic, and the queues
