@@ -6,6 +6,17 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- Ticket classifier (Phase 2)
+  - Download from a pinned dataset revision, cleaning, PII masking, deduplication and a
+    stratified split, with a data profile
+  - TF-IDF and logistic regression baseline
+  - DistilBERT fine-tuning loop with class-weighted loss, warmup, length bucketing and
+    early stopping on validation macro F1, running on CUDA, MPS or CPU
+  - Review threshold chosen on validation, stored with the model
+  - Final test-set evaluation with comparison table, per-class report, confusion matrix,
+    calibration curve and error analysis
+  - Model card and a script to publish the model to the Hugging Face Hub
+
 - RAG assistant (Phase 1)
   - Knowledge base of 31 synthetic help center articles for the fictional retailer Altura
   - Loaders for PDF, Markdown, text and HTML with page-level metadata
