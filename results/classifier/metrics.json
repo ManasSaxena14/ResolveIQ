@@ -73,6 +73,80 @@
     "train_seconds": 29.8
   },
   "distilbert": {
+    "seed-1234": {
+      "metrics": {
+        "accuracy": 0.4733,
+        "macro_f1": 0.5164,
+        "weighted_f1": 0.4724,
+        "weakest_class": "Customer Service",
+        "weakest_class_f1": 0.3629,
+        "per_class": {
+          "Billing and Payments": {
+            "precision": 0.7647,
+            "recall": 0.8159,
+            "f1": 0.7895,
+            "support": 239
+          },
+          "Customer Service": {
+            "precision": 0.3486,
+            "recall": 0.3785,
+            "f1": 0.3629,
+            "support": 362
+          },
+          "General Inquiry": {
+            "precision": 0.4762,
+            "recall": 0.5714,
+            "f1": 0.5195,
+            "support": 35
+          },
+          "Human Resources": {
+            "precision": 0.5373,
+            "recall": 0.6923,
+            "f1": 0.605,
+            "support": 52
+          },
+          "IT Support": {
+            "precision": 0.3466,
+            "recall": 0.4502,
+            "f1": 0.3916,
+            "support": 291
+          },
+          "Product Support": {
+            "precision": 0.4393,
+            "recall": 0.3688,
+            "f1": 0.4009,
+            "support": 461
+          },
+          "Returns and Exchanges": {
+            "precision": 0.3484,
+            "recall": 0.439,
+            "f1": 0.3885,
+            "support": 123
+          },
+          "Sales and Pre-Sales": {
+            "precision": 0.5301,
+            "recall": 0.5714,
+            "f1": 0.55,
+            "support": 77
+          },
+          "Service Outages and Maintenance": {
+            "precision": 0.6491,
+            "recall": 0.74,
+            "f1": 0.6916,
+            "support": 100
+          },
+          "Technical Support": {
+            "precision": 0.5182,
+            "recall": 0.4205,
+            "f1": 0.4643,
+            "support": 711
+          }
+        }
+      },
+      "best_val_macro_f1": 0.5123,
+      "best_epoch": 5,
+      "train_seconds": 4956.5
+    },
     "seed-42": {
       "metrics": {
         "accuracy": 0.4725,
@@ -146,12 +220,86 @@
       "best_val_macro_f1": 0.5395,
       "best_epoch": 5,
       "train_seconds": 4372.1
+    },
+    "seed-7": {
+      "metrics": {
+        "accuracy": 0.4782,
+        "macro_f1": 0.52,
+        "weighted_f1": 0.4797,
+        "weakest_class": "Customer Service",
+        "weakest_class_f1": 0.3861,
+        "per_class": {
+          "Billing and Payments": {
+            "precision": 0.8182,
+            "recall": 0.7908,
+            "f1": 0.8043,
+            "support": 239
+          },
+          "Customer Service": {
+            "precision": 0.375,
+            "recall": 0.3978,
+            "f1": 0.3861,
+            "support": 362
+          },
+          "General Inquiry": {
+            "precision": 0.5,
+            "recall": 0.4857,
+            "f1": 0.4928,
+            "support": 35
+          },
+          "Human Resources": {
+            "precision": 0.4769,
+            "recall": 0.5962,
+            "f1": 0.5299,
+            "support": 52
+          },
+          "IT Support": {
+            "precision": 0.3392,
+            "recall": 0.5292,
+            "f1": 0.4134,
+            "support": 291
+          },
+          "Product Support": {
+            "precision": 0.4093,
+            "recall": 0.4013,
+            "f1": 0.4053,
+            "support": 461
+          },
+          "Returns and Exchanges": {
+            "precision": 0.4511,
+            "recall": 0.4878,
+            "f1": 0.4688,
+            "support": 123
+          },
+          "Sales and Pre-Sales": {
+            "precision": 0.5,
+            "recall": 0.5065,
+            "f1": 0.5032,
+            "support": 77
+          },
+          "Service Outages and Maintenance": {
+            "precision": 0.7308,
+            "recall": 0.76,
+            "f1": 0.7451,
+            "support": 100
+          },
+          "Technical Support": {
+            "precision": 0.5368,
+            "recall": 0.3896,
+            "f1": 0.4515,
+            "support": 711
+          }
+        }
+      },
+      "best_val_macro_f1": 0.5309,
+      "best_epoch": 5,
+      "train_seconds": 3382.8
     }
   },
   "distilbert_mean": {
-    "macro_f1_mean": 0.5213,
-    "macro_f1_std": 0.0,
-    "accuracy_mean": 0.4725
+    "macro_f1_mean": 0.5192,
+    "macro_f1_std": 0.0025,
+    "accuracy_mean": 0.4747
   },
   "production_model": "seed-42",
   "production_review": {

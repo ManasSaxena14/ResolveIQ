@@ -62,7 +62,8 @@ Routes each ticket to one of 10 queues and flags low-confidence predictions for 
 | Model (test split) | Accuracy | Macro F1 |
 |---|---|---|
 | TF-IDF + logistic regression | 0.6091 | 0.6333 |
-| DistilBERT, seed 42 | 0.4725 | 0.5213 |
+| DistilBERT, seed 42 (production) | 0.4725 | 0.5213 |
+| DistilBERT, mean of 3 seeds | 0.4747 | 0.5192 +/- 0.0025 |
 
 The fine-tuned model is below the baseline: it was still improving when training
 stopped, and a hand review shows most errors come from overlapping queues and noisy
