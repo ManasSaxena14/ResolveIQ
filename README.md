@@ -27,7 +27,7 @@ See [docs/architecture.md](docs/architecture.md) for the system design.
 |---|---|---|
 | 0 | Repository, configuration, tooling and CI | Complete |
 | 1 | RAG assistant: ingestion, hybrid retrieval, grounded answers, evaluation | Complete |
-| 2 | Deep-learning ticket classifier | Planned |
+| 2 | Ticket classifier: TF-IDF baseline, fine-tuned DistilBERT, review threshold | Complete |
 | 3 | Escalation risk model | Planned |
 | 4 | API, UI, MLOps and deployment | Planned |
 
@@ -47,6 +47,29 @@ See [docs/architecture.md](docs/architecture.md) for the system design.
 
 Details: [docs/rag_pipeline.md](docs/rag_pipeline.md).
 
+## Ticket classifier (Phase 2)
+
+Routes each ticket to one of 10 queues and flags low-confidence predictions for review.
+
+- 16,337 English tickets from a pinned public dataset, with PII masking, deduplication
+  and a stratified 70/15/15 split
+- TF-IDF and logistic regression baseline, and DistilBERT fine-tuned with a plain
+  PyTorch loop (class-weighted loss, warmup, length-bucketed batches, early stopping)
+- Review threshold chosen on validation so auto-routed predictions are 90% accurate
+- Single final evaluation on the frozen test split, with confusion matrix, calibration
+  curve and a hand-reviewed error analysis
+
+| Model (test split) | Accuracy | Macro F1 |
+|---|---|---|
+| TF-IDF + logistic regression | 0.6091 | 0.6333 |
+| DistilBERT, seed 42 | 0.4725 | 0.5213 |
+
+The fine-tuned model is below the baseline: it was still improving when training
+stopped, and a hand review shows most errors come from overlapping queues and noisy
+labels. The analysis, and the decision to serve whichever model scores higher on
+validation, are in [docs/classifier.md](docs/classifier.md). Model card:
+[docs/model_card_classifier.md](docs/model_card_classifier.md).
+
 ## Getting started
 
 Requirements: Python 3.12 on macOS or Linux. Docker is not required.
@@ -65,7 +88,13 @@ make index
 python eval/run_rag_eval.py run --split dev --retrieval-only
 ```
 
-For full answers, install [Ollama](https://ollama.com) and pull the default model with
+Prepare the ticket data and train the classifiers:
+
+```bash
+make data && make baseline && make classifier && make evaluate-classifier
+```
+
+For full RAG answers, install [Ollama](https://ollama.com) and pull the default model with
 `ollama pull llama3.2`, or set `llm.provider` to a hosted provider and add its key to
 `.env`. Then run:
 
@@ -97,15 +126,19 @@ scripts/                  offline jobs such as building the index
 src/resolveiq/            application package
   config.py               configuration loading and validation
   tracking.py             MLflow helpers
+  privacy.py              PII masking shared by training and logging
   rag/                    ingestion, retrieval, generation and evaluation
+  classifier/             data preparation, baseline, fine-tuning, calibration, prediction
+results/classifier/       committed evaluation artifacts for the classifier
 tests/                    unit and component tests
 ```
 
 ## Data
 
 The knowledge base is synthetic and written for this project, so every evaluation
-question has a known answer. It does not describe a real company. See
-[data/README.md](data/README.md).
+question has a known answer. It does not describe a real company. The ticket dataset
+is a public synthetic dataset licensed CC BY-NC 4.0; it is downloaded from a pinned
+revision and not redistributed here. See [data/README.md](data/README.md).
 
 ## License
 

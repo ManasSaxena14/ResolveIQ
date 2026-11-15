@@ -6,8 +6,10 @@ build/
 dist/
 
 # Environments and secrets
+.venv
 .venv/
 venv/
+*.nosync
 .env
 
 # Tooling caches
@@ -26,8 +28,8 @@ mlartifacts/
 data/raw/
 data/processed/
 models/
-results/**/*.csv
-!results/.gitkeep
+results/rag/
+results/classifier/errors.csv
 
 # OS and editors
 .DS_Store

@@ -1,0 +1,68 @@
+{
+  "dataset": {
+    "repo_id": "Tobi-Bueck/customer-support-tickets",
+    "revision": "ddf1c81a5475992c4fa6752bf1e8b4e31f07bbeb",
+    "filename": "aa_dataset-tickets-multi-lang-5-2-50-version.csv",
+    "language": "en",
+    "label_column": "queue"
+  },
+  "cleaning": {
+    "rows_read": 28587,
+    "rows_other_language": 12249,
+    "rows_empty": 0,
+    "duplicates_removed": 1,
+    "conflicting_labels_removed": 0,
+    "tickets_kept": 16337
+  },
+  "split_sizes": {
+    "train": 11435,
+    "validation": 2451,
+    "test": 2451
+  },
+  "class_counts": {
+    "train": {
+      "Technical Support": 3315,
+      "Product Support": 2151,
+      "Customer Service": 1686,
+      "IT Support": 1360,
+      "Billing and Payments": 1117,
+      "Returns and Exchanges": 574,
+      "Service Outages and Maintenance": 464,
+      "Sales and Pre-Sales": 359,
+      "Human Resources": 244,
+      "General Inquiry": 165
+    },
+    "validation": {
+      "Technical Support": 710,
+      "Product Support": 461,
+      "Customer Service": 362,
+      "IT Support": 291,
+      "Billing and Payments": 239,
+      "Returns and Exchanges": 123,
+      "Service Outages and Maintenance": 100,
+      "Sales and Pre-Sales": 77,
+      "Human Resources": 52,
+      "General Inquiry": 36
+    },
+    "test": {
+      "Technical Support": 711,
+      "Product Support": 461,
+      "Customer Service": 362,
+      "IT Support": 291,
+      "Billing and Payments": 239,
+      "Returns and Exchanges": 123,
+      "Service Outages and Maintenance": 100,
+      "Sales and Pre-Sales": 77,
+      "Human Resources": 52,
+      "General Inquiry": 35
+    }
+  },
+  "token_lengths": {
+    "median": 75.0,
+    "p95": 118.0,
+    "p99": 131.0,
+    "max": 210,
+    "share_over_128": 0.0129,
+    "share_over_256": 0.0
+  }
+}

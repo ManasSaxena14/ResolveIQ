@@ -1,0 +1,165 @@
+{
+  "test_size": 2451,
+  "baseline": {
+    "metrics": {
+      "accuracy": 0.6091,
+      "macro_f1": 0.6333,
+      "weighted_f1": 0.61,
+      "weakest_class": "IT Support",
+      "weakest_class_f1": 0.5142,
+      "per_class": {
+        "Billing and Payments": {
+          "precision": 0.8133,
+          "recall": 0.8201,
+          "f1": 0.8167,
+          "support": 239
+        },
+        "Customer Service": {
+          "precision": 0.5297,
+          "recall": 0.5663,
+          "f1": 0.5474,
+          "support": 362
+        },
+        "General Inquiry": {
+          "precision": 0.7,
+          "recall": 0.6,
+          "f1": 0.6462,
+          "support": 35
+        },
+        "Human Resources": {
+          "precision": 0.8043,
+          "recall": 0.7115,
+          "f1": 0.7551,
+          "support": 52
+        },
+        "IT Support": {
+          "precision": 0.5,
+          "recall": 0.5292,
+          "f1": 0.5142,
+          "support": 291
+        },
+        "Product Support": {
+          "precision": 0.5525,
+          "recall": 0.5705,
+          "f1": 0.5614,
+          "support": 461
+        },
+        "Returns and Exchanges": {
+          "precision": 0.5893,
+          "recall": 0.5366,
+          "f1": 0.5617,
+          "support": 123
+        },
+        "Sales and Pre-Sales": {
+          "precision": 0.5529,
+          "recall": 0.6104,
+          "f1": 0.5802,
+          "support": 77
+        },
+        "Service Outages and Maintenance": {
+          "precision": 0.6909,
+          "recall": 0.76,
+          "f1": 0.7238,
+          "support": 100
+        },
+        "Technical Support": {
+          "precision": 0.6524,
+          "recall": 0.602,
+          "f1": 0.6262,
+          "support": 711
+        }
+      }
+    },
+    "train_seconds": 29.8
+  },
+  "distilbert": {
+    "seed-42": {
+      "metrics": {
+        "accuracy": 0.4725,
+        "macro_f1": 0.5213,
+        "weighted_f1": 0.4722,
+        "weakest_class": "Customer Service",
+        "weakest_class_f1": 0.3774,
+        "per_class": {
+          "Billing and Payments": {
+            "precision": 0.8233,
+            "recall": 0.7992,
+            "f1": 0.811,
+            "support": 239
+          },
+          "Customer Service": {
+            "precision": 0.3684,
+            "recall": 0.3867,
+            "f1": 0.3774,
+            "support": 362
+          },
+          "General Inquiry": {
+            "precision": 0.45,
+            "recall": 0.5143,
+            "f1": 0.48,
+            "support": 35
+          },
+          "Human Resources": {
+            "precision": 0.5484,
+            "recall": 0.6538,
+            "f1": 0.5965,
+            "support": 52
+          },
+          "IT Support": {
+            "precision": 0.3469,
+            "recall": 0.4983,
+            "f1": 0.409,
+            "support": 291
+          },
+          "Product Support": {
+            "precision": 0.394,
+            "recall": 0.4273,
+            "f1": 0.41,
+            "support": 461
+          },
+          "Returns and Exchanges": {
+            "precision": 0.5,
+            "recall": 0.5122,
+            "f1": 0.506,
+            "support": 123
+          },
+          "Sales and Pre-Sales": {
+            "precision": 0.4598,
+            "recall": 0.5195,
+            "f1": 0.4878,
+            "support": 77
+          },
+          "Service Outages and Maintenance": {
+            "precision": 0.6726,
+            "recall": 0.76,
+            "f1": 0.7136,
+            "support": 100
+          },
+          "Technical Support": {
+            "precision": 0.5152,
+            "recall": 0.3572,
+            "f1": 0.4219,
+            "support": 711
+          }
+        }
+      },
+      "best_val_macro_f1": 0.5395,
+      "best_epoch": 5,
+      "train_seconds": 4372.1
+    }
+  },
+  "distilbert_mean": {
+    "macro_f1_mean": 0.5213,
+    "macro_f1_std": 0.0,
+    "accuracy_mean": 0.4725
+  },
+  "production_model": "seed-42",
+  "production_review": {
+    "threshold": 0.8776,
+    "target_accuracy": 0.9,
+    "test_coverage": 0.1632,
+    "test_accuracy_auto_routed": 0.8675,
+    "test_accuracy_needs_review": 0.3954
+  },
+  "production_test_ece": 0.0977
+}

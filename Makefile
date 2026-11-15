@@ -1,6 +1,6 @@
 PYTHON ?= python
 
-.PHONY: help install install-dev lint format test coverage index eval clean
+.PHONY: help install install-dev lint format test coverage index eval data baseline classifier evaluate-classifier clean
 
 help:
 	@echo "install      Install runtime dependencies and the package"
@@ -11,6 +11,10 @@ help:
 	@echo "coverage     Run the test suite with the coverage gate used in CI"
 	@echo "index        Build the knowledge base index"
 	@echo "eval         Run the RAG evaluation on the dev split"
+	@echo "data         Download and prepare the ticket dataset"
+	@echo "baseline     Train the TF-IDF baseline classifier"
+	@echo "classifier   Fine-tune DistilBERT for every configured seed"
+	@echo "evaluate-classifier  Final test-set evaluation of all classifiers"
 	@echo "clean        Remove caches and generated artifacts"
 
 install:
@@ -40,6 +44,19 @@ index:
 
 eval:
 	$(PYTHON) eval/run_rag_eval.py run --split dev
+
+data:
+	$(PYTHON) scripts/download_data.py
+	$(PYTHON) scripts/prepare_tickets.py
+
+baseline:
+	$(PYTHON) scripts/train_baseline.py
+
+classifier:
+	$(PYTHON) scripts/train_classifier.py --all-seeds
+
+evaluate-classifier:
+	$(PYTHON) scripts/evaluate_classifier.py
 
 clean:
 	rm -rf .pytest_cache .ruff_cache .coverage htmlcov

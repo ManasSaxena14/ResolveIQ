@@ -1,0 +1,11 @@
+label,precision,recall,f1,support
+Billing and Payments,0.8233,0.7992,0.811,239
+Customer Service,0.3684,0.3867,0.3774,362
+General Inquiry,0.45,0.5143,0.48,35
+Human Resources,0.5484,0.6538,0.5965,52
+IT Support,0.3469,0.4983,0.409,291
+Product Support,0.394,0.4273,0.41,461
+Returns and Exchanges,0.5,0.5122,0.506,123
+Sales and Pre-Sales,0.4598,0.5195,0.4878,77
+Service Outages and Maintenance,0.6726,0.76,0.7136,100
+Technical Support,0.5152,0.3572,0.4219,711
