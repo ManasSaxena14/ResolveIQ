@@ -28,6 +28,8 @@ jobs:
           # CPU-only builds keep the install small; versions match requirements.txt.
           pip install torch==2.15.0 --index-url https://download.pytorch.org/whl/cpu
           pip install transformers==5.23.0
+          # xgboost-cpu is the same library without the CUDA dependencies.
+          pip install xgboost-cpu==3.4.1
           pip install -e . --no-deps
 
       - name: Lint

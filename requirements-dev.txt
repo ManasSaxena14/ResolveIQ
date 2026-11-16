@@ -1,10 +1,10 @@
 # Development and CI dependencies.
 #
-# CI installs this file plus CPU-only torch and transformers (see ci.yml). It
-# contains the lightweight runtime libraries the tests import directly, plus
-# tooling. sentence-transformers, chromadb and mlflow are replaced by test
-# doubles, and transformer tests use tiny randomly initialized models, so CI
-# never downloads a model. For local development install both files:
+# CI installs this file plus CPU-only torch, transformers and xgboost (see
+# ci.yml). It contains the lightweight runtime libraries the tests import
+# directly, plus tooling. sentence-transformers, chromadb and mlflow are
+# replaced by test doubles, and transformer tests use tiny randomly
+# initialized models, so CI never downloads a model. For local development install both files:
 # `pip install -r requirements.txt -r requirements-dev.txt`.
 PyYAML==6.0.3
 pydantic==2.14.3
@@ -16,6 +16,7 @@ rank-bm25==0.2.2
 scikit-learn==1.9.1
 joblib==1.6.0
 matplotlib==3.11.2
+vaderSentiment==3.3.2
 
 pytest==9.2.0
 pytest-cov==7.1.0
