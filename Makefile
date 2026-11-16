@@ -1,6 +1,6 @@
 PYTHON ?= python
 
-.PHONY: help install install-dev lint format test coverage index eval data baseline classifier evaluate-classifier clean
+.PHONY: help install install-dev lint format test coverage index eval data baseline classifier evaluate-classifier risk-features risk evaluate-risk clean
 
 help:
 	@echo "install      Install runtime dependencies and the package"
@@ -15,6 +15,9 @@ help:
 	@echo "baseline     Train the TF-IDF baseline classifier"
 	@echo "classifier   Fine-tune DistilBERT for every configured seed"
 	@echo "evaluate-classifier  Final test-set evaluation of all classifiers"
+	@echo "risk-features  Build escalation risk features from the ticket splits"
+	@echo "risk         Train the escalation risk models and choose the alert threshold"
+	@echo "evaluate-risk  Final test-set evaluation of the escalation risk model"
 	@echo "clean        Remove caches and generated artifacts"
 
 install:
@@ -57,6 +60,15 @@ classifier:
 
 evaluate-classifier:
 	$(PYTHON) scripts/evaluate_classifier.py
+
+risk-features:
+	$(PYTHON) scripts/build_risk_features.py
+
+risk:
+	$(PYTHON) scripts/train_risk.py
+
+evaluate-risk:
+	$(PYTHON) scripts/evaluate_risk.py
 
 clean:
 	rm -rf .pytest_cache .ruff_cache .coverage htmlcov
