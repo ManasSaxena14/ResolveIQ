@@ -6,6 +6,19 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- Escalation risk model (Phase 3)
+  - Written proxy label (high priority) and a leakage checklist for every dataset column
+  - Feature builder: text statistics, VADER sentiment, keyword groups, ticket type,
+    out-of-fold queue probabilities and an out-of-fold text score
+  - Logistic regression baseline, XGBoost with early stopping and an 18-trial grid
+    search, and sigmoid calibration, all tracked in MLflow
+  - Metrics for imbalanced labels: PR-AUC, recall at fixed precision, Brier score and
+    ROC-AUC, with precision-recall and calibration plots
+  - Alert threshold chosen on validation from a cost ratio, with a cost table
+  - Top three reasons per ticket from TreeSHAP values, and a SHAP summary plot
+  - Batch scoring of a CSV of tickets into a list ranked by risk
+  - Single-thread XGBoost when PyTorch is loaded, avoiding an OpenMP conflict on macOS
+
 - Ticket classifier (Phase 2)
   - Download from a pinned dataset revision, cleaning, PII masking, deduplication and a
     stratified split, with a data profile

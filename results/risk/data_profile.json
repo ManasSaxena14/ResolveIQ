@@ -1,0 +1,71 @@
+{
+  "label": {
+    "source_column": "priority",
+    "positive_values": [
+      "high"
+    ],
+    "is_proxy": true
+  },
+  "feature_count": 30,
+  "feature_names": [
+    "char_count",
+    "word_count",
+    "exclamation_count",
+    "question_count",
+    "caps_ratio",
+    "sentiment_compound",
+    "sentiment_negative",
+    "kw_urgency",
+    "kw_outage",
+    "kw_security",
+    "kw_data_loss",
+    "kw_money",
+    "kw_churn",
+    "kw_legal",
+    "kw_frustration",
+    "type_incident",
+    "type_problem",
+    "type_request",
+    "type_change",
+    "queue_billing_and_payments",
+    "queue_customer_service",
+    "queue_general_inquiry",
+    "queue_human_resources",
+    "queue_it_support",
+    "queue_product_support",
+    "queue_returns_and_exchanges",
+    "queue_sales_and_pre_sales",
+    "queue_service_outages_and_maintenance",
+    "queue_technical_support",
+    "text_risk_score"
+  ],
+  "queues": [
+    "Billing and Payments",
+    "Customer Service",
+    "General Inquiry",
+    "Human Resources",
+    "IT Support",
+    "Product Support",
+    "Returns and Exchanges",
+    "Sales and Pre-Sales",
+    "Service Outages and Maintenance",
+    "Technical Support"
+  ],
+  "splits": {
+    "train": {
+      "tickets": 11435,
+      "escalations": 4460,
+      "escalation_rate": 0.39
+    },
+    "validation": {
+      "tickets": 2451,
+      "escalations": 935,
+      "escalation_rate": 0.3815
+    },
+    "test": {
+      "tickets": 2451,
+      "escalations": 950,
+      "escalation_rate": 0.3876
+    }
+  }
+}

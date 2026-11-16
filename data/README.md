@@ -67,3 +67,19 @@ after the ticket arrives, and tags largely restate the queue.
 The classes are imbalanced by a factor of 20, so macro F1 is the headline metric and
 both models use class-balanced weighting. Full counts, cleaning statistics and token
 lengths are in `results/classifier/data_profile.json`.
+
+### Label: escalation (proxy)
+
+The escalation risk model (Phase 3) uses the same splits. The dataset has no escalation
+field, so a ticket counts as an escalation when its `priority` is `high`; `priority` is
+therefore never a model input. This is a proxy label, documented with a leakage
+checklist in [docs/risk_model.md](../docs/risk_model.md).
+
+| Split | Tickets | High priority | Rate |
+|---|---|---|---|
+| Train | 11,435 | 4,460 | 39.0% |
+| Validation | 2,451 | 935 | 38.1% |
+| Test | 2,451 | 950 | 38.8% |
+
+Features are written to `data/processed/risk/` by `scripts/build_risk_features.py` and
+are not committed.

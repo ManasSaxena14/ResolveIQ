@@ -1,0 +1,135 @@
+{
+  "test_size": 2451,
+  "test_positive_rate": 0.3876,
+  "models": {
+    "majority": {
+      "pr_auc": 0.3876,
+      "recall_at_precision": 0.0,
+      "brier": 0.2374,
+      "roc_auc": 0.5,
+      "positive_rate": 0.3876
+    },
+    "logistic_regression": {
+      "pr_auc": 0.7435,
+      "recall_at_precision": 0.6221,
+      "brier": 0.1742,
+      "roc_auc": 0.8175,
+      "positive_rate": 0.3876
+    },
+    "xgboost": {
+      "pr_auc": 0.7497,
+      "recall_at_precision": 0.6453,
+      "brier": 0.1708,
+      "roc_auc": 0.8206,
+      "positive_rate": 0.3876
+    },
+    "xgboost_tuned": {
+      "pr_auc": 0.7489,
+      "recall_at_precision": 0.6316,
+      "brier": 0.1718,
+      "roc_auc": 0.8208,
+      "positive_rate": 0.3876
+    },
+    "xgboost_tuned_calibrated": {
+      "pr_auc": 0.7489,
+      "recall_at_precision": 0.6316,
+      "brier": 0.1664,
+      "roc_auc": 0.8208,
+      "positive_rate": 0.3876
+    }
+  },
+  "cost_table": [
+    {
+      "cost_ratio": 1.0,
+      "threshold": 0.53,
+      "caught": 0.5895,
+      "false_alarms_per_100_alerts": 27.8,
+      "alert_rate": 0.3166
+    },
+    {
+      "cost_ratio": 2.0,
+      "threshold": 0.3,
+      "caught": 0.7926,
+      "false_alarms_per_100_alerts": 38.7,
+      "alert_rate": 0.501
+    },
+    {
+      "cost_ratio": 3.0,
+      "threshold": 0.23,
+      "caught": 0.8663,
+      "false_alarms_per_100_alerts": 43.7,
+      "alert_rate": 0.5965
+    },
+    {
+      "cost_ratio": 5.0,
+      "threshold": 0.19,
+      "caught": 0.9168,
+      "false_alarms_per_100_alerts": 46.9,
+      "alert_rate": 0.6691
+    },
+    {
+      "cost_ratio": 10.0,
+      "threshold": 0.11,
+      "caught": 0.9747,
+      "false_alarms_per_100_alerts": 55.2,
+      "alert_rate": 0.8425
+    },
+    {
+      "cost_ratio": 20.0,
+      "threshold": 0.06,
+      "caught": 0.9958,
+      "false_alarms_per_100_alerts": 59.6,
+      "alert_rate": 0.9547
+    }
+  ],
+  "production_threshold": 0.23,
+  "production_alert": {
+    "threshold": 0.23,
+    "alert_rate": 0.5965,
+    "caught": 0.8663,
+    "false_alarms_per_100_alerts": 43.7,
+    "cost": 766.0
+  },
+  "top_features": [
+    [
+      "text_risk_score",
+      1.0762
+    ],
+    [
+      "queue_human_resources",
+      0.0634
+    ],
+    [
+      "queue_returns_and_exchanges",
+      0.0569
+    ],
+    [
+      "queue_billing_and_payments",
+      0.0534
+    ],
+    [
+      "queue_customer_service",
+      0.0475
+    ],
+    [
+      "queue_technical_support",
+      0.044
+    ],
+    [
+      "type_incident",
+      0.0369
+    ],
+    [
+      "queue_it_support",
+      0.0348
+    ],
+    [
+      "queue_product_support",
+      0.0309
+    ],
+    [
+      "queue_service_outages_and_maintenance",
+      0.0283
+    ]
+  ]
+}

@@ -41,6 +41,7 @@ scripts/            offline jobs (index build, training)
 src/resolveiq/      application package
   rag/              Phase 1: retrieval-augmented generation
   classifier/       Phase 2: ticket queue classification
+  risk/             Phase 3: escalation risk features, training and explanations
 results/            committed evaluation artifacts
 tests/              unit and component tests with lightweight test doubles
 ```
@@ -52,5 +53,5 @@ tests/              unit and component tests with lightweight test doubles
 | 0 | Repository, configuration, tooling, CI | Complete |
 | 1 | RAG assistant ([details](rag_pipeline.md)) | Complete |
 | 2 | Ticket classifier ([details](classifier.md)) | Complete |
-| 3 | Escalation risk model | Planned |
+| 3 | Escalation risk model ([details](risk_model.md)) | Complete |
 | 4 | Service, API, UI, monitoring, deployment | Planned |
