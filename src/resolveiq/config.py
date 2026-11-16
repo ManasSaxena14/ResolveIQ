@@ -121,6 +121,43 @@ class ClassifierConfig(_StrictModel):
     output_dir: Path
 
 
+class RiskLabelConfig(_StrictModel):
+    source_column: str
+    positive_values: list[str] = Field(min_length=1)
+
+
+class XGBoostConfig(_StrictModel):
+    n_estimators: int = Field(gt=0)
+    learning_rate: float = Field(gt=0, le=1)
+    max_depth: int = Field(gt=0)
+    min_child_weight: float = Field(ge=0)
+    subsample: float = Field(gt=0, le=1)
+    colsample_bytree: float = Field(gt=0, le=1)
+    early_stopping_rounds: int = Field(gt=0)
+
+
+class RiskConfig(_StrictModel):
+    label: RiskLabelConfig
+    output_dir: Path
+    features_dir: Path
+    queue_folds: int = Field(ge=2)
+    text_score_feature: bool = True
+    seed: int
+    xgboost: XGBoostConfig
+    tuning_grid: dict[str, list[float]]
+    calibration: Literal["isotonic", "sigmoid"]
+    precision_target: float = Field(gt=0, lt=1)
+    cost_ratios: list[float] = Field(min_length=1)
+    alert_cost_ratio: float = Field(gt=0)
+
+    @model_validator(mode="after")
+    def _check_grid(self) -> RiskConfig:
+        unknown = set(self.tuning_grid) - set(XGBoostConfig.model_fields)
+        if unknown:
+            raise ValueError(f"risk.tuning_grid has unknown parameters: {sorted(unknown)}")
+        return self
+
+
 class PathsConfig(_StrictModel):
     kb_dir: Path
     index_dir: Path
@@ -137,6 +174,7 @@ class Settings(_StrictModel):
     rag: RagConfig
     llm: LLMConfig
     classifier: ClassifierConfig
+    risk: RiskConfig
     paths: PathsConfig
     tracking: TrackingConfig
 

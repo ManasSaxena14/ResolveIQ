@@ -7,6 +7,14 @@ language model, so the suite runs in seconds and never downloads a model.
 from __future__ import annotations
 
 import hashlib
+import os
+
+# PyTorch and XGBoost ship different OpenMP runtimes on macOS. When both start
+# worker threads in one process (as in this test session), the runtimes collide
+# and the interpreter crashes. With a single OpenMP thread neither runtime
+# starts workers. This must be set before numpy, torch or xgboost is imported.
+os.environ.setdefault("OMP_NUM_THREADS", "1")
+
 from collections.abc import Sequence
 from pathlib import Path
 

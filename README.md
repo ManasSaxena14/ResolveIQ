@@ -28,7 +28,7 @@ See [docs/architecture.md](docs/architecture.md) for the system design.
 | 0 | Repository, configuration, tooling and CI | Complete |
 | 1 | RAG assistant: ingestion, hybrid retrieval, grounded answers, evaluation | Complete |
 | 2 | Ticket classifier: TF-IDF baseline, fine-tuned DistilBERT, review threshold | Complete |
-| 3 | Escalation risk model | Planned |
+| 3 | Escalation risk model: XGBoost, calibration, cost-based alerts, SHAP reasons | Complete |
 | 4 | API, UI, MLOps and deployment | Planned |
 
 ## RAG assistant (Phase 1)
@@ -71,6 +71,31 @@ labels. The analysis, and the decision to serve whichever model scores higher on
 validation, are in [docs/classifier.md](docs/classifier.md). Model card:
 [docs/model_card_classifier.md](docs/model_card_classifier.md).
 
+## Escalation risk model (Phase 3)
+
+Scores each ticket on arrival with a calibrated escalation probability, an alert flag
+and its top three reasons.
+
+- Proxy label written down: a ticket counts as an escalation when its priority is high
+  (the dataset has no escalation field), with a leakage checklist for every column
+- 30 features known at arrival: text statistics, VADER sentiment, keyword groups,
+  ticket type, Phase 2 queue probabilities and an out-of-fold text score
+- Logistic regression baseline and XGBoost with early stopping, an 18-trial grid
+  search and sigmoid calibration, all logged to MLflow
+- Alert threshold chosen on validation from a stated cost ratio, with a table for six
+  ratios
+- Per-ticket reasons from TreeSHAP values, and batch scoring of a CSV into a ranked list
+
+| Model (test split) | PR-AUC | Recall at 70% precision | Brier score |
+|---|---|---|---|
+| Always predict the base rate | 0.3876 | 0.0000 | 0.2374 |
+| Logistic regression | 0.7435 | 0.6221 | 0.1742 |
+| XGBoost, tuned and calibrated | 0.7489 | 0.6316 | 0.1664 |
+
+At the production cost ratio of 3 : 1 the alert catches 86.6% of high-priority tickets
+and fires on 59.7% of tickets. Label definition, leakage checklist, cost table and
+limitations: [docs/risk_model.md](docs/risk_model.md).
+
 ## Getting started
 
 Requirements: Python 3.12 on macOS or Linux. Docker is not required.
@@ -93,6 +118,13 @@ Prepare the ticket data and train the classifiers:
 
 ```bash
 make data && make baseline && make classifier && make evaluate-classifier
+```
+
+Build the escalation risk model and score a CSV of tickets:
+
+```bash
+make risk-features && make risk && make evaluate-risk
+python scripts/score_tickets.py tickets.csv
 ```
 
 For full RAG answers, install [Ollama](https://ollama.com) and pull the default model with
@@ -123,14 +155,16 @@ configs/config.yaml       all settings, validated at load time
 data/kb/                  synthetic help center for the fictional retailer Altura
 docs/                     architecture and component documentation
 eval/                     RAG test set and evaluation script
-scripts/                  offline jobs such as building the index
+scripts/                  offline jobs: index build, training, evaluation, batch scoring
 src/resolveiq/            application package
   config.py               configuration loading and validation
   tracking.py             MLflow helpers
   privacy.py              PII masking shared by training and logging
   rag/                    ingestion, retrieval, generation and evaluation
   classifier/             data preparation, baseline, fine-tuning, calibration, prediction
+  risk/                   escalation features, training, evaluation, explanations, scoring
 results/classifier/       committed evaluation artifacts for the classifier
+results/risk/             committed evaluation artifacts for the escalation risk model
 tests/                    unit and component tests
 ```
 

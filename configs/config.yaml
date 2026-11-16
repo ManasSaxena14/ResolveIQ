@@ -74,6 +74,40 @@ classifier:
   review_threshold: 0.70   # replaced by the calibrated value from the validation set
   output_dir: models/classifier
 
+risk:
+  # Proxy label: the dataset has no escalation field, so a ticket marked high
+  # priority counts as an escalation. The priority column is therefore never a feature.
+  label:
+    source_column: priority
+    positive_values: [high]
+  output_dir: models/risk
+  features_dir: data/processed/risk
+  queue_folds: 5           # out-of-fold text model scores for the training split
+  # Adds the score of a TF-IDF model trained on the label. Set to false to measure
+  # the model on hand-built features only (see docs/risk_model.md).
+  text_score_feature: true
+  seed: 42
+  xgboost:
+    n_estimators: 1000     # upper bound; early stopping on validation picks the count
+    learning_rate: 0.05
+    max_depth: 5
+    min_child_weight: 1
+    subsample: 0.8
+    colsample_bytree: 0.8
+    early_stopping_rounds: 50
+  tuning_grid:
+    max_depth: [4, 5, 6]
+    min_child_weight: [1, 5]
+    colsample_bytree: [0.6, 0.8, 1.0]
+  calibration: sigmoid     # isotonic | sigmoid, fitted on the validation split
+  precision_target: 0.70   # for the "recall at fixed precision" metric
+  # Cost of missing an escalation relative to a false alarm (cost 1). The alert
+  # threshold minimizes total cost on validation for alert_cost_ratio. With 39% of
+  # tickets labeled high priority, ratios of 10:1 and above alert on most tickets,
+  # so 3:1 is used (see the cost table in docs/risk_model.md).
+  cost_ratios: [1, 2, 3, 5, 10, 20]
+  alert_cost_ratio: 3
+
 paths:
   kb_dir: data/kb
   index_dir: .chroma

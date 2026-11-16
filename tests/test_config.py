@@ -75,3 +75,18 @@ def test_relative_paths_resolve_from_project_root():
 
     assert resolved.is_absolute()
     assert resolved.parts[-2:] == ("data", "kb")
+
+
+def test_risk_tuning_grid_rejects_unknown_parameters(tmp_path):
+    path = _write_config(tmp_path, risk={"tuning_grid": {"max_leaves": [8]}})
+
+    with pytest.raises(ValidationError, match="unknown parameters"):
+        load_config(path)
+
+
+def test_risk_defaults_are_valid():
+    risk = load_config(DEFAULT_CONFIG_PATH).risk
+
+    assert risk.label.source_column == "priority"
+    assert risk.alert_cost_ratio in risk.cost_ratios
+    assert risk.calibration in {"isotonic", "sigmoid"}
