@@ -9,7 +9,6 @@ version, and loads it with the project's own loaders.
 from __future__ import annotations
 
 import logging
-import re
 import shutil
 import tempfile
 from dataclasses import dataclass
@@ -17,13 +16,12 @@ from pathlib import Path
 from typing import Any
 
 from resolveiq.config import Settings
+from resolveiq.rag.loaders import is_sync_duplicate
 from resolveiq.tracking import resolve_tracking_uri
 
 logger = logging.getLogger(__name__)
 
 ARTIFACT_KEY = "model_dir"
-# iCloud Drive and some sync tools leave copies such as "model 2.safetensors".
-_SYNC_DUPLICATE = re.compile(r" \d+(\.[^.]+)?$")
 
 
 @dataclass(frozen=True)
@@ -37,11 +35,7 @@ def clean_copy(source: Path, destination: Path) -> Path:
     """Copy a model folder without sync-tool duplicates or hidden files."""
     destination.mkdir(parents=True, exist_ok=True)
     for path in sorted(source.iterdir()):
-        if (
-            path.is_file()
-            and not path.name.startswith(".")
-            and not _SYNC_DUPLICATE.search(path.name)
-        ):
+        if path.is_file() and not path.name.startswith(".") and not is_sync_duplicate(path.name):
             shutil.copy2(path, destination / path.name)
     return destination
 

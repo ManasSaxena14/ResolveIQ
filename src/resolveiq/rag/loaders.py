@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import re
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -14,17 +15,34 @@ PDF_SUFFIXES = {".pdf"}
 HTML_SUFFIXES = {".html", ".htm"}
 TEXT_SUFFIXES = {".txt", ".md", ".markdown"}
 SUPPORTED_SUFFIXES = PDF_SUFFIXES | HTML_SUFFIXES | TEXT_SUFFIXES
+# File sync tools such as iCloud Drive leave copies named "article 2.md" next to
+# the original. Indexing them would duplicate every chunk.
+_SYNC_DUPLICATE = re.compile(r" \d+(\.[^.]+)?$")
+
+
+def is_sync_duplicate(name: str) -> bool:
+    """True for names like ``refunds 2.md`` that sync tools create."""
+    return bool(_SYNC_DUPLICATE.search(name))
 
 
 def discover_files(kb_dir: Path) -> list[Path]:
-    """Return supported files under ``kb_dir`` in a stable order."""
+    """Return supported files under ``kb_dir`` in a stable order.
+
+    Hidden files and sync-tool duplicates are skipped.
+    """
     if not kb_dir.is_dir():
         raise FileNotFoundError(f"Knowledge base directory not found: {kb_dir}")
-    return sorted(
-        path
-        for path in kb_dir.rglob("*")
-        if path.is_file() and path.suffix.lower() in SUPPORTED_SUFFIXES
-    )
+    files, skipped = [], []
+    for path in kb_dir.rglob("*"):
+        if not path.is_file() or path.suffix.lower() not in SUPPORTED_SUFFIXES:
+            continue
+        if path.name.startswith(".") or is_sync_duplicate(path.name):
+            skipped.append(path.name)
+            continue
+        files.append(path)
+    if skipped:
+        logger.warning("Skipped %d hidden or duplicate files in %s", len(skipped), kb_dir)
+    return sorted(files)
 
 
 def load_documents(kb_dir: Path) -> list[Page]:
