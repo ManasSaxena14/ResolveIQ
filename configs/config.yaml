@@ -108,6 +108,39 @@ risk:
   cost_ratios: [1, 2, 3, 5, 10, 20]
   alert_cost_ratio: 3
 
+service:
+  # Limits protect the public demo. Longer tickets are rejected with HTTP 422.
+  max_text_chars: 4000
+  max_upload_bytes: 2000000      # 2 MB, larger batch files return HTTP 413
+  max_batch_rows: 2000
+  # registry: load the "production" alias from the MLflow model registry and fall
+  # back to the local folders below when the registry is unavailable (as on a
+  # hosted demo). local: always use the folders.
+  model_source: registry
+  classifier_dir: models/classifier/production
+  risk_dir: models/risk
+  registry:
+    classifier_name: resolveiq-ticket-classifier
+    risk_name: resolveiq-escalation-risk
+    alias: production
+    cache_dir: models/registry
+  request_log: logs/requests.db
+  # Knowledge base files are linked from the UI so a reader can open the source.
+  source_base_url: https://github.com/ManasSaxena14/ResolveIQ/blob/main/data/kb/
+
+monitoring:
+  reference_path: results/monitoring/reference.csv
+  report_dir: results/monitoring
+  recent_requests: 500           # rows from the request log compared with the reference
+  numeric_features: [text_length, confidence, risk_score]
+  categorical_features: [category]
+  psi_threshold: 0.2             # a feature drifts when PSI is at least this value
+  p_value: 0.05                  # and its KS or chi-square test is significant
+  # Retrain rule (see docs/monitoring.md).
+  retrain_drift_share: 0.5       # share of monitored features that drifted
+  retrain_thumbs_down_rate: 0.3  # share of negative feedback
+  min_feedback: 20               # feedback rule applies only after this many votes
+
 paths:
   kb_dir: data/kb
   index_dir: .chroma

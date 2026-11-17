@@ -158,6 +158,44 @@ class RiskConfig(_StrictModel):
         return self
 
 
+class RegistryConfig(_StrictModel):
+    classifier_name: str
+    risk_name: str
+    alias: str
+    cache_dir: Path
+
+
+class ServiceConfig(_StrictModel):
+    max_text_chars: int = Field(gt=0)
+    max_upload_bytes: int = Field(gt=0)
+    max_batch_rows: int = Field(gt=0)
+    model_source: Literal["registry", "local"]
+    classifier_dir: Path
+    risk_dir: Path
+    registry: RegistryConfig
+    request_log: Path
+    source_base_url: str = ""
+
+
+class MonitoringConfig(_StrictModel):
+    reference_path: Path
+    report_dir: Path
+    recent_requests: int = Field(gt=0)
+    numeric_features: list[str]
+    categorical_features: list[str]
+    psi_threshold: float = Field(gt=0)
+    p_value: float = Field(gt=0, lt=1)
+    retrain_drift_share: float = Field(gt=0, le=1)
+    retrain_thumbs_down_rate: float = Field(gt=0, le=1)
+    min_feedback: int = Field(ge=0)
+
+    @model_validator(mode="after")
+    def _check_features(self) -> MonitoringConfig:
+        if not self.numeric_features and not self.categorical_features:
+            raise ValueError("monitoring needs at least one feature to compare")
+        return self
+
+
 class PathsConfig(_StrictModel):
     kb_dir: Path
     index_dir: Path
@@ -175,6 +213,8 @@ class Settings(_StrictModel):
     llm: LLMConfig
     classifier: ClassifierConfig
     risk: RiskConfig
+    service: ServiceConfig
+    monitoring: MonitoringConfig
     paths: PathsConfig
     tracking: TrackingConfig
 
