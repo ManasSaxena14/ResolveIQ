@@ -13,6 +13,7 @@ import hashlib
 import json
 import logging
 import sqlite3
+import statistics
 import threading
 from collections.abc import Iterator
 from contextlib import contextmanager
@@ -181,6 +182,53 @@ class RequestLog:
             counts = {rating: int(n) for rating, n in cursor.fetchall()}
         up, down = counts.get("up", 0), counts.get("down", 0)
         return FeedbackStats(total=up + down, up=up, down=down)
+
+    def ratings(self, request_ids: list[str]) -> dict[str, str]:
+        """The latest vote for each of ``request_ids`` that has one."""
+        if not request_ids:
+            return {}
+        placeholders = ", ".join("?" for _ in request_ids)
+        with self._transaction() as cursor:
+            cursor.execute(
+                f"SELECT request_id, rating FROM feedback WHERE request_id IN ({placeholders}) "
+                "ORDER BY id",
+                request_ids,
+            )
+            return {request_id: rating for request_id, rating in cursor.fetchall()}
+
+    def summary(self) -> dict[str, Any]:
+        """Totals over the whole log for the monitoring dashboard."""
+        with self._transaction() as cursor:
+            cursor.execute(
+                "SELECT COUNT(*), COALESCE(SUM(alert), 0), COALESCE(SUM(needs_review), 0), "
+                "AVG(risk_score), AVG(confidence) FROM requests"
+            )
+            total, alerts, reviews, mean_risk, mean_confidence = cursor.fetchone()
+            cursor.execute("SELECT category, COUNT(*) FROM requests GROUP BY category")
+            categories = {label: int(n) for label, n in cursor.fetchall()}
+            cursor.execute("SELECT draft_status, COUNT(*) FROM requests GROUP BY draft_status")
+            drafts = {status: int(n) for status, n in cursor.fetchall()}
+            cursor.execute("SELECT latency_ms FROM requests ORDER BY latency_ms")
+            latencies = [float(row[0]) for row in cursor.fetchall()]
+        median = round(statistics.median(latencies), 1) if latencies else None
+        p95 = (
+            latencies[min(len(latencies) - 1, round(0.95 * (len(latencies) - 1)))]
+            if latencies
+            else None
+        )
+        return {
+            "requests": int(total),
+            "alerts": int(alerts),
+            "needs_review": int(reviews),
+            "mean_risk": round(float(mean_risk), 4) if mean_risk is not None else None,
+            "mean_confidence": (
+                round(float(mean_confidence), 4) if mean_confidence is not None else None
+            ),
+            "categories": dict(sorted(categories.items(), key=lambda item: -item[1])),
+            "draft_status": drafts,
+            "latency_median_ms": median,
+            "latency_p95_ms": p95,
+        }
 
 
 def log_event(event: str, **fields: Any) -> None:

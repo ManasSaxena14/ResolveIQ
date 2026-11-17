@@ -23,12 +23,15 @@ import time
 import uuid
 from collections.abc import AsyncIterator, Callable
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import Annotated, Any
 
-from fastapi import FastAPI, File, HTTPException, Request, Response, UploadFile
+from fastapi import FastAPI, File, HTTPException, Query, Request, Response, UploadFile
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from resolveiq import __version__
+from resolveiq.config import PROJECT_ROOT
 from resolveiq.schemas import (
     AnalyzeRequest,
     AnalyzeResponse,
@@ -37,12 +40,16 @@ from resolveiq.schemas import (
     FeedbackRequest,
     FeedbackResponse,
     HealthResponse,
+    RequestSummary,
+    StatsResponse,
 )
 from resolveiq.service import Copilot, InputError, PayloadTooLargeError
 
 logger = logging.getLogger("resolveiq.api")
 
 REQUEST_ID_HEADER = "X-Request-ID"
+# The React app is built into this folder by `npm run build` in frontend/.
+WEB_DIR = PROJECT_ROOT / "frontend" / "dist"
 
 
 def _load_from_settings() -> Copilot:
@@ -55,9 +62,14 @@ def _load_from_settings() -> Copilot:
 
 
 def create_app(
-    copilot: Copilot | None = None, loader: Callable[[], Copilot] = _load_from_settings
+    copilot: Copilot | None = None,
+    loader: Callable[[], Copilot] = _load_from_settings,
+    web_dir: Path | None = WEB_DIR,
 ) -> FastAPI:
-    """Build the app. Pass a ready ``copilot`` in tests; otherwise ``loader`` runs at startup."""
+    """Build the app. Pass a ready ``copilot`` in tests; otherwise ``loader`` runs at startup.
+
+    When ``web_dir`` holds a built frontend, it is served at ``/`` next to the API.
+    """
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
@@ -150,6 +162,22 @@ def create_app(
     @app.get("/health", response_model=HealthResponse)
     def health(request: Request) -> HealthResponse:
         return service(request).health()
+
+    @app.get("/requests", response_model=list[RequestSummary])
+    def recent_requests(
+        request: Request, limit: Annotated[int, Query(ge=1, le=500)] = 50
+    ) -> list[RequestSummary]:
+        """Newest analyzed tickets with their outputs and feedback. Never ticket text."""
+        return service(request).recent_requests(limit)
+
+    @app.get("/stats", response_model=StatsResponse)
+    def stats(request: Request) -> StatsResponse:
+        """Totals over the request log for the monitoring dashboard."""
+        return service(request).stats()
+
+    # Mounted last so every API route above takes precedence.
+    if web_dir is not None and (web_dir / "index.html").is_file():
+        app.mount("/", StaticFiles(directory=web_dir, html=True), name="web")
 
     return app
 

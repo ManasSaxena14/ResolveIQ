@@ -32,8 +32,10 @@ from resolveiq.schemas import (
     CategoryScore,
     DraftReply,
     HealthResponse,
+    RequestSummary,
     RiskOut,
     SourceOut,
+    StatsResponse,
 )
 
 logger = logging.getLogger(__name__)
@@ -314,6 +316,39 @@ class Copilot:
         stored = self.request_log.add_feedback(request_id, rating, comment)
         log_event("feedback", request_id=request_id, rating=rating, stored=stored)
         return stored
+
+    def recent_requests(self, limit: int = 50) -> list[RequestSummary]:
+        """Newest requests first, with the latest feedback vote of each."""
+        if self.request_log is None:
+            return []
+        rows = list(reversed(self.request_log.recent(limit)))
+        ratings = self.request_log.ratings([row["request_id"] for row in rows])
+        fields = set(RequestSummary.model_fields) - {"rating"}
+        return [
+            RequestSummary(
+                **{k: v for k, v in row.items() if k in fields},
+                rating=ratings.get(row["request_id"]),
+            )
+            for row in rows
+        ]
+
+    def stats(self) -> StatsResponse:
+        if self.request_log is None:
+            return StatsResponse(
+                requests=0,
+                alerts=0,
+                needs_review=0,
+                mean_risk=None,
+                mean_confidence=None,
+                categories={},
+                draft_status={},
+                latency_median_ms=None,
+                latency_p95_ms=None,
+                feedback={"total": 0, "up": 0, "down": 0, "down_rate": 0.0},
+            )
+        return StatsResponse(
+            **self.request_log.summary(), feedback=self.request_log.feedback_stats().as_dict()
+        )
 
     def health(self) -> HealthResponse:
         components = {
