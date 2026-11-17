@@ -1,0 +1,154 @@
+"""Register trained models in the local MLflow model registry and load them back.
+
+Each model folder is logged as an MLflow ``pyfunc`` model whose artifact is the
+folder itself, then registered under a name and tagged with the ``production``
+alias. The service downloads the folder behind that alias once, caches it by
+version, and loads it with the project's own loaders.
+"""
+
+from __future__ import annotations
+
+import logging
+import re
+import shutil
+import tempfile
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any
+
+from resolveiq.config import Settings
+from resolveiq.tracking import resolve_tracking_uri
+
+logger = logging.getLogger(__name__)
+
+ARTIFACT_KEY = "model_dir"
+# iCloud Drive and some sync tools leave copies such as "model 2.safetensors".
+_SYNC_DUPLICATE = re.compile(r" \d+(\.[^.]+)?$")
+
+
+@dataclass(frozen=True)
+class ResolvedModel:
+    path: Path
+    source: str  # "registry" or "local"
+    version: str
+
+
+def clean_copy(source: Path, destination: Path) -> Path:
+    """Copy a model folder without sync-tool duplicates or hidden files."""
+    destination.mkdir(parents=True, exist_ok=True)
+    for path in sorted(source.iterdir()):
+        if (
+            path.is_file()
+            and not path.name.startswith(".")
+            and not _SYNC_DUPLICATE.search(path.name)
+        ):
+            shutil.copy2(path, destination / path.name)
+    return destination
+
+
+def _python_model(kind: str) -> Any:
+    """A pyfunc wrapper so the registered model can also be served by MLflow."""
+    import mlflow.pyfunc
+
+    class ResolveIQModel(mlflow.pyfunc.PythonModel):
+        def load_context(self, context: Any) -> None:
+            model_dir = Path(context.artifacts[ARTIFACT_KEY])
+            if kind == "classifier":
+                from resolveiq.classifier.predict import TicketClassifier
+
+                self.model = TicketClassifier.load(model_dir)
+            else:
+                from resolveiq.risk.predict import RiskModel
+
+                self.model = RiskModel.load(model_dir)
+
+        def predict(self, context: Any, model_input: Any, params: Any = None) -> Any:
+            subjects = model_input.get("subject", [""] * len(model_input))
+            bodies = model_input["body"]
+            if kind == "classifier":
+                return [
+                    self.model.predict_ticket(body, subject).label
+                    for subject, body in zip(subjects, bodies, strict=True)
+                ]
+            types = model_input.get("type", [""] * len(model_input))
+            return [
+                self.model.score(subject, body, ticket_type).escalation_probability
+                for subject, body, ticket_type in zip(subjects, bodies, types, strict=True)
+            ]
+
+    return ResolveIQModel()
+
+
+def register_model(
+    settings: Settings, kind: str, model_dir: Path, experiment: str, tags: dict[str, str]
+) -> str:
+    """Log ``model_dir`` as a model, register it and point the alias at it.
+
+    Returns the new registry version.
+    """
+    import mlflow
+    from mlflow import MlflowClient
+
+    from resolveiq.tracking import tracked_run
+
+    registry = settings.service.registry
+    name = registry.classifier_name if kind == "classifier" else registry.risk_name
+    with tempfile.TemporaryDirectory() as tmp:
+        staged = clean_copy(model_dir, Path(tmp) / model_dir.name)
+        with tracked_run(settings, experiment, run_name=f"register-{kind}", tags=tags):
+            info = mlflow.pyfunc.log_model(
+                name="model",
+                python_model=_python_model(kind),
+                artifacts={ARTIFACT_KEY: str(staged)},
+                registered_model_name=name,
+                pip_requirements=["-r requirements.txt"],
+            )
+    client = MlflowClient()
+    version = str(info.registered_model_version)
+    client.set_registered_model_alias(name, registry.alias, version)
+    for key, value in tags.items():
+        client.set_model_version_tag(name, version, key, value)
+    return version
+
+
+def resolve_model_dir(settings: Settings, kind: str) -> ResolvedModel:
+    """Folder to load a model from, following ``service.model_source``.
+
+    With ``registry`` the folder behind the alias is downloaded once and cached
+    by version. Any registry problem (no database, no alias, missing files)
+    falls back to the local folder with a warning, so a hosted demo without the
+    registry still starts.
+    """
+    service = settings.service
+    local = settings.resolve(service.classifier_dir if kind == "classifier" else service.risk_dir)
+    if service.model_source == "registry":
+        try:
+            return _download_from_registry(settings, kind)
+        except Exception as exc:  # the registry is optional at run time
+            logger.warning("Registry load of the %s failed (%s); using %s", kind, exc, local)
+    return ResolvedModel(local, "local", "local")
+
+
+def _download_from_registry(settings: Settings, kind: str) -> ResolvedModel:
+    import mlflow
+    from mlflow import MlflowClient
+
+    registry = settings.service.registry
+    name = registry.classifier_name if kind == "classifier" else registry.risk_name
+    mlflow.set_tracking_uri(resolve_tracking_uri(settings.tracking.tracking_uri))
+    version = MlflowClient().get_model_version_by_alias(name, registry.alias).version
+    cache = settings.resolve(registry.cache_dir) / name / str(version)
+    if not cache.is_dir():
+        with tempfile.TemporaryDirectory() as tmp:
+            downloaded = Path(
+                mlflow.artifacts.download_artifacts(
+                    artifact_uri=f"models:/{name}/{version}", dst_path=tmp
+                )
+            )
+            artifact_root = downloaded / "artifacts"
+            folders = [p for p in artifact_root.iterdir() if p.is_dir()]
+            if len(folders) != 1:
+                raise FileNotFoundError(f"Unexpected artifact layout in {artifact_root}")
+            cache.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copytree(folders[0], cache)
+    return ResolvedModel(cache, "registry", f"{name}/v{version}")
