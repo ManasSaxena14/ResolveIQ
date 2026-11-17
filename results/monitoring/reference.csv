@@ -1,0 +1,2452 @@
+text_length,category,confidence,risk_score
+91,Billing and Payments,0.644,0.061
+208,IT Support,0.5442,0.4301
+505,IT Support,0.8156,0.8384
+526,Sales and Pre-Sales,0.9592,0.0327
+320,Billing and Payments,0.9983,0.224
+287,Product Support,0.3593,0.6706
+170,Returns and Exchanges,0.9567,0.1074
+201,IT Support,0.7912,0.0738
+231,Technical Support,0.4686,0.5274
+242,IT Support,0.803,0.1855
+484,IT Support,0.5748,0.1311
+621,General Inquiry,0.894,0.0912
+427,Service Outages and Maintenance,0.9927,0.9459
+514,Product Support,0.6618,0.8529
+465,Technical Support,0.3832,0.2608
+91,Billing and Payments,0.9983,0.1219
+573,Customer Service,0.3368,0.0819
+320,IT Support,0.4124,0.8719
+387,Service Outages and Maintenance,0.3862,0.1008
+213,IT Support,0.5371,0.841
+552,Technical Support,0.4891,0.4108
+584,Returns and Exchanges,0.3028,0.1284
+87,Returns and Exchanges,0.4539,0.4182
+351,IT Support,0.6055,0.8666
+585,Technical Support,0.347,0.2908
+526,IT Support,0.7766,0.8387
+475,Technical Support,0.3869,0.1057
+354,Technical Support,0.2849,0.0848
+617,Customer Service,0.5436,0.2737
+592,Product Support,0.4381,0.9466
+438,Technical Support,0.4643,0.257
+198,IT Support,0.5517,0.8548
+210,Product Support,0.6291,0.0575
+382,Product Support,0.349,0.556
+116,Product Support,0.3036,0.5137
+303,Product Support,0.3543,0.2955
+389,Sales and Pre-Sales,0.2956,0.8775
+231,Sales and Pre-Sales,0.7403,0.0789
+605,Billing and Payments,0.9985,0.0857
+285,Product Support,0.5916,0.288
+532,Technical Support,0.4463,0.8623
+373,Returns and Exchanges,0.7117,0.174
+626,Product Support,0.5021,0.3214
+645,Technical Support,0.4509,0.6899
+247,IT Support,0.7105,0.7314
+428,Customer Service,0.578,0.6239
+607,Billing and Payments,0.5693,0.4528
+599,Product Support,0.4452,0.6861
+571,Technical Support,0.4879,0.118
+99,Returns and Exchanges,0.2668,0.7478
+627,Customer Service,0.3911,0.3644
+335,Customer Service,0.2694,0.3546
+257,Customer Service,0.5385,0.0592
+482,IT Support,0.3319,0.2271
+643,Product Support,0.6598,0.0361
+260,Human Resources,0.2126,0.2521
+69,IT Support,0.5495,0.5942
+656,Product Support,0.3377,0.7636
+410,Product Support,0.4716,0.1236
+356,Technical Support,0.3893,0.1909
+100,Product Support,0.4429,0.7666
+549,IT Support,0.8985,0.7308
+443,Product Support,0.641,0.097
+431,Product Support,0.4511,0.1258
+352,Technical Support,0.4826,0.3643
+390,Product Support,0.4231,0.6354
+460,Technical Support,0.3849,0.2451
+330,Technical Support,0.2901,0.6728
+436,Customer Service,0.2786,0.6544
+325,IT Support,0.9048,0.7216
+524,Product Support,0.5599,0.201
+813,IT Support,0.5332,0.5218
+336,IT Support,0.6496,0.2352
+123,Customer Service,0.4843,0.4599
+528,Billing and Payments,0.9985,0.0975
+670,Returns and Exchanges,0.9889,0.4318
+505,Product Support,0.6063,0.6013
+545,Customer Service,0.7081,0.3123
+145,Billing and Payments,0.6672,0.1681
+103,Customer Service,0.2285,0.3623
+727,Human Resources,0.9907,0.0752
+106,Customer Service,0.4545,0.3097
+448,Billing and Payments,0.9984,0.6238
+594,Service Outages and Maintenance,0.9303,0.6302
+496,Billing and Payments,0.9985,0.094
+375,Technical Support,0.4752,0.926
+565,Sales and Pre-Sales,0.6742,0.1525
+272,Customer Service,0.377,0.2864
+286,Technical Support,0.5008,0.6557
+411,Product Support,0.4592,0.4011
+503,Product Support,0.4056,0.6875
+331,Product Support,0.4143,0.0577
+694,Product Support,0.4847,0.0627
+517,Product Support,0.3883,0.8457
+605,IT Support,0.8798,0.8536
+1145,Product Support,0.3319,0.4663
+633,Customer Service,0.4505,0.0343
+108,Product Support,0.4847,0.1241
+605,IT Support,0.8832,0.2822
+611,Technical Support,0.5663,0.6111
+270,Product Support,0.385,0.309
+557,Technical Support,0.2329,0.4737
+569,Service Outages and Maintenance,0.9901,0.8807
+442,Technical Support,0.3687,0.8708
+301,Technical Support,0.403,0.2441
+549,Technical Support,0.5127,0.4407
+203,IT Support,0.4308,0.0723
+532,Returns and Exchanges,0.6018,0.8049
+177,Customer Service,0.5993,0.3239
+350,Billing and Payments,0.9984,0.0536
+634,Customer Service,0.4175,0.4325
+256,Billing and Payments,0.9985,0.1711
+155,Service Outages and Maintenance,0.4297,0.825
+636,IT Support,0.7113,0.7337
+345,Technical Support,0.558,0.7486
+547,IT Support,0.542,0.8437
+76,IT Support,0.2614,0.1313
+283,Customer Service,0.4234,0.4452
+528,Product Support,0.6473,0.6297
+377,Customer Service,0.3853,0.1039
+154,Billing and Payments,0.4685,0.3655
+488,Customer Service,0.6217,0.6723
+195,Returns and Exchanges,0.8063,0.2626
+309,Product Support,0.5426,0.7583
+568,Technical Support,0.3528,0.2289
+406,IT Support,0.9185,0.3569
+470,Billing and Payments,0.7886,0.1351
+296,Billing and Payments,0.8681,0.696
+506,Technical Support,0.3525,0.8947
+330,Technical Support,0.3258,0.9525
+585,Customer Service,0.4385,0.1061
+283,Returns and Exchanges,0.9896,0.0838
+560,Product Support,0.4412,0.2127
+154,Product Support,0.4445,0.3457
+333,Service Outages and Maintenance,0.9928,0.9049
+541,IT Support,0.8416,0.0656
+619,Billing and Payments,0.9985,0.7989
+178,IT Support,0.3559,0.1459
+273,Product Support,0.5594,0.4143
+263,Customer Service,0.4054,0.7668
+136,Returns and Exchanges,0.7322,0.077
+617,Service Outages and Maintenance,0.9927,0.8804
+108,IT Support,0.5707,0.0931
+465,Human Resources,0.4797,0.0776
+133,Service Outages and Maintenance,0.9923,0.6289
+743,IT Support,0.5591,0.8907
+269,IT Support,0.5773,0.2657
+615,Product Support,0.4269,0.7242
+549,Returns and Exchanges,0.6455,0.1701
+527,IT Support,0.7256,0.9481
+333,Product Support,0.4221,0.5726
+420,Technical Support,0.5641,0.8176
+92,Customer Service,0.4414,0.1719
+130,Technical Support,0.4984,0.8567
+153,IT Support,0.6979,0.3413
+604,Sales and Pre-Sales,0.514,0.1602
+278,Product Support,0.4471,0.0972
+579,Product Support,0.4569,0.1874
+112,Product Support,0.5076,0.2579
+207,Billing and Payments,0.92,0.2338
+504,IT Support,0.731,0.2274
+683,Product Support,0.4901,0.1257
+89,Technical Support,0.5726,0.8068
+218,Human Resources,0.9876,0.2078
+589,Technical Support,0.4237,0.0778
+132,Service Outages and Maintenance,0.612,0.1126
+646,Technical Support,0.4238,0.1949
+197,Technical Support,0.5126,0.7833
+617,Technical Support,0.5472,0.6867
+594,General Inquiry,0.4306,0.0614
+108,IT Support,0.8691,0.284
+458,Human Resources,0.6613,0.7716
+456,Technical Support,0.4557,0.1615
+645,Returns and Exchanges,0.9091,0.078
+575,Product Support,0.4624,0.253
+439,Technical Support,0.4657,0.8848
+222,Sales and Pre-Sales,0.3804,0.2557
+304,Technical Support,0.2892,0.426
+635,IT Support,0.8804,0.0458
+224,Technical Support,0.3734,0.5666
+519,Product Support,0.5147,0.6588
+302,Billing and Payments,0.5394,0.2955
+224,Product Support,0.5557,0.0829
+594,Product Support,0.6529,0.108
+594,Technical Support,0.4728,0.5098
+186,IT Support,0.4203,0.7655
+197,Technical Support,0.3242,0.5616
+382,Billing and Payments,0.9986,0.583
+153,Customer Service,0.3349,0.4529
+139,Returns and Exchanges,0.4199,0.1992
+268,Human Resources,0.9633,0.0185
+692,Customer Service,0.4546,0.4468
+583,Product Support,0.4906,0.3018
+446,IT Support,0.333,0.2893
+187,Customer Service,0.3957,0.2721
+295,IT Support,0.6495,0.2136
+143,IT Support,0.5549,0.542
+472,Product Support,0.3642,0.1436
+158,Technical Support,0.3439,0.4994
+379,Technical Support,0.5832,0.4251
+584,Technical Support,0.3148,0.4562
+410,Technical Support,0.5152,0.6075
+573,Product Support,0.4427,0.0717
+390,Customer Service,0.4828,0.1141
+292,Technical Support,0.3681,0.0535
+591,Technical Support,0.3623,0.1299
+431,Product Support,0.4,0.7351
+606,Technical Support,0.3719,0.6796
+374,IT Support,0.6792,0.622
+593,IT Support,0.4428,0.7277
+424,Technical Support,0.4908,0.9015
+508,Technical Support,0.4079,0.7552
+215,Human Resources,0.94,0.135
+652,Product Support,0.4682,0.235
+601,Product Support,0.5881,0.0544
+623,IT Support,0.5481,0.2226
+306,Customer Service,0.3843,0.2051
+400,Technical Support,0.4075,0.6026
+85,Product Support,0.2939,0.3976
+168,Product Support,0.3179,0.281
+279,Billing and Payments,0.9984,0.395
+584,Technical Support,0.4356,0.7947
+622,Product Support,0.3862,0.075
+209,Product Support,0.5805,0.3759
+517,Product Support,0.5674,0.838
+288,Billing and Payments,0.7823,0.138
+323,Customer Service,0.5534,0.3668
+565,Technical Support,0.6488,0.8425
+141,Customer Service,0.3092,0.199
+289,Billing and Payments,0.9986,0.1081
+329,Technical Support,0.6267,0.8996
+541,Billing and Payments,0.3667,0.4391
+190,Product Support,0.3108,0.1412
+122,IT Support,0.4118,0.0509
+290,Technical Support,0.5297,0.4836
+491,Billing and Payments,0.5006,0.2761
+506,Returns and Exchanges,0.4447,0.6063
+540,Product Support,0.5733,0.3852
+585,Billing and Payments,0.9985,0.0991
+127,Billing and Payments,0.9984,0.2113
+617,Technical Support,0.5468,0.5702
+360,Product Support,0.5421,0.3159
+622,IT Support,0.7259,0.1492
+570,IT Support,0.7005,0.0841
+582,IT Support,0.7809,0.1402
+563,Billing and Payments,0.7658,0.1042
+564,IT Support,0.4942,0.8997
+231,IT Support,0.6726,0.816
+406,Technical Support,0.5402,0.4223
+384,IT Support,0.5083,0.1123
+356,Product Support,0.3265,0.3318
+176,Customer Service,0.6979,0.1221
+270,Service Outages and Maintenance,0.8135,0.5684
+255,Product Support,0.3019,0.2953
+329,Service Outages and Maintenance,0.9926,0.0578
+555,Billing and Payments,0.9985,0.1066
+354,IT Support,0.7314,0.8867
+538,Billing and Payments,0.9781,0.2731
+211,Technical Support,0.5188,0.3469
+554,Technical Support,0.3801,0.7788
+307,Product Support,0.4739,0.6458
+415,Sales and Pre-Sales,0.3097,0.2128
+547,Technical Support,0.365,0.1505
+431,Technical Support,0.3585,0.2556
+624,Billing and Payments,0.9985,0.824
+296,IT Support,0.6111,0.8011
+338,IT Support,0.7214,0.831
+247,Returns and Exchanges,0.99,0.304
+158,Service Outages and Maintenance,0.5332,0.8907
+663,Technical Support,0.4148,0.1423
+465,Technical Support,0.5125,0.9049
+219,IT Support,0.6196,0.0709
+526,Product Support,0.354,0.7464
+653,Sales and Pre-Sales,0.5172,0.1701
+128,Billing and Payments,0.9985,0.7164
+618,Product Support,0.5709,0.0584
+459,Customer Service,0.6963,0.2829
+391,Technical Support,0.4422,0.5429
+86,Service Outages and Maintenance,0.9923,0.7847
+255,Technical Support,0.4938,0.2759
+488,Technical Support,0.568,0.736
+360,Billing and Payments,0.4129,0.1569
+622,IT Support,0.3884,0.2541
+421,Service Outages and Maintenance,0.9922,0.9542
+590,Product Support,0.3318,0.1668
+614,Technical Support,0.5714,0.8137
+584,Customer Service,0.487,0.186
+545,Technical Support,0.4253,0.049
+394,Product Support,0.4927,0.1182
+184,IT Support,0.7687,0.6569
+213,Returns and Exchanges,0.356,0.8545
+557,Customer Service,0.5095,0.8907
+152,Customer Service,0.3269,0.8543
+505,IT Support,0.6416,0.0774
+653,IT Support,0.6981,0.8513
+659,IT Support,0.7781,0.5456
+249,Sales and Pre-Sales,0.7024,0.7099
+434,Returns and Exchanges,0.439,0.6419
+161,Product Support,0.396,0.0566
+375,Product Support,0.352,0.1266
+590,Returns and Exchanges,0.4251,0.2379
+600,IT Support,0.5232,0.3206
+435,Technical Support,0.3295,0.0785
+463,Technical Support,0.409,0.8017
+567,Billing and Payments,0.9985,0.2149
+247,Product Support,0.4294,0.1978
+183,Billing and Payments,0.2468,0.3172
+574,Product Support,0.3379,0.0783
+682,Product Support,0.6101,0.7329
+406,Technical Support,0.5447,0.2315
+571,IT Support,0.7259,0.9025
+556,Technical Support,0.322,0.0872
+255,IT Support,0.7752,0.6684
+410,Technical Support,0.4937,0.2356
+520,Customer Service,0.5559,0.4246
+79,IT Support,0.7171,0.7291
+408,General Inquiry,0.4688,0.1388
+209,IT Support,0.8208,0.6841
+182,Customer Service,0.633,0.5722
+588,Billing and Payments,0.9807,0.2063
+548,Sales and Pre-Sales,0.2444,0.1956
+140,Service Outages and Maintenance,0.9914,0.3272
+388,IT Support,0.5604,0.16
+406,IT Support,0.8191,0.9713
+387,Sales and Pre-Sales,0.7876,0.3994
+400,Billing and Payments,0.9984,0.1825
+417,IT Support,0.4668,0.7788
+546,Technical Support,0.2554,0.0811
+546,Service Outages and Maintenance,0.939,0.821
+634,Billing and Payments,0.9983,0.439
+140,Customer Service,0.5164,0.2455
+325,Technical Support,0.5004,0.0642
+231,Customer Service,0.3515,0.7793
+538,Sales and Pre-Sales,0.8587,0.2489
+187,Customer Service,0.3979,0.348
+577,Sales and Pre-Sales,0.9708,0.2046
+504,Billing and Payments,0.9986,0.0888
+456,Technical Support,0.5957,0.1195
+134,Billing and Payments,0.9982,0.7672
+643,IT Support,0.6807,0.1141
+227,IT Support,0.7721,0.8474
+615,Product Support,0.4922,0.697
+288,Product Support,0.36,0.3525
+215,IT Support,0.3522,0.3722
+643,Returns and Exchanges,0.7233,0.0743
+104,Returns and Exchanges,0.9278,0.1386
+422,Sales and Pre-Sales,0.4143,0.1849
+334,Returns and Exchanges,0.5785,0.0788
+407,Technical Support,0.3628,0.1254
+96,Billing and Payments,0.4389,0.2428
+504,Returns and Exchanges,0.5834,0.0921
+495,Product Support,0.6293,0.0308
+417,Customer Service,0.4109,0.2442
+578,Customer Service,0.3216,0.3492
+557,Technical Support,0.4884,0.5029
+367,Product Support,0.5127,0.0635
+293,Technical Support,0.3719,0.114
+234,IT Support,0.3777,0.3622
+660,IT Support,0.6909,0.8589
+408,Billing and Payments,0.9983,0.1079
+174,Product Support,0.6793,0.17
+553,Customer Service,0.5432,0.3648
+469,Billing and Payments,0.3427,0.7853
+277,Returns and Exchanges,0.9521,0.1861
+287,Product Support,0.4743,0.6323
+533,Customer Service,0.4073,0.6665
+310,IT Support,0.6988,0.5561
+366,Billing and Payments,0.9985,0.2908
+461,Technical Support,0.5213,0.8818
+682,Technical Support,0.2533,0.3447
+559,Human Resources,0.9426,0.532
+145,Technical Support,0.3978,0.2189
+191,Billing and Payments,0.9985,0.3186
+411,Returns and Exchanges,0.9833,0.126
+583,Customer Service,0.3848,0.2364
+457,Service Outages and Maintenance,0.9926,0.5979
+401,Technical Support,0.4699,0.9069
+559,Technical Support,0.4747,0.8042
+243,Sales and Pre-Sales,0.8804,0.5196
+465,Product Support,0.5331,0.3705
+574,Technical Support,0.56,0.1437
+603,General Inquiry,0.8998,0.1169
+251,IT Support,0.8409,0.5544
+153,Customer Service,0.4381,0.095
+366,Technical Support,0.4697,0.6575
+376,Product Support,0.4168,0.1336
+505,Returns and Exchanges,0.943,0.1127
+562,IT Support,0.5493,0.3833
+339,Billing and Payments,0.9695,0.1837
+221,Technical Support,0.3758,0.0474
+200,Customer Service,0.45,0.1443
+575,Customer Service,0.5303,0.2589
+381,Product Support,0.423,0.8619
+570,Customer Service,0.3798,0.6057
+547,IT Support,0.7602,0.1432
+216,Technical Support,0.4027,0.0862
+497,Technical Support,0.6305,0.7659
+335,IT Support,0.3625,0.3775
+719,Returns and Exchanges,0.7313,0.1443
+349,Product Support,0.6459,0.7247
+206,IT Support,0.2923,0.2527
+547,Product Support,0.5191,0.2226
+572,Customer Service,0.4296,0.1414
+385,IT Support,0.3138,0.0787
+153,Returns and Exchanges,0.3164,0.2554
+617,Returns and Exchanges,0.7083,0.1606
+120,Technical Support,0.3479,0.0871
+80,Technical Support,0.4541,0.2595
+224,Technical Support,0.3307,0.7806
+514,Technical Support,0.557,0.8075
+511,IT Support,0.5117,0.0695
+566,Technical Support,0.489,0.1689
+408,Returns and Exchanges,0.4245,0.6351
+635,Product Support,0.6491,0.0313
+356,Product Support,0.3733,0.1485
+592,Sales and Pre-Sales,0.6538,0.2066
+280,Customer Service,0.3399,0.0536
+341,Customer Service,0.4483,0.1383
+103,IT Support,0.5588,0.2206
+198,Product Support,0.6168,0.0459
+518,Product Support,0.3716,0.6216
+215,Billing and Payments,0.5345,0.7433
+532,Product Support,0.5421,0.0724
+230,Product Support,0.4253,0.1286
+159,Billing and Payments,0.582,0.8473
+114,IT Support,0.6971,0.6366
+263,Billing and Payments,0.9426,0.2162
+358,Product Support,0.6932,0.0936
+405,Product Support,0.3107,0.2432
+554,Product Support,0.5397,0.5642
+294,Customer Service,0.4276,0.2393
+336,Customer Service,0.6672,0.1097
+81,Technical Support,0.3805,0.0712
+387,Product Support,0.6794,0.2628
+528,General Inquiry,0.8377,0.1776
+676,Returns and Exchanges,0.7404,0.3913
+341,Product Support,0.4221,0.8141
+654,Returns and Exchanges,0.8952,0.1901
+613,Product Support,0.5257,0.2688
+552,Billing and Payments,0.9985,0.1052
+605,IT Support,0.2717,0.3072
+462,Technical Support,0.3997,0.2751
+571,IT Support,0.7211,0.751
+442,Returns and Exchanges,0.4681,0.398
+502,Customer Service,0.3044,0.9497
+591,Technical Support,0.3661,0.8227
+527,Product Support,0.4905,0.1567
+520,Customer Service,0.456,0.1166
+541,Sales and Pre-Sales,0.9872,0.0233
+532,Technical Support,0.4341,0.8891
+547,Returns and Exchanges,0.6448,0.5197
+454,Returns and Exchanges,0.4697,0.1279
+247,Product Support,0.405,0.2877
+486,Technical Support,0.5519,0.4278
+566,Billing and Payments,0.9985,0.5919
+570,Product Support,0.4253,0.7562
+105,Technical Support,0.3446,0.689
+89,Technical Support,0.559,0.1289
+485,IT Support,0.3766,0.1411
+295,IT Support,0.6201,0.7912
+370,Billing and Payments,0.9386,0.2537
+239,Billing and Payments,0.9986,0.1456
+450,IT Support,0.5715,0.8037
+289,IT Support,0.6417,0.377
+539,Customer Service,0.4042,0.1418
+472,IT Support,0.6203,0.361
+184,Product Support,0.5501,0.3023
+682,Product Support,0.2829,0.7069
+614,Customer Service,0.4889,0.0973
+306,Product Support,0.5548,0.6751
+572,Returns and Exchanges,0.9815,0.8811
+634,General Inquiry,0.8833,0.0596
+311,Billing and Payments,0.9985,0.1725
+131,Product Support,0.5794,0.3035
+264,General Inquiry,0.9746,0.0812
+169,IT Support,0.6027,0.6431
+607,Technical Support,0.4274,0.7092
+624,Customer Service,0.3649,0.1989
+394,Billing and Payments,0.4779,0.1088
+94,Product Support,0.3157,0.0983
+90,IT Support,0.2649,0.4553
+315,Technical Support,0.4173,0.6399
+267,Technical Support,0.3816,0.4077
+577,IT Support,0.6746,0.6634
+475,IT Support,0.8719,0.1334
+150,IT Support,0.8515,0.8874
+213,Customer Service,0.7024,0.1221
+550,Customer Service,0.5917,0.2415
+598,Customer Service,0.5986,0.1091
+289,IT Support,0.6811,0.7814
+578,Technical Support,0.5941,0.8488
+402,Product Support,0.5232,0.3084
+569,Technical Support,0.4511,0.2017
+156,Product Support,0.387,0.2401
+139,Customer Service,0.5154,0.3194
+233,IT Support,0.6812,0.5058
+333,Technical Support,0.5414,0.9185
+683,Product Support,0.2982,0.1296
+534,IT Support,0.4084,0.2839
+404,IT Support,0.5903,0.2466
+447,General Inquiry,0.271,0.9245
+563,Product Support,0.4992,0.9574
+138,Customer Service,0.5818,0.1842
+175,Product Support,0.3736,0.3945
+577,IT Support,0.3761,0.1212
+492,Product Support,0.4113,0.0611
+571,Technical Support,0.4375,0.414
+125,Technical Support,0.5921,0.0471
+222,Customer Service,0.3705,0.272
+244,Technical Support,0.3185,0.2602
+80,Technical Support,0.5155,0.4453
+429,Technical Support,0.3834,0.1493
+236,Customer Service,0.322,0.2833
+693,Product Support,0.579,0.3313
+639,Product Support,0.5222,0.1131
+325,IT Support,0.6751,0.1374
+249,IT Support,0.4485,0.8722
+180,IT Support,0.9264,0.5248
+631,Returns and Exchanges,0.9694,0.0979
+526,Technical Support,0.5182,0.0572
+680,IT Support,0.3827,0.1636
+536,Customer Service,0.3648,0.1042
+264,Technical Support,0.5719,0.6803
+408,Product Support,0.6804,0.2216
+395,Technical Support,0.6689,0.5936
+649,Product Support,0.3079,0.1734
+158,Customer Service,0.4406,0.3
+435,Billing and Payments,0.6527,0.7145
+442,Customer Service,0.4492,0.1564
+260,IT Support,0.506,0.3504
+627,Technical Support,0.6619,0.607
+486,Technical Support,0.3145,0.5205
+105,Billing and Payments,0.9984,0.7483
+605,Technical Support,0.4439,0.2525
+163,Product Support,0.5564,0.6291
+563,Service Outages and Maintenance,0.9935,0.2162
+497,Customer Service,0.3912,0.8242
+496,Product Support,0.3813,0.3003
+508,IT Support,0.4989,0.1544
+141,Service Outages and Maintenance,0.9932,0.0786
+655,Technical Support,0.5483,0.9282
+564,Product Support,0.4476,0.1466
+594,Product Support,0.5938,0.1362
+274,Technical Support,0.5198,0.5342
+458,Technical Support,0.4456,0.521
+610,Returns and Exchanges,0.4043,0.1677
+132,General Inquiry,0.8781,0.067
+560,Customer Service,0.3616,0.0412
+538,Sales and Pre-Sales,0.9362,0.0842
+293,IT Support,0.6357,0.824
+189,IT Support,0.7485,0.0476
+580,Technical Support,0.534,0.1161
+616,Technical Support,0.3629,0.1164
+325,Product Support,0.4805,0.7344
+144,Customer Service,0.5481,0.0401
+459,Product Support,0.3396,0.1967
+488,Technical Support,0.4803,0.8937
+122,Billing and Payments,0.9985,0.1607
+216,Product Support,0.5145,0.1046
+224,Returns and Exchanges,0.9359,0.2375
+512,Product Support,0.3742,0.1716
+585,Technical Support,0.3652,0.8156
+543,Technical Support,0.4155,0.4254
+312,IT Support,0.3382,0.6067
+583,Product Support,0.3798,0.758
+188,Customer Service,0.4399,0.3836
+506,Technical Support,0.5358,0.1501
+618,Technical Support,0.5581,0.2277
+95,Customer Service,0.517,0.1695
+235,Technical Support,0.3952,0.4845
+164,Service Outages and Maintenance,0.9926,0.5752
+283,Service Outages and Maintenance,0.9736,0.7847
+532,IT Support,0.8846,0.2256
+251,Product Support,0.4359,0.1038
+709,Product Support,0.3844,0.2442
+397,Sales and Pre-Sales,0.9133,0.1743
+285,Technical Support,0.3128,0.2645
+598,Product Support,0.6235,0.3118
+295,Technical Support,0.521,0.4208
+593,Product Support,0.4381,0.1464
+252,Human Resources,0.5026,0.3132
+396,Customer Service,0.4007,0.1576
+181,Customer Service,0.482,0.0696
+146,Human Resources,0.535,0.1277
+109,Technical Support,0.5504,0.1817
+455,Customer Service,0.3924,0.1307
+566,Billing and Payments,0.9985,0.1159
+622,IT Support,0.6989,0.2735
+408,Technical Support,0.5643,0.66
+139,Customer Service,0.3384,0.1999
+400,Product Support,0.4059,0.864
+200,Technical Support,0.3826,0.0753
+147,Customer Service,0.5332,0.495
+331,IT Support,0.8189,0.8551
+617,IT Support,0.7884,0.8368
+203,General Inquiry,0.4299,0.2279
+445,Technical Support,0.4188,0.8589
+309,Technical Support,0.5734,0.1836
+644,Returns and Exchanges,0.6218,0.1409
+361,Product Support,0.5632,0.1328
+537,IT Support,0.8376,0.3035
+538,Technical Support,0.5753,0.5891
+570,Technical Support,0.5856,0.177
+248,Returns and Exchanges,0.4764,0.6217
+560,IT Support,0.8535,0.09
+76,Technical Support,0.4991,0.2371
+294,Customer Service,0.4547,0.2296
+438,Product Support,0.4865,0.2869
+209,Technical Support,0.6414,0.6245
+595,Technical Support,0.344,0.4649
+584,IT Support,0.868,0.8974
+366,Product Support,0.4545,0.1788
+293,IT Support,0.4988,0.8563
+497,IT Support,0.4634,0.7142
+174,Billing and Payments,0.9984,0.2803
+383,Customer Service,0.3928,0.284
+534,IT Support,0.8562,0.2125
+613,Sales and Pre-Sales,0.9766,0.0903
+623,Sales and Pre-Sales,0.6421,0.1387
+516,Service Outages and Maintenance,0.6714,0.6109
+260,Billing and Payments,0.4433,0.2744
+281,Customer Service,0.3653,0.2394
+216,Customer Service,0.7402,0.1198
+579,Product Support,0.4034,0.5319
+377,Service Outages and Maintenance,0.2819,0.3697
+263,Product Support,0.3988,0.3827
+163,Customer Service,0.309,0.4382
+697,Product Support,0.4723,0.645
+565,Service Outages and Maintenance,0.2888,0.6587
+372,Technical Support,0.5427,0.171
+294,IT Support,0.5452,0.3118
+199,Returns and Exchanges,0.7216,0.3608
+80,Billing and Payments,0.9987,0.6882
+351,Product Support,0.3457,0.1942
+215,IT Support,0.5992,0.6399
+276,Product Support,0.4434,0.7861
+614,Returns and Exchanges,0.988,0.1119
+498,Product Support,0.5327,0.1048
+324,Customer Service,0.296,0.1092
+611,Customer Service,0.309,0.6484
+295,Product Support,0.519,0.1354
+430,Customer Service,0.4971,0.6815
+610,Technical Support,0.4267,0.6777
+564,IT Support,0.8718,0.6205
+359,IT Support,0.8285,0.447
+413,Technical Support,0.5664,0.5522
+542,IT Support,0.7418,0.4367
+385,Technical Support,0.4833,0.8613
+560,Customer Service,0.5674,0.2686
+350,Technical Support,0.4571,0.3289
+532,Billing and Payments,0.9985,0.4037
+577,Product Support,0.5037,0.1725
+583,General Inquiry,0.9455,0.0696
+137,Product Support,0.3431,0.5813
+589,Customer Service,0.4285,0.3811
+616,Technical Support,0.4486,0.9554
+912,Returns and Exchanges,0.961,0.0765
+676,Product Support,0.4135,0.3249
+437,Billing and Payments,0.8428,0.7924
+381,Technical Support,0.3849,0.8186
+396,IT Support,0.4451,0.0975
+236,Customer Service,0.2811,0.1311
+343,Service Outages and Maintenance,0.7849,0.8991
+558,Service Outages and Maintenance,0.9939,0.9333
+156,Returns and Exchanges,0.9005,0.2341
+505,Human Resources,0.4693,0.6153
+392,Technical Support,0.5848,0.2156
+548,Product Support,0.4572,0.693
+458,Technical Support,0.4691,0.0864
+163,Product Support,0.5562,0.2017
+313,Technical Support,0.3998,0.596
+558,Product Support,0.6034,0.1802
+151,Billing and Payments,0.9983,0.0985
+605,Technical Support,0.403,0.8879
+382,IT Support,0.2744,0.2202
+120,Technical Support,0.2459,0.3264
+229,Billing and Payments,0.9985,0.6602
+552,Product Support,0.5752,0.3043
+537,Customer Service,0.3399,0.1603
+391,Billing and Payments,0.9984,0.2979
+145,Sales and Pre-Sales,0.5314,0.4003
+390,Technical Support,0.3529,0.2526
+274,Product Support,0.4837,0.0957
+569,Human Resources,0.9939,0.097
+510,Customer Service,0.3159,0.0728
+341,Customer Service,0.5805,0.4821
+80,Product Support,0.3411,0.2512
+362,Service Outages and Maintenance,0.4183,0.404
+155,Billing and Payments,0.9986,0.1326
+595,Customer Service,0.439,0.6494
+500,IT Support,0.586,0.6457
+96,General Inquiry,0.1898,0.3069
+380,Product Support,0.5854,0.452
+591,Service Outages and Maintenance,0.9923,0.7543
+631,Billing and Payments,0.9986,0.7988
+623,IT Support,0.7202,0.5394
+604,Billing and Payments,0.9985,0.0908
+447,Returns and Exchanges,0.3962,0.0954
+314,Product Support,0.3895,0.065
+598,Technical Support,0.4007,0.7999
+308,Billing and Payments,0.9985,0.7041
+609,Product Support,0.6219,0.3497
+441,Technical Support,0.4317,0.8273
+556,Technical Support,0.2947,0.5517
+562,General Inquiry,0.9096,0.156
+417,IT Support,0.4774,0.8829
+296,Customer Service,0.3469,0.6685
+553,Sales and Pre-Sales,0.5308,0.2408
+642,IT Support,0.6699,0.4891
+185,Customer Service,0.4263,0.1149
+585,Service Outages and Maintenance,0.9317,0.7989
+156,Customer Service,0.566,0.231
+130,Returns and Exchanges,0.743,0.1623
+527,Product Support,0.4972,0.0696
+368,IT Support,0.8489,0.9281
+590,Customer Service,0.4889,0.0653
+303,IT Support,0.773,0.0794
+611,Customer Service,0.4754,0.0531
+614,Product Support,0.6005,0.142
+496,Service Outages and Maintenance,0.9875,0.5722
+451,Product Support,0.4616,0.1566
+346,IT Support,0.4303,0.3851
+646,Billing and Payments,0.9985,0.0839
+169,Customer Service,0.4924,0.2559
+467,Customer Service,0.4577,0.6461
+413,Billing and Payments,0.5148,0.1461
+426,Human Resources,0.9945,0.1176
+658,Service Outages and Maintenance,0.9182,0.9474
+536,Technical Support,0.6325,0.8936
+557,Technical Support,0.2745,0.1295
+401,Billing and Payments,0.9985,0.8315
+450,Service Outages and Maintenance,0.9899,0.24
+343,Customer Service,0.3551,0.0807
+521,Billing and Payments,0.9984,0.2178
+608,Product Support,0.4949,0.1703
+576,Product Support,0.4515,0.0304
+516,Billing and Payments,0.5915,0.2959
+581,Technical Support,0.3829,0.2754
+215,Customer Service,0.4619,0.2543
+641,Technical Support,0.4599,0.713
+222,Customer Service,0.3414,0.0482
+450,Returns and Exchanges,0.7672,0.3001
+430,Customer Service,0.5267,0.3386
+597,Customer Service,0.5359,0.0974
+239,Product Support,0.6164,0.5378
+144,Returns and Exchanges,0.3274,0.676
+312,Customer Service,0.4431,0.076
+607,Customer Service,0.5502,0.1732
+617,Billing and Payments,0.474,0.7627
+444,Customer Service,0.4216,0.0835
+583,Technical Support,0.3834,0.9258
+548,Service Outages and Maintenance,0.9928,0.7364
+554,Billing and Payments,0.9985,0.2176
+610,Customer Service,0.5042,0.1987
+548,Technical Support,0.5146,0.7622
+390,Technical Support,0.3916,0.7763
+332,Technical Support,0.3468,0.0347
+120,Returns and Exchanges,0.785,0.3779
+623,Customer Service,0.2567,0.186
+577,Billing and Payments,0.9986,0.2135
+382,Technical Support,0.3776,0.1379
+325,IT Support,0.639,0.0547
+395,Technical Support,0.4728,0.1669
+198,Technical Support,0.3303,0.1766
+226,Billing and Payments,0.9986,0.693
+600,Product Support,0.3297,0.3353
+573,Technical Support,0.2954,0.2971
+603,Billing and Payments,0.9055,0.7146
+219,Product Support,0.5168,0.6135
+164,Product Support,0.4019,0.5206
+456,Customer Service,0.4145,0.1695
+540,Product Support,0.3949,0.1439
+609,Product Support,0.3757,0.6056
+198,IT Support,0.4311,0.7083
+519,Technical Support,0.5143,0.9447
+241,IT Support,0.7712,0.6489
+169,Customer Service,0.4221,0.082
+522,General Inquiry,0.4513,0.1371
+352,Technical Support,0.3686,0.8497
+566,Technical Support,0.4012,0.1847
+567,Technical Support,0.3994,0.2891
+85,Technical Support,0.2787,0.6301
+254,Customer Service,0.5865,0.1558
+379,Technical Support,0.5799,0.7483
+85,Product Support,0.5004,0.5288
+80,Technical Support,0.5174,0.6432
+360,Customer Service,0.3379,0.146
+510,IT Support,0.4618,0.2971
+141,IT Support,0.8349,0.517
+272,Service Outages and Maintenance,0.993,0.5476
+291,Technical Support,0.4591,0.1362
+328,Technical Support,0.4482,0.6361
+307,Customer Service,0.3079,0.2718
+280,Product Support,0.5996,0.2835
+549,Customer Service,0.3486,0.2737
+355,Technical Support,0.4016,0.8004
+613,Customer Service,0.6281,0.1847
+357,IT Support,0.7019,0.3224
+106,Product Support,0.3939,0.0552
+579,IT Support,0.6592,0.72
+606,Service Outages and Maintenance,0.9927,0.9011
+63,Product Support,0.3277,0.3555
+429,Billing and Payments,0.9986,0.1848
+608,IT Support,0.7108,0.5077
+430,Returns and Exchanges,0.2758,0.1536
+715,IT Support,0.4715,0.8144
+280,Product Support,0.473,0.1331
+135,Product Support,0.3598,0.7301
+671,Technical Support,0.3252,0.56
+282,Customer Service,0.6237,0.2829
+494,Technical Support,0.3345,0.1074
+501,Technical Support,0.3527,0.87
+298,IT Support,0.6493,0.2157
+397,IT Support,0.2436,0.4799
+296,Technical Support,0.5403,0.8306
+587,Product Support,0.3556,0.1085
+522,Product Support,0.4687,0.6324
+669,Human Resources,0.964,0.1728
+446,Technical Support,0.4122,0.4438
+573,Returns and Exchanges,0.5082,0.0588
+594,Billing and Payments,0.9985,0.6195
+540,Product Support,0.422,0.1207
+525,Product Support,0.3697,0.1566
+98,Technical Support,0.3839,0.3111
+359,Returns and Exchanges,0.3325,0.2753
+166,Service Outages and Maintenance,0.9936,0.7023
+611,IT Support,0.8457,0.1476
+392,IT Support,0.4852,0.5504
+133,Customer Service,0.3774,0.0396
+297,Product Support,0.3865,0.1655
+342,IT Support,0.79,0.8328
+480,Technical Support,0.4046,0.511
+85,IT Support,0.473,0.8276
+463,IT Support,0.5932,0.3469
+587,Billing and Payments,0.711,0.3116
+537,IT Support,0.2982,0.6391
+533,Customer Service,0.4471,0.0316
+653,Customer Service,0.5438,0.0623
+592,Customer Service,0.3839,0.2244
+600,IT Support,0.5528,0.2124
+588,Billing and Payments,0.7467,0.2487
+105,Technical Support,0.4021,0.248
+106,Technical Support,0.5728,0.6135
+224,IT Support,0.7586,0.0338
+132,Customer Service,0.671,0.3719
+624,Technical Support,0.3706,0.7017
+94,Billing and Payments,0.9976,0.1748
+367,Product Support,0.607,0.1764
+585,Product Support,0.5706,0.8185
+312,IT Support,0.7493,0.4651
+326,Customer Service,0.6243,0.1785
+108,Customer Service,0.4601,0.6888
+362,Technical Support,0.4908,0.4477
+367,Service Outages and Maintenance,0.9831,0.8221
+562,Returns and Exchanges,0.4558,0.7662
+202,Sales and Pre-Sales,0.8293,0.5866
+584,Service Outages and Maintenance,0.992,0.829
+136,Technical Support,0.3423,0.1862
+622,IT Support,0.7821,0.7758
+477,Returns and Exchanges,0.3754,0.1274
+605,Product Support,0.3849,0.0613
+182,Returns and Exchanges,0.9875,0.3528
+626,Technical Support,0.4716,0.2659
+436,IT Support,0.4987,0.4985
+168,Technical Support,0.3956,0.09
+169,Returns and Exchanges,0.311,0.3981
+335,Sales and Pre-Sales,0.556,0.1976
+411,Customer Service,0.526,0.1605
+311,Technical Support,0.5062,0.2236
+487,Returns and Exchanges,0.4794,0.1131
+600,Technical Support,0.5685,0.1151
+386,Customer Service,0.3285,0.1636
+229,Customer Service,0.615,0.1996
+186,Returns and Exchanges,0.6397,0.116
+537,IT Support,0.5851,0.0676
+413,Product Support,0.5528,0.7886
+152,Sales and Pre-Sales,0.8436,0.1005
+484,IT Support,0.4872,0.4142
+546,Billing and Payments,0.9984,0.2613
+394,Technical Support,0.3114,0.6435
+611,Technical Support,0.3816,0.7166
+532,Sales and Pre-Sales,0.6043,0.1042
+413,Customer Service,0.5024,0.8063
+343,Customer Service,0.357,0.081
+392,IT Support,0.6628,0.0448
+197,Product Support,0.5969,0.0797
+487,Customer Service,0.5051,0.6523
+269,IT Support,0.5907,0.3114
+532,Technical Support,0.5428,0.2928
+606,Product Support,0.7127,0.4594
+448,Returns and Exchanges,0.859,0.0726
+640,Customer Service,0.4578,0.5992
+211,Technical Support,0.5279,0.1611
+575,Technical Support,0.3631,0.9
+565,Billing and Payments,0.5046,0.5007
+125,Returns and Exchanges,0.77,0.398
+424,Customer Service,0.4307,0.3337
+529,IT Support,0.3747,0.189
+294,Customer Service,0.4223,0.1391
+485,Customer Service,0.5256,0.3122
+117,Customer Service,0.6344,0.0531
+586,Product Support,0.3927,0.1566
+557,Technical Support,0.4181,0.3085
+176,Billing and Payments,0.9441,0.7309
+93,General Inquiry,0.82,0.446
+200,Human Resources,0.9719,0.2888
+128,Billing and Payments,0.9982,0.1566
+397,Customer Service,0.3995,0.3216
+497,Customer Service,0.3876,0.3845
+296,Technical Support,0.6095,0.5702
+153,Customer Service,0.6987,0.1419
+371,Product Support,0.4088,0.5437
+169,Technical Support,0.5562,0.3404
+585,Product Support,0.7186,0.2114
+655,Human Resources,0.3125,0.0893
+343,IT Support,0.6742,0.4177
+474,IT Support,0.7134,0.842
+354,General Inquiry,0.8269,0.0738
+399,Customer Service,0.3417,0.2403
+128,Returns and Exchanges,0.5632,0.2097
+648,IT Support,0.6216,0.9595
+57,Technical Support,0.5166,0.5293
+102,IT Support,0.5316,0.2178
+613,Customer Service,0.4688,0.1697
+293,Customer Service,0.6491,0.6998
+538,Returns and Exchanges,0.7002,0.5794
+283,Returns and Exchanges,0.9898,0.0486
+309,Customer Service,0.3334,0.0864
+146,Product Support,0.4051,0.1488
+469,Product Support,0.4637,0.5982
+364,Customer Service,0.4726,0.2914
+139,Technical Support,0.5038,0.1103
+122,Technical Support,0.45,0.5295
+335,Product Support,0.3412,0.4788
+313,Technical Support,0.4236,0.1051
+630,Technical Support,0.6062,0.2812
+325,Billing and Payments,0.8282,0.1861
+244,Customer Service,0.3911,0.0611
+504,Customer Service,0.4168,0.2841
+227,Billing and Payments,0.5529,0.2311
+534,Customer Service,0.4995,0.2653
+595,Technical Support,0.497,0.1764
+417,Customer Service,0.3161,0.7541
+639,Product Support,0.5309,0.1171
+361,Billing and Payments,0.9413,0.313
+618,Returns and Exchanges,0.7713,0.0396
+549,Billing and Payments,0.7675,0.1573
+343,Product Support,0.3361,0.1702
+521,IT Support,0.4364,0.212
+642,Sales and Pre-Sales,0.9841,0.0345
+405,Customer Service,0.2578,0.1357
+407,Product Support,0.3923,0.8564
+125,Sales and Pre-Sales,0.4509,0.2764
+543,Product Support,0.4814,0.0984
+613,Customer Service,0.4633,0.1115
+133,Technical Support,0.4321,0.18
+134,Customer Service,0.5369,0.2236
+686,Human Resources,0.9898,0.0603
+567,IT Support,0.4824,0.9089
+443,Technical Support,0.5529,0.1995
+629,Customer Service,0.2572,0.2552
+564,Customer Service,0.3488,0.1777
+446,Technical Support,0.35,0.117
+703,Product Support,0.3375,0.5232
+582,IT Support,0.8457,0.8826
+585,IT Support,0.8328,0.7166
+291,Technical Support,0.438,0.7927
+516,Product Support,0.6699,0.0875
+182,Human Resources,0.3238,0.2076
+575,Returns and Exchanges,0.9833,0.1158
+262,IT Support,0.391,0.7013
+484,Customer Service,0.3099,0.492
+161,Customer Service,0.5088,0.5879
+532,IT Support,0.5726,0.0625
+567,Sales and Pre-Sales,0.4224,0.3005
+464,Billing and Payments,0.7861,0.7124
+530,Service Outages and Maintenance,0.9476,0.7591
+564,Customer Service,0.5488,0.7019
+312,Customer Service,0.3568,0.2133
+201,Product Support,0.4364,0.5593
+468,Technical Support,0.4336,0.1762
+582,Service Outages and Maintenance,0.9939,0.8637
+588,Billing and Payments,0.9985,0.0829
+559,IT Support,0.84,0.8336
+304,Product Support,0.4959,0.5488
+311,Customer Service,0.5042,0.1732
+301,IT Support,0.5575,0.9044
+312,Product Support,0.3883,0.3668
+594,Product Support,0.5597,0.5471
+346,Technical Support,0.518,0.4254
+254,Product Support,0.323,0.6222
+610,Technical Support,0.2676,0.421
+439,Technical Support,0.3225,0.8949
+528,Technical Support,0.3582,0.1614
+246,Product Support,0.4862,0.9364
+366,Billing and Payments,0.6082,0.3842
+593,Product Support,0.2959,0.2811
+575,Technical Support,0.5028,0.5825
+750,Customer Service,0.3094,0.4226
+328,Technical Support,0.3994,0.3431
+187,Returns and Exchanges,0.9716,0.08
+525,Returns and Exchanges,0.4299,0.1426
+629,Service Outages and Maintenance,0.8412,0.5741
+362,Technical Support,0.5278,0.3595
+585,Technical Support,0.3791,0.0712
+332,Billing and Payments,0.9986,0.7851
+461,Customer Service,0.5316,0.2455
+220,Customer Service,0.4883,0.1109
+590,IT Support,0.6198,0.8522
+542,Product Support,0.5847,0.083
+95,Technical Support,0.3478,0.2655
+444,Customer Service,0.6863,0.2331
+532,Customer Service,0.5068,0.1199
+137,Customer Service,0.4268,0.6111
+404,IT Support,0.7378,0.8831
+355,Sales and Pre-Sales,0.9834,0.2048
+534,Technical Support,0.4133,0.1524
+367,IT Support,0.7534,0.2827
+552,Product Support,0.5029,0.0482
+166,Product Support,0.5831,0.068
+509,Customer Service,0.4026,0.1826
+192,Technical Support,0.5926,0.2377
+475,Product Support,0.4215,0.3289
+371,IT Support,0.8174,0.8076
+348,IT Support,0.486,0.594
+388,Customer Service,0.4578,0.1514
+557,Customer Service,0.4904,0.0735
+619,Customer Service,0.434,0.0849
+351,Product Support,0.4698,0.3223
+298,Technical Support,0.3889,0.203
+362,IT Support,0.4248,0.1146
+566,Product Support,0.3752,0.1846
+405,Product Support,0.3286,0.1562
+278,Billing and Payments,0.9985,0.2311
+70,Product Support,0.4722,0.1156
+553,Billing and Payments,0.9985,0.2459
+559,Customer Service,0.6347,0.7703
+509,Technical Support,0.3194,0.45
+134,Product Support,0.6705,0.4208
+645,Service Outages and Maintenance,0.9935,0.8785
+127,Technical Support,0.4745,0.3602
+82,IT Support,0.663,0.659
+230,Technical Support,0.3472,0.2053
+569,IT Support,0.4277,0.0982
+188,Product Support,0.4142,0.2987
+655,Product Support,0.5389,0.0893
+154,IT Support,0.4314,0.3803
+325,Product Support,0.6326,0.7245
+350,Product Support,0.3989,0.217
+256,Technical Support,0.5011,0.096
+484,Service Outages and Maintenance,0.9924,0.9136
+53,IT Support,0.535,0.1932
+356,Technical Support,0.296,0.6532
+156,Service Outages and Maintenance,0.9929,0.8708
+535,Billing and Payments,0.9985,0.2891
+589,Customer Service,0.3564,0.086
+103,Technical Support,0.3455,0.4322
+320,Technical Support,0.5323,0.9379
+191,Billing and Payments,0.9985,0.1532
+651,Technical Support,0.4905,0.7987
+405,Customer Service,0.5521,0.2008
+514,Billing and Payments,0.648,0.2036
+642,Customer Service,0.5781,0.0864
+586,Product Support,0.4658,0.434
+173,Sales and Pre-Sales,0.3999,0.375
+131,Customer Service,0.575,0.0317
+335,Technical Support,0.2774,0.3004
+586,Customer Service,0.4089,0.1005
+105,Technical Support,0.5922,0.8621
+588,Product Support,0.6069,0.0832
+218,Billing and Payments,0.9985,0.1867
+566,Customer Service,0.4426,0.7301
+671,Returns and Exchanges,0.344,0.7652
+254,Billing and Payments,0.9621,0.1852
+404,IT Support,0.7101,0.0358
+693,Product Support,0.6919,0.1412
+569,Returns and Exchanges,0.7388,0.1524
+144,Billing and Payments,0.9985,0.2481
+595,Technical Support,0.5427,0.8676
+546,Billing and Payments,0.9985,0.5042
+561,Customer Service,0.3899,0.181
+526,Technical Support,0.5534,0.9735
+499,IT Support,0.8411,0.5795
+215,Human Resources,0.6652,0.1654
+383,Product Support,0.2476,0.3705
+565,Product Support,0.6374,0.141
+334,Customer Service,0.3222,0.3928
+299,IT Support,0.8251,0.7786
+359,Billing and Payments,0.9984,0.0793
+425,Customer Service,0.2624,0.2439
+253,Sales and Pre-Sales,0.5209,0.5106
+494,Technical Support,0.5796,0.6603
+657,General Inquiry,0.3139,0.349
+82,Technical Support,0.6276,0.7453
+244,Human Resources,0.9936,0.1779
+415,Human Resources,0.6018,0.1907
+201,Technical Support,0.4255,0.0408
+118,Technical Support,0.3815,0.7278
+466,Sales and Pre-Sales,0.573,0.1124
+124,Sales and Pre-Sales,0.801,0.2125
+691,IT Support,0.3963,0.8724
+374,Product Support,0.4178,0.1127
+186,Product Support,0.2791,0.0574
+598,IT Support,0.659,0.7696
+622,Customer Service,0.7442,0.0581
+557,Technical Support,0.3043,0.4412
+628,General Inquiry,0.4425,0.1723
+221,Customer Service,0.3087,0.2566
+482,Product Support,0.4982,0.1551
+100,Billing and Payments,0.2415,0.2933
+642,Billing and Payments,0.9985,0.4404
+392,IT Support,0.5682,0.7795
+251,Technical Support,0.4717,0.8691
+636,Product Support,0.447,0.6186
+187,Service Outages and Maintenance,0.9481,0.4775
+331,Technical Support,0.5204,0.9461
+349,IT Support,0.5032,0.3538
+444,IT Support,0.3358,0.7551
+681,IT Support,0.5393,0.7505
+265,IT Support,0.4769,0.353
+214,IT Support,0.7426,0.7833
+148,Technical Support,0.4545,0.7168
+631,Sales and Pre-Sales,0.9884,0.0466
+663,Technical Support,0.5291,0.795
+590,Product Support,0.6194,0.0979
+215,IT Support,0.4943,0.2002
+525,Sales and Pre-Sales,0.7223,0.8516
+460,Human Resources,0.9741,0.2204
+515,Product Support,0.5015,0.456
+562,Technical Support,0.4749,0.779
+134,Customer Service,0.274,0.3737
+571,Customer Service,0.3,0.6184
+90,Technical Support,0.4524,0.8474
+237,Customer Service,0.6532,0.2702
+391,IT Support,0.4609,0.7436
+602,Returns and Exchanges,0.481,0.0565
+93,Product Support,0.4957,0.2561
+520,IT Support,0.7026,0.0315
+453,Technical Support,0.6306,0.5998
+344,Product Support,0.4679,0.1311
+535,Customer Service,0.3742,0.1949
+173,IT Support,0.671,0.8273
+472,Technical Support,0.4115,0.6004
+653,Product Support,0.4495,0.2124
+451,Technical Support,0.5083,0.5642
+211,Customer Service,0.3847,0.0807
+598,Billing and Payments,0.9984,0.7004
+166,Technical Support,0.2917,0.2615
+248,Billing and Payments,0.8349,0.5474
+590,IT Support,0.6257,0.3865
+78,Service Outages and Maintenance,0.4481,0.3108
+433,IT Support,0.4936,0.472
+500,Technical Support,0.3909,0.1772
+279,IT Support,0.3701,0.0743
+91,Technical Support,0.5063,0.1642
+572,Product Support,0.5262,0.1366
+161,Billing and Payments,0.5421,0.3637
+98,IT Support,0.8267,0.5126
+202,Product Support,0.3266,0.043
+355,Billing and Payments,0.9984,0.3367
+479,Technical Support,0.4051,0.396
+320,Product Support,0.3489,0.0974
+320,Returns and Exchanges,0.8548,0.28
+344,Billing and Payments,0.9986,0.0895
+103,Technical Support,0.4851,0.0578
+552,Product Support,0.3457,0.7569
+522,Technical Support,0.3795,0.0856
+214,Technical Support,0.47,0.3805
+414,Returns and Exchanges,0.8182,0.4708
+451,Technical Support,0.4608,0.1313
+567,Technical Support,0.4315,0.8285
+575,Customer Service,0.4138,0.0932
+483,Sales and Pre-Sales,0.9806,0.8988
+572,Sales and Pre-Sales,0.2918,0.2259
+386,Customer Service,0.6189,0.1577
+354,Billing and Payments,0.9985,0.3642
+466,Product Support,0.307,0.2604
+87,Technical Support,0.5621,0.3137
+546,Customer Service,0.3232,0.0777
+321,Product Support,0.326,0.1984
+310,Technical Support,0.5265,0.7714
+429,Billing and Payments,0.6235,0.2383
+86,IT Support,0.5592,0.5709
+175,Customer Service,0.4534,0.7784
+585,Product Support,0.4817,0.6505
+571,Billing and Payments,0.7844,0.3325
+510,Product Support,0.5024,0.4439
+704,Product Support,0.5086,0.0858
+646,Customer Service,0.4044,0.0471
+488,IT Support,0.4614,0.7921
+259,IT Support,0.4469,0.222
+610,Product Support,0.4574,0.1827
+204,General Inquiry,0.4141,0.6927
+473,Technical Support,0.4172,0.234
+351,Billing and Payments,0.9985,0.3463
+107,Sales and Pre-Sales,0.7672,0.0684
+622,Technical Support,0.2879,0.9416
+501,Customer Service,0.469,0.6376
+260,Service Outages and Maintenance,0.8878,0.0916
+642,General Inquiry,0.7987,0.4057
+117,Returns and Exchanges,0.9649,0.1036
+258,Human Resources,0.248,0.1735
+488,Technical Support,0.3995,0.757
+208,IT Support,0.3846,0.5495
+306,Service Outages and Maintenance,0.9923,0.8481
+159,Product Support,0.3732,0.3158
+593,Sales and Pre-Sales,0.5075,0.8161
+426,Technical Support,0.2562,0.802
+688,Sales and Pre-Sales,0.9844,0.3282
+574,Product Support,0.6793,0.2004
+105,Service Outages and Maintenance,0.9927,0.9069
+357,Returns and Exchanges,0.4567,0.041
+495,Returns and Exchanges,0.3107,0.6266
+396,Technical Support,0.5386,0.9128
+131,Sales and Pre-Sales,0.4646,0.1883
+320,Service Outages and Maintenance,0.9921,0.9487
+348,Customer Service,0.382,0.3236
+208,Sales and Pre-Sales,0.7093,0.3675
+690,Sales and Pre-Sales,0.4394,0.1818
+609,Customer Service,0.5992,0.1703
+619,IT Support,0.8059,0.8927
+675,Technical Support,0.4071,0.6391
+255,Customer Service,0.3053,0.1988
+640,IT Support,0.5751,0.2677
+477,Customer Service,0.5663,0.3004
+123,Customer Service,0.5379,0.3383
+454,Returns and Exchanges,0.8833,0.0876
+602,Billing and Payments,0.9752,0.2573
+549,Product Support,0.6065,0.0842
+520,IT Support,0.6538,0.887
+137,Service Outages and Maintenance,0.9823,0.7877
+156,Service Outages and Maintenance,0.9933,0.7593
+249,Product Support,0.4446,0.1167
+632,Service Outages and Maintenance,0.2725,0.5723
+200,Product Support,0.3659,0.2681
+606,IT Support,0.4119,0.7274
+546,Billing and Payments,0.9986,0.367
+283,Product Support,0.4692,0.1762
+544,Billing and Payments,0.9985,0.1049
+647,Product Support,0.4364,0.6189
+508,IT Support,0.4717,0.7994
+103,IT Support,0.5387,0.5318
+541,Technical Support,0.6195,0.2253
+536,Service Outages and Maintenance,0.9938,0.9318
+141,Sales and Pre-Sales,0.5134,0.2877
+499,IT Support,0.5641,0.2701
+176,Customer Service,0.4914,0.1412
+569,IT Support,0.5217,0.1875
+533,Customer Service,0.5981,0.1641
+511,Technical Support,0.3694,0.2338
+501,Billing and Payments,0.9986,0.0977
+579,Technical Support,0.4989,0.2219
+79,Technical Support,0.461,0.4993
+625,Technical Support,0.3809,0.0938
+511,Product Support,0.4115,0.4575
+353,Sales and Pre-Sales,0.9779,0.7799
+599,IT Support,0.5505,0.4589
+449,Returns and Exchanges,0.8381,0.6308
+211,Product Support,0.5351,0.0605
+166,Product Support,0.4874,0.3735
+556,Product Support,0.5903,0.2046
+190,IT Support,0.6176,0.2048
+338,Product Support,0.5143,0.5079
+287,IT Support,0.4484,0.0534
+643,Returns and Exchanges,0.4898,0.2476
+609,IT Support,0.362,0.1815
+220,IT Support,0.3662,0.1493
+280,Customer Service,0.4023,0.3095
+443,Product Support,0.4491,0.2219
+586,IT Support,0.8891,0.0589
+440,Customer Service,0.4422,0.1259
+549,Returns and Exchanges,0.4463,0.355
+255,Customer Service,0.2964,0.4248
+565,Customer Service,0.4644,0.1092
+512,Service Outages and Maintenance,0.9072,0.4566
+437,Billing and Payments,0.6238,0.2952
+412,Returns and Exchanges,0.9393,0.0789
+194,IT Support,0.5742,0.28
+166,Billing and Payments,0.9984,0.6293
+535,Technical Support,0.5454,0.5261
+173,Technical Support,0.6366,0.6588
+426,Service Outages and Maintenance,0.9932,0.5966
+458,Technical Support,0.4554,0.2146
+506,Billing and Payments,0.7256,0.3104
+398,Customer Service,0.5936,0.0735
+163,Customer Service,0.6359,0.2585
+530,Customer Service,0.3032,0.4718
+485,Product Support,0.7079,0.231
+587,IT Support,0.4139,0.2388
+208,Product Support,0.428,0.3275
+145,Billing and Payments,0.9984,0.3999
+128,IT Support,0.4478,0.376
+241,Human Resources,0.9671,0.1444
+313,Technical Support,0.3615,0.6181
+499,IT Support,0.4195,0.2812
+127,IT Support,0.6633,0.8773
+595,Product Support,0.491,0.3191
+327,Technical Support,0.3991,0.1866
+525,Sales and Pre-Sales,0.3691,0.1263
+422,Sales and Pre-Sales,0.9532,0.0374
+170,Service Outages and Maintenance,0.9931,0.182
+627,IT Support,0.9214,0.0672
+642,Product Support,0.5361,0.165
+300,IT Support,0.8343,0.2903
+432,Technical Support,0.5143,0.6351
+503,Billing and Payments,0.7962,0.5523
+510,Customer Service,0.2808,0.6403
+443,Billing and Payments,0.9985,0.0986
+558,Technical Support,0.38,0.7988
+652,Product Support,0.487,0.078
+200,IT Support,0.8591,0.839
+369,IT Support,0.5632,0.345
+520,Product Support,0.5532,0.2755
+662,Product Support,0.6373,0.1061
+514,Product Support,0.4757,0.1661
+252,Customer Service,0.343,0.1194
+414,Customer Service,0.4235,0.2093
+64,IT Support,0.4926,0.8299
+311,Technical Support,0.509,0.7896
+589,Product Support,0.3189,0.0519
+639,IT Support,0.3822,0.3182
+384,Product Support,0.5436,0.1197
+197,IT Support,0.8325,0.9578
+427,Technical Support,0.5391,0.1652
+308,IT Support,0.5006,0.6147
+606,Technical Support,0.5826,0.852
+273,Customer Service,0.4235,0.0602
+75,Technical Support,0.357,0.6527
+593,Customer Service,0.3602,0.1856
+597,Technical Support,0.3624,0.2312
+151,IT Support,0.8087,0.8064
+139,Customer Service,0.2152,0.6843
+311,IT Support,0.6131,0.7843
+632,IT Support,0.2978,0.3696
+455,Technical Support,0.4348,0.0595
+575,IT Support,0.3059,0.1321
+134,Product Support,0.4862,0.1266
+608,IT Support,0.4114,0.1838
+250,Returns and Exchanges,0.6912,0.7536
+469,Service Outages and Maintenance,0.2556,0.8251
+204,Technical Support,0.417,0.5864
+214,Billing and Payments,0.9985,0.133
+607,Customer Service,0.4813,0.0524
+313,IT Support,0.6027,0.5422
+528,IT Support,0.7631,0.1548
+581,Customer Service,0.3176,0.3743
+611,Technical Support,0.3183,0.7208
+358,IT Support,0.5333,0.4782
+507,Product Support,0.4178,0.218
+213,IT Support,0.7619,0.1204
+163,Product Support,0.416,0.6353
+421,Service Outages and Maintenance,0.9882,0.8497
+362,Product Support,0.7065,0.8888
+248,Technical Support,0.265,0.2412
+491,Billing and Payments,0.9985,0.0824
+521,Product Support,0.4796,0.9574
+602,IT Support,0.4593,0.5605
+598,Product Support,0.4473,0.1831
+245,Returns and Exchanges,0.3097,0.1013
+102,Product Support,0.4192,0.1861
+683,Returns and Exchanges,0.4056,0.184
+607,Technical Support,0.4896,0.7495
+570,Service Outages and Maintenance,0.9149,0.7837
+240,Technical Support,0.5795,0.4914
+574,Human Resources,0.6525,0.0638
+362,Product Support,0.5098,0.1231
+238,Sales and Pre-Sales,0.9885,0.8866
+664,Product Support,0.5711,0.3665
+558,Product Support,0.6471,0.3074
+433,Product Support,0.4278,0.7353
+609,IT Support,0.6425,0.2352
+386,Returns and Exchanges,0.4898,0.7571
+217,Product Support,0.3284,0.5221
+554,Product Support,0.4871,0.4927
+702,Technical Support,0.301,0.3821
+297,Technical Support,0.4834,0.812
+267,Product Support,0.536,0.3855
+436,Billing and Payments,0.9262,0.1637
+260,Technical Support,0.3869,0.5595
+725,IT Support,0.5855,0.1584
+406,Customer Service,0.3447,0.1142
+213,General Inquiry,0.9704,0.1766
+211,Technical Support,0.4271,0.2018
+617,Technical Support,0.5011,0.8686
+342,Technical Support,0.4832,0.5484
+572,IT Support,0.4126,0.4485
+129,Product Support,0.2008,0.5194
+351,Returns and Exchanges,0.7296,0.1888
+623,Product Support,0.5807,0.8739
+545,Returns and Exchanges,0.3607,0.3223
+524,Technical Support,0.5541,0.1676
+568,Technical Support,0.4588,0.5489
+551,IT Support,0.6753,0.6558
+472,Technical Support,0.4383,0.6111
+475,Product Support,0.4473,0.1971
+135,Returns and Exchanges,0.5985,0.2488
+614,Human Resources,0.8771,0.268
+230,Billing and Payments,0.9985,0.3976
+116,Billing and Payments,0.9985,0.407
+150,Product Support,0.4642,0.7958
+566,Product Support,0.4759,0.8164
+247,Customer Service,0.5891,0.1847
+576,IT Support,0.6246,0.9022
+428,Billing and Payments,0.9983,0.0467
+233,Technical Support,0.3319,0.3857
+182,Product Support,0.3915,0.3603
+353,IT Support,0.8646,0.9119
+183,Technical Support,0.3697,0.145
+421,Product Support,0.4321,0.4207
+727,IT Support,0.2521,0.6095
+322,IT Support,0.3398,0.2784
+627,Returns and Exchanges,0.4674,0.0733
+624,Product Support,0.4449,0.6159
+310,IT Support,0.6194,0.2209
+351,Returns and Exchanges,0.6909,0.8284
+619,Billing and Payments,0.9986,0.1313
+427,Human Resources,0.9033,0.4669
+91,Service Outages and Maintenance,0.9936,0.9124
+615,Product Support,0.3701,0.2756
+328,Billing and Payments,0.2722,0.8499
+244,Service Outages and Maintenance,0.9933,0.9084
+539,Customer Service,0.3385,0.8964
+135,Billing and Payments,0.9985,0.7783
+610,Technical Support,0.5677,0.8644
+218,Billing and Payments,0.9978,0.1714
+204,Billing and Payments,0.5298,0.2126
+109,General Inquiry,0.2608,0.1977
+651,Technical Support,0.4756,0.8336
+557,Customer Service,0.6702,0.1623
+485,Customer Service,0.6141,0.2677
+287,Product Support,0.6219,0.0599
+533,Technical Support,0.4571,0.4239
+462,IT Support,0.5962,0.3168
+599,Product Support,0.664,0.052
+595,Product Support,0.4769,0.6631
+131,Customer Service,0.4693,0.2653
+157,Technical Support,0.3696,0.7534
+527,Billing and Payments,0.9985,0.321
+285,Technical Support,0.3382,0.2402
+183,Technical Support,0.4409,0.6571
+682,IT Support,0.8921,0.437
+585,IT Support,0.7992,0.7002
+534,Customer Service,0.4388,0.7807
+491,Human Resources,0.6962,0.4582
+140,Technical Support,0.5242,0.1929
+550,Customer Service,0.4581,0.189
+309,Customer Service,0.2854,0.1498
+291,Human Resources,0.9943,0.1172
+445,Product Support,0.3025,0.2582
+449,Billing and Payments,0.9986,0.2382
+323,Product Support,0.3486,0.1312
+469,Product Support,0.4009,0.0775
+454,Customer Service,0.3856,0.1455
+301,Technical Support,0.4524,0.2996
+650,IT Support,0.6443,0.2477
+473,Billing and Payments,0.9982,0.3749
+642,General Inquiry,0.9601,0.0866
+444,IT Support,0.739,0.8948
+279,Customer Service,0.4417,0.4053
+629,Product Support,0.4196,0.3842
+280,Customer Service,0.4242,0.713
+426,Returns and Exchanges,0.3127,0.1452
+311,Technical Support,0.4189,0.1329
+440,Customer Service,0.411,0.1719
+613,General Inquiry,0.9657,0.0458
+617,Service Outages and Maintenance,0.9939,0.7832
+596,Human Resources,0.9945,0.0277
+375,IT Support,0.7238,0.6686
+583,Technical Support,0.3802,0.2002
+619,Billing and Payments,0.9985,0.395
+537,Billing and Payments,0.9985,0.2467
+327,Returns and Exchanges,0.7956,0.0741
+631,Product Support,0.5925,0.7063
+567,Product Support,0.4614,0.1422
+566,Product Support,0.4622,0.3058
+355,Technical Support,0.4769,0.9028
+496,IT Support,0.5383,0.4636
+548,IT Support,0.4721,0.8576
+553,Service Outages and Maintenance,0.9931,0.7438
+237,Technical Support,0.4922,0.027
+623,Product Support,0.4873,0.855
+294,Service Outages and Maintenance,0.9929,0.7013
+600,Billing and Payments,0.9986,0.3428
+618,Customer Service,0.3403,0.4992
+374,Product Support,0.4012,0.2389
+575,Product Support,0.5248,0.8283
+530,Billing and Payments,0.5888,0.3379
+115,Technical Support,0.5984,0.2755
+586,Service Outages and Maintenance,0.9934,0.5784
+402,Service Outages and Maintenance,0.2543,0.2491
+225,Technical Support,0.472,0.0392
+567,Product Support,0.4789,0.0864
+452,Product Support,0.5577,0.8499
+428,Product Support,0.3809,0.2342
+368,Product Support,0.3093,0.2205
+296,Customer Service,0.4497,0.0947
+104,Customer Service,0.5409,0.0604
+576,IT Support,0.6686,0.7617
+568,IT Support,0.3755,0.0697
+303,Billing and Payments,0.9983,0.7417
+627,Customer Service,0.3406,0.126
+692,Returns and Exchanges,0.8224,0.5994
+542,Customer Service,0.4847,0.6972
+627,IT Support,0.5025,0.6866
+301,Product Support,0.6617,0.1088
+325,Billing and Payments,0.998,0.6496
+288,Product Support,0.5173,0.0796
+569,Product Support,0.4748,0.1966
+163,Customer Service,0.5481,0.2515
+437,IT Support,0.3268,0.3005
+335,General Inquiry,0.9201,0.8601
+500,IT Support,0.4813,0.8075
+657,Returns and Exchanges,0.4863,0.1452
+659,Billing and Payments,0.9984,0.2074
+163,Product Support,0.46,0.2958
+578,Customer Service,0.5167,0.0779
+264,Returns and Exchanges,0.8335,0.1897
+249,Billing and Payments,0.9984,0.4354
+498,Billing and Payments,0.9275,0.6335
+332,Billing and Payments,0.7049,0.3338
+302,IT Support,0.6132,0.0594
+614,Returns and Exchanges,0.6841,0.0522
+588,Returns and Exchanges,0.9881,0.1232
+294,Technical Support,0.508,0.6272
+365,Billing and Payments,0.9985,0.8009
+254,Sales and Pre-Sales,0.8866,0.0805
+380,Technical Support,0.5262,0.3412
+594,Technical Support,0.4568,0.122
+260,Product Support,0.4832,0.11
+604,Customer Service,0.7019,0.0775
+509,Sales and Pre-Sales,0.8046,0.2358
+663,Customer Service,0.6927,0.1649
+555,Product Support,0.4071,0.1613
+614,Customer Service,0.7457,0.1104
+292,General Inquiry,0.8048,0.2044
+549,IT Support,0.6562,0.1031
+369,IT Support,0.4295,0.6915
+564,IT Support,0.7969,0.8786
+281,Technical Support,0.5257,0.3278
+630,Customer Service,0.2737,0.1943
+490,IT Support,0.6493,0.4546
+166,Product Support,0.4843,0.6422
+430,Billing and Payments,0.9986,0.1925
+285,IT Support,0.769,0.1827
+514,Customer Service,0.3527,0.1502
+207,IT Support,0.8779,0.1832
+353,IT Support,0.7559,0.9104
+467,Product Support,0.5216,0.0619
+348,Product Support,0.3511,0.3852
+117,Product Support,0.3759,0.1226
+522,Product Support,0.3715,0.5938
+608,Billing and Payments,0.9986,0.7951
+535,IT Support,0.3996,0.4745
+667,Sales and Pre-Sales,0.801,0.3614
+410,General Inquiry,0.5194,0.0838
+84,Returns and Exchanges,0.5449,0.1761
+589,Billing and Payments,0.4292,0.0851
+343,Human Resources,0.2758,0.1019
+560,Product Support,0.4928,0.4355
+447,Returns and Exchanges,0.6266,0.2239
+630,Returns and Exchanges,0.9352,0.1627
+629,Product Support,0.3587,0.169
+68,IT Support,0.664,0.2391
+99,Product Support,0.2782,0.0908
+429,IT Support,0.6154,0.8169
+594,Human Resources,0.993,0.3381
+85,Technical Support,0.4205,0.0909
+224,Product Support,0.3695,0.3293
+524,IT Support,0.7892,0.9574
+658,IT Support,0.6574,0.6555
+361,Technical Support,0.4149,0.752
+423,Product Support,0.3793,0.5515
+602,IT Support,0.5202,0.8243
+485,Product Support,0.2828,0.1181
+68,Product Support,0.2602,0.1771
+354,IT Support,0.5215,0.3623
+81,Returns and Exchanges,0.9668,0.1379
+377,General Inquiry,0.7296,0.6001
+263,Customer Service,0.3478,0.1239
+487,Service Outages and Maintenance,0.9922,0.9179
+353,Customer Service,0.4017,0.6773
+505,IT Support,0.7708,0.8274
+211,Customer Service,0.4154,0.1079
+507,Customer Service,0.6655,0.2406
+88,Customer Service,0.6135,0.1478
+362,IT Support,0.7545,0.9271
+375,Technical Support,0.5379,0.0729
+392,IT Support,0.3654,0.2639
+457,Product Support,0.456,0.8263
+600,Technical Support,0.4868,0.1179
+517,IT Support,0.7411,0.0671
+288,IT Support,0.8968,0.2598
+662,IT Support,0.6095,0.8901
+519,Returns and Exchanges,0.9897,0.049
+359,Technical Support,0.5774,0.5056
+543,Customer Service,0.2806,0.8206
+115,Billing and Payments,0.9974,0.6039
+139,Billing and Payments,0.9984,0.2492
+684,Billing and Payments,0.9984,0.2368
+551,IT Support,0.7051,0.2133
+596,Billing and Payments,0.7462,0.1142
+660,Product Support,0.7147,0.4548
+181,IT Support,0.6736,0.7679
+338,IT Support,0.7337,0.0474
+78,Technical Support,0.5201,0.2747
+564,Technical Support,0.3259,0.5609
+276,IT Support,0.4945,0.2611
+115,Returns and Exchanges,0.5613,0.2292
+586,Billing and Payments,0.9984,0.2932
+644,Technical Support,0.3455,0.6639
+87,Returns and Exchanges,0.9742,0.2929
+125,Technical Support,0.3156,0.7588
+104,Technical Support,0.4033,0.5822
+215,Customer Service,0.4686,0.5702
+158,Product Support,0.4648,0.1777
+239,General Inquiry,0.7737,0.1445
+383,Customer Service,0.3878,0.2325
+257,Human Resources,0.9574,0.1549
+612,Customer Service,0.6584,0.0666
+638,Technical Support,0.4101,0.2503
+117,Technical Support,0.2826,0.1445
+578,Service Outages and Maintenance,0.8569,0.8252
+542,Technical Support,0.5636,0.346
+582,Product Support,0.451,0.2402
+294,Billing and Payments,0.9985,0.1599
+135,Customer Service,0.395,0.4862
+495,Technical Support,0.6117,0.2247
+556,Technical Support,0.394,0.1278
+410,Technical Support,0.4407,0.4404
+248,IT Support,0.6884,0.6655
+467,Customer Service,0.4291,0.1732
+492,Returns and Exchanges,0.2386,0.6887
+533,Technical Support,0.4905,0.7541
+650,Returns and Exchanges,0.5746,0.2032
+555,Technical Support,0.3341,0.1167
+112,Returns and Exchanges,0.9051,0.2954
+582,Technical Support,0.4183,0.7396
+409,Customer Service,0.6549,0.1558
+583,Technical Support,0.5343,0.6663
+627,IT Support,0.6316,0.0982
+561,IT Support,0.774,0.1683
+181,IT Support,0.8322,0.7185
+573,Service Outages and Maintenance,0.5741,0.9355
+94,Product Support,0.3631,0.1717
+593,Service Outages and Maintenance,0.8649,0.7843
+265,IT Support,0.9049,0.0555
+608,Customer Service,0.3477,0.0816
+494,Returns and Exchanges,0.9092,0.1049
+544,Billing and Payments,0.9205,0.7235
+604,Product Support,0.6666,0.0667
+125,Technical Support,0.5706,0.1063
+345,IT Support,0.4377,0.6695
+508,General Inquiry,0.2365,0.1192
+410,Service Outages and Maintenance,0.9917,0.9519
+62,IT Support,0.8946,0.5544
+262,Billing and Payments,0.9983,0.3256
+462,Technical Support,0.5117,0.7158
+68,Technical Support,0.3224,0.1808
+395,Sales and Pre-Sales,0.5482,0.1692
+569,General Inquiry,0.976,0.8049
+503,IT Support,0.6888,0.1309
+572,IT Support,0.3362,0.6765
+176,Customer Service,0.396,0.1314
+584,Product Support,0.457,0.1105
+58,IT Support,0.439,0.1145
+88,Returns and Exchanges,0.7215,0.402
+125,Billing and Payments,0.9473,0.2186
+169,Billing and Payments,0.9985,0.163
+267,Product Support,0.3461,0.3124
+401,Billing and Payments,0.9986,0.2267
+95,General Inquiry,0.3335,0.0751
+488,Product Support,0.6013,0.1264
+125,Customer Service,0.5396,0.0925
+447,Billing and Payments,0.5095,0.3671
+447,Customer Service,0.3948,0.2369
+73,IT Support,0.6643,0.5682
+92,Customer Service,0.7027,0.3572
+370,Customer Service,0.3674,0.3145
+507,Billing and Payments,0.9986,0.2512
+549,IT Support,0.6119,0.0432
+249,Customer Service,0.5366,0.2139
+520,Product Support,0.4213,0.5669
+312,Customer Service,0.2527,0.3611
+708,Customer Service,0.2965,0.2139
+370,Technical Support,0.5679,0.8498
+296,IT Support,0.4596,0.6713
+234,Sales and Pre-Sales,0.5659,0.1732
+258,IT Support,0.8556,0.0734
+424,Product Support,0.501,0.9313
+592,Sales and Pre-Sales,0.429,0.2874
+268,Technical Support,0.3676,0.3357
+240,Returns and Exchanges,0.9892,0.1546
+582,Technical Support,0.4931,0.8061
+321,Human Resources,0.9886,0.0677
+448,Service Outages and Maintenance,0.9931,0.889
+620,Customer Service,0.3317,0.1082
+528,Technical Support,0.5122,0.3995
+482,Customer Service,0.6519,0.0425
+441,Product Support,0.3148,0.8068
+532,IT Support,0.4473,0.1733
+614,Returns and Exchanges,0.9714,0.2675
+361,Service Outages and Maintenance,0.529,0.3952
+545,Returns and Exchanges,0.9515,0.3241
+386,Technical Support,0.3762,0.3125
+655,Service Outages and Maintenance,0.9006,0.2278
+181,Product Support,0.6994,0.434
+464,Product Support,0.4004,0.2611
+95,Customer Service,0.6413,0.4069
+435,Technical Support,0.3771,0.3719
+591,IT Support,0.4926,0.6923
+570,Service Outages and Maintenance,0.9855,0.8295
+105,Technical Support,0.5338,0.4808
+544,IT Support,0.6127,0.2731
+113,Technical Support,0.5221,0.3577
+373,Billing and Payments,0.2662,0.293
+245,IT Support,0.8379,0.145
+571,Product Support,0.5063,0.1314
+602,Technical Support,0.4515,0.1456
+496,IT Support,0.5687,0.8459
+596,Billing and Payments,0.3713,0.6354
+508,Customer Service,0.3049,0.4716
+202,General Inquiry,0.3365,0.1063
+371,Billing and Payments,0.9984,0.0874
+117,Product Support,0.2746,0.7304
+566,Product Support,0.4359,0.2579
+514,Technical Support,0.4403,0.0626
+625,Technical Support,0.4751,0.6497
+595,IT Support,0.8355,0.2416
+562,IT Support,0.3899,0.0806
+591,Sales and Pre-Sales,0.7728,0.8297
+425,Returns and Exchanges,0.9311,0.3377
+579,General Inquiry,0.6557,0.4178
+253,Returns and Exchanges,0.8013,0.1371
+636,Sales and Pre-Sales,0.475,0.2531
+350,Technical Support,0.4594,0.4273
+286,Customer Service,0.3726,0.2694
+269,Returns and Exchanges,0.4383,0.2815
+185,Service Outages and Maintenance,0.9925,0.2228
+238,Billing and Payments,0.9985,0.0674
+232,Technical Support,0.4803,0.8362
+111,Sales and Pre-Sales,0.9814,0.5671
+181,IT Support,0.6623,0.7448
+171,Customer Service,0.4139,0.2648
+452,Billing and Payments,0.9984,0.093
+559,Returns and Exchanges,0.4265,0.2929
+437,Billing and Payments,0.9987,0.143
+290,Product Support,0.5799,0.0653
+578,IT Support,0.7206,0.1968
+237,IT Support,0.6553,0.2645
+592,Product Support,0.4516,0.2728
+145,Service Outages and Maintenance,0.9897,0.863
+335,IT Support,0.3973,0.7296
+513,Service Outages and Maintenance,0.9934,0.8745
+310,IT Support,0.8076,0.8345
+119,Technical Support,0.3454,0.1177
+640,Customer Service,0.4775,0.4941
+623,IT Support,0.4445,0.2519
+369,IT Support,0.8534,0.8343
+320,Technical Support,0.5012,0.7432
+258,Customer Service,0.5359,0.6345
+625,Technical Support,0.5172,0.8599
+581,Technical Support,0.3886,0.0736
+600,Customer Service,0.5106,0.776
+635,Sales and Pre-Sales,0.989,0.7767
+517,IT Support,0.4996,0.2869
+498,Returns and Exchanges,0.5036,0.2137
+595,Technical Support,0.4701,0.1479
+201,Customer Service,0.3911,0.0407
+519,Product Support,0.4486,0.136
+472,Sales and Pre-Sales,0.9625,0.142
+492,Product Support,0.3118,0.8252
+422,Service Outages and Maintenance,0.9439,0.9562
+159,Customer Service,0.2267,0.1709
+518,Product Support,0.4755,0.2393
+288,IT Support,0.6557,0.1998
+668,Product Support,0.2855,0.7586
+293,Returns and Exchanges,0.5201,0.193
+280,Technical Support,0.453,0.1702
+556,Technical Support,0.5379,0.4917
+565,Returns and Exchanges,0.5577,0.8056
+581,Billing and Payments,0.9985,0.1092
+539,Service Outages and Maintenance,0.9505,0.5377
+363,Product Support,0.5008,0.1706
+529,Returns and Exchanges,0.6785,0.1448
+560,IT Support,0.7891,0.6319
+555,Customer Service,0.5397,0.082
+397,Product Support,0.5629,0.1648
+425,Product Support,0.3946,0.2659
+139,Product Support,0.7098,0.1352
+513,Billing and Payments,0.9945,0.7892
+561,Technical Support,0.417,0.2544
+436,IT Support,0.5331,0.6214
+261,Technical Support,0.2302,0.2225
+182,Product Support,0.3075,0.4311
+200,IT Support,0.612,0.8251
+400,Technical Support,0.5731,0.9229
+582,IT Support,0.2999,0.7146
+481,Product Support,0.4022,0.1639
+138,Human Resources,0.9622,0.1036
+504,Sales and Pre-Sales,0.9409,0.126
+380,IT Support,0.7967,0.8156
+581,Returns and Exchanges,0.981,0.0538
+364,Technical Support,0.3491,0.0895
+601,Customer Service,0.6731,0.0946
+199,IT Support,0.3799,0.4431
+439,Product Support,0.6332,0.8444
+304,Human Resources,0.9748,0.1406
+276,Customer Service,0.2364,0.7497
+321,Customer Service,0.3111,0.837
+528,Product Support,0.5442,0.8803
+131,IT Support,0.7217,0.6548
+253,Technical Support,0.6161,0.8335
+431,Returns and Exchanges,0.8047,0.2789
+126,Billing and Payments,0.9984,0.8322
+233,Billing and Payments,0.9985,0.3458
+518,Product Support,0.5218,0.2557
+77,Returns and Exchanges,0.589,0.2055
+516,Sales and Pre-Sales,0.8901,0.5544
+516,Product Support,0.5801,0.032
+516,IT Support,0.5847,0.4075
+191,Technical Support,0.4836,0.1286
+514,IT Support,0.7532,0.9537
+305,Customer Service,0.5194,0.2181
+378,Billing and Payments,0.6363,0.1927
+527,Returns and Exchanges,0.9601,0.1714
+553,Technical Support,0.3564,0.4475
+214,Technical Support,0.4011,0.0774
+616,Billing and Payments,0.7073,0.2214
+593,Product Support,0.3736,0.7101
+278,Billing and Payments,0.282,0.2233
+197,Returns and Exchanges,0.9363,0.6554
+588,Product Support,0.4591,0.3222
+460,Product Support,0.3114,0.1444
+492,Technical Support,0.5349,0.9208
+289,Billing and Payments,0.9695,0.2634
+527,IT Support,0.4241,0.2339
+343,Product Support,0.4061,0.0574
+224,Product Support,0.3912,0.2706
+466,Customer Service,0.7295,0.849
+466,Technical Support,0.4629,0.8276
+583,Technical Support,0.41,0.1478
+842,Customer Service,0.3094,0.1685
+161,IT Support,0.5018,0.5565
+620,Billing and Payments,0.6526,0.1925
+169,Technical Support,0.5506,0.2489
+112,Customer Service,0.2452,0.2863
+298,IT Support,0.7444,0.2693
+674,Customer Service,0.4143,0.1775
+598,Customer Service,0.358,0.3371
+88,IT Support,0.6504,0.7412
+66,Billing and Payments,0.8303,0.2375
+643,Sales and Pre-Sales,0.6109,0.1581
+115,Technical Support,0.5465,0.0883
+135,Product Support,0.3762,0.1075
+559,Service Outages and Maintenance,0.9936,0.9522
+395,Product Support,0.3774,0.2439
+109,IT Support,0.5188,0.6663
+421,Service Outages and Maintenance,0.575,0.9508
+532,Billing and Payments,0.9985,0.0948
+693,General Inquiry,0.3471,0.1472
+592,Product Support,0.3199,0.058
+637,Technical Support,0.4105,0.8197
+232,IT Support,0.8863,0.0275
+613,Sales and Pre-Sales,0.5928,0.1401
+554,Customer Service,0.4713,0.1808
+587,Customer Service,0.4174,0.1623
+282,IT Support,0.8434,0.2186
+602,IT Support,0.6024,0.5926
+527,Billing and Payments,0.3796,0.13
+362,Technical Support,0.3369,0.5947
+550,Service Outages and Maintenance,0.9896,0.7545
+645,IT Support,0.85,0.8199
+566,Technical Support,0.4395,0.4038
+520,Product Support,0.6018,0.1121
+459,Customer Service,0.5613,0.1423
+455,Customer Service,0.327,0.128
+553,Technical Support,0.5359,0.7989
+642,IT Support,0.5999,0.1856
+327,Technical Support,0.4732,0.2591
+437,Product Support,0.6097,0.6758
+614,Product Support,0.3636,0.3979
+135,IT Support,0.8924,0.124
+468,Returns and Exchanges,0.9761,0.8282
+663,Billing and Payments,0.9986,0.2014
+790,Technical Support,0.4046,0.7437
+358,Customer Service,0.2386,0.1567
+430,Product Support,0.4962,0.7294
+398,Billing and Payments,0.9986,0.0523
+515,Billing and Payments,0.9498,0.5923
+549,Customer Service,0.3319,0.4313
+98,IT Support,0.1929,0.3067
+559,Technical Support,0.3666,0.4218
+550,Customer Service,0.6882,0.1482
+479,Technical Support,0.5218,0.8115
+152,IT Support,0.477,0.5496
+616,Customer Service,0.5844,0.126
+614,Product Support,0.4539,0.0524
+417,Sales and Pre-Sales,0.3464,0.3678
+542,Service Outages and Maintenance,0.9937,0.9671
+222,Customer Service,0.6201,0.1884
+676,Sales and Pre-Sales,0.9709,0.0353
+319,Product Support,0.4332,0.6786
+78,IT Support,0.8425,0.1665
+491,IT Support,0.8717,0.506
+240,Product Support,0.2277,0.2395
+324,Billing and Payments,0.6078,0.2
+604,IT Support,0.7306,0.8982
+253,Customer Service,0.3321,0.6436
+124,Customer Service,0.4124,0.6888
+645,Customer Service,0.4208,0.8193
+493,Technical Support,0.5538,0.158
+583,IT Support,0.5214,0.78
+606,Product Support,0.4018,0.6426
+621,Technical Support,0.3936,0.1894
+595,Service Outages and Maintenance,0.9928,0.7603
+449,IT Support,0.7439,0.7966
+242,Billing and Payments,0.4933,0.5897
+283,Technical Support,0.5705,0.8757
+251,Service Outages and Maintenance,0.4508,0.7993
+615,Product Support,0.4451,0.4641
+458,Technical Support,0.5908,0.9532
+686,Returns and Exchanges,0.778,0.6255
+585,IT Support,0.5204,0.3558
+122,Human Resources,0.5389,0.1905
+99,IT Support,0.4774,0.4336
+610,Customer Service,0.6596,0.1284
+618,Customer Service,0.3836,0.083
+328,Technical Support,0.3836,0.0625
+279,Technical Support,0.4644,0.4742
+323,General Inquiry,0.8658,0.0522
+432,Technical Support,0.4261,0.8692
+278,IT Support,0.5016,0.8442
+571,Customer Service,0.4714,0.8371
+549,IT Support,0.4578,0.1547
+519,Service Outages and Maintenance,0.9929,0.8976
+239,Sales and Pre-Sales,0.9711,0.2148
+665,Returns and Exchanges,0.3407,0.3465
+160,IT Support,0.5738,0.8296
+663,Returns and Exchanges,0.9886,0.1528
+778,Product Support,0.348,0.7813
+509,Sales and Pre-Sales,0.9754,0.5071
+679,Returns and Exchanges,0.6518,0.117
+268,Service Outages and Maintenance,0.9935,0.9047
+88,IT Support,0.4188,0.3651
+425,Customer Service,0.4909,0.0605
+173,Technical Support,0.5462,0.4244
+638,Customer Service,0.3858,0.1421
+524,IT Support,0.6767,0.1802
+133,IT Support,0.4247,0.4314
+499,Technical Support,0.4299,0.1331
+316,Technical Support,0.4822,0.3046
+435,Technical Support,0.4053,0.6668
+498,Human Resources,0.8084,0.4363
+553,Sales and Pre-Sales,0.9798,0.8571
+634,Product Support,0.3989,0.1758
+243,Billing and Payments,0.3807,0.2192
+485,Customer Service,0.2969,0.8676
+460,Human Resources,0.4763,0.6363
+646,Customer Service,0.5828,0.1986
+258,Technical Support,0.4774,0.8149
+338,Technical Support,0.594,0.3462
+247,IT Support,0.3858,0.1514
+595,Technical Support,0.3498,0.75
+652,Technical Support,0.4771,0.6908
+677,IT Support,0.5063,0.1925
+638,Customer Service,0.4215,0.77
+351,Product Support,0.4708,0.7753
+592,Sales and Pre-Sales,0.8291,0.4747
+530,Customer Service,0.3863,0.575
+277,Technical Support,0.3704,0.2474
+372,IT Support,0.4257,0.7148
+545,Technical Support,0.3974,0.1833
+306,Product Support,0.415,0.1754
+461,Customer Service,0.4709,0.7177
+668,Product Support,0.4603,0.2299
+216,Customer Service,0.573,0.2035
+297,Billing and Payments,0.9985,0.1198
+637,Billing and Payments,0.9984,0.0726
+650,Customer Service,0.4475,0.1875
+703,Technical Support,0.4133,0.1227
+618,Sales and Pre-Sales,0.9746,0.305
+585,Product Support,0.6797,0.058
+356,Service Outages and Maintenance,0.9932,0.4097
+392,Product Support,0.3277,0.5292
+406,Product Support,0.4066,0.4397
+591,Sales and Pre-Sales,0.9882,0.0628
+608,Technical Support,0.6395,0.7696
+527,Technical Support,0.3859,0.8433
+376,Customer Service,0.4568,0.113
+569,Service Outages and Maintenance,0.9902,0.5942
+418,General Inquiry,0.9856,0.824
+255,Product Support,0.3213,0.4147
+134,Customer Service,0.7029,0.6272
+297,Billing and Payments,0.8481,0.1849
+435,Technical Support,0.3252,0.131
+397,Product Support,0.5475,0.6373
+562,Customer Service,0.409,0.2504
+528,General Inquiry,0.9732,0.1202
+384,Technical Support,0.3455,0.6635
+107,Product Support,0.4178,0.6704
+555,Customer Service,0.4157,0.127
+386,Billing and Payments,0.9983,0.132
+618,Billing and Payments,0.8544,0.2921
+128,IT Support,0.4502,0.2297
+676,Customer Service,0.5263,0.1862
+615,Product Support,0.6402,0.1241
+254,Billing and Payments,0.9388,0.1874
+608,Customer Service,0.4579,0.12
+577,Customer Service,0.5775,0.2658
+152,Product Support,0.4488,0.369
+140,Human Resources,0.9856,0.0221
+562,Billing and Payments,0.6947,0.1207
+595,IT Support,0.316,0.7377
+234,Billing and Payments,0.9986,0.5494
+77,Technical Support,0.4316,0.444
+343,IT Support,0.6859,0.1299
+544,Product Support,0.2724,0.2412
+107,Technical Support,0.385,0.5917
+353,Product Support,0.4361,0.3145
+164,Returns and Exchanges,0.5728,0.1657
+623,Customer Service,0.5008,0.0544
+568,Technical Support,0.331,0.4628
+525,Billing and Payments,0.3298,0.7109
+517,Human Resources,0.8776,0.0418
+463,Technical Support,0.6053,0.1367
+628,Product Support,0.4854,0.1177
+341,Product Support,0.3991,0.3938
+245,Technical Support,0.2908,0.2001
+437,Technical Support,0.4824,0.8057
+492,Service Outages and Maintenance,0.993,0.3941
+415,Customer Service,0.6269,0.2379
+231,Technical Support,0.3647,0.4241
+150,Technical Support,0.2421,0.4736
+344,Product Support,0.3099,0.3871
+350,IT Support,0.6603,0.1483
+202,Product Support,0.5362,0.8004
+639,IT Support,0.6163,0.1995
+321,Technical Support,0.416,0.3569
+591,Technical Support,0.5546,0.7035
+323,Technical Support,0.476,0.2828
+124,Billing and Payments,0.998,0.7219
+615,Product Support,0.4952,0.1369
+470,Customer Service,0.3324,0.0381
+505,Technical Support,0.4149,0.9087
+300,Technical Support,0.5578,0.0838
+84,IT Support,0.304,0.3999
+541,Product Support,0.5963,0.0826
+708,Technical Support,0.5245,0.467
+402,Billing and Payments,0.9415,0.2546
+501,IT Support,0.5129,0.068
+592,Returns and Exchanges,0.9711,0.1275
+467,Returns and Exchanges,0.8833,0.1011
+534,Customer Service,0.3224,0.1933
+592,IT Support,0.7188,0.4624
+385,Technical Support,0.4062,0.3905
+528,IT Support,0.4244,0.3079
+591,Returns and Exchanges,0.7358,0.1872
+585,Returns and Exchanges,0.9147,0.0411
+549,Customer Service,0.5341,0.4327
+598,Product Support,0.3932,0.1295
+249,IT Support,0.7009,0.1544
+166,Service Outages and Maintenance,0.9934,0.8668
+439,Product Support,0.2872,0.102
+156,Product Support,0.4059,0.5819
+106,Product Support,0.3141,0.2645
+335,General Inquiry,0.5269,0.8191
+482,IT Support,0.4422,0.171
+608,Customer Service,0.532,0.2562
+378,Product Support,0.4685,0.8261
+93,Technical Support,0.4573,0.614
+623,Sales and Pre-Sales,0.6179,0.0986
+349,IT Support,0.9153,0.0697
+408,Product Support,0.5697,0.1728
+167,Customer Service,0.7094,0.6879
+644,Product Support,0.5417,0.2357
+420,Technical Support,0.5529,0.0548
+604,Sales and Pre-Sales,0.9745,0.1354
+204,Human Resources,0.4351,0.1271
+447,Customer Service,0.3758,0.6743
+305,Technical Support,0.5026,0.2022
+274,Sales and Pre-Sales,0.9678,0.0831
+576,Product Support,0.5074,0.1576
+184,Service Outages and Maintenance,0.7177,0.2167
+424,Billing and Payments,0.9984,0.2229
+390,Service Outages and Maintenance,0.2281,0.2378
+653,Product Support,0.472,0.5928
+583,Product Support,0.3707,0.1189
+496,IT Support,0.7125,0.1499
+518,IT Support,0.5087,0.2547
+178,Technical Support,0.2235,0.6788
+586,Technical Support,0.4895,0.9275
+317,Product Support,0.5912,0.6434
+394,IT Support,0.675,0.0542
+642,Returns and Exchanges,0.7283,0.1195
+292,Technical Support,0.6142,0.9033
+576,Service Outages and Maintenance,0.9933,0.6993
+604,IT Support,0.4797,0.4599
+589,IT Support,0.3985,0.2784
+614,Technical Support,0.5232,0.6376
+153,Technical Support,0.3561,0.2455
+478,Customer Service,0.4029,0.286
+587,Customer Service,0.4099,0.1252
+652,Product Support,0.3737,0.1519
+285,Billing and Payments,0.9985,0.5388
+651,IT Support,0.9012,0.0824
+221,IT Support,0.6814,0.7145
+416,Technical Support,0.5226,0.1919
+475,Technical Support,0.3769,0.4882
+579,Billing and Payments,0.9986,0.7923
+97,General Inquiry,0.4161,0.4592
+516,Billing and Payments,0.7944,0.1679
+645,Technical Support,0.4489,0.172
+333,Technical Support,0.3913,0.1389
+55,Technical Support,0.4305,0.136
+643,Sales and Pre-Sales,0.7604,0.1714
+265,Billing and Payments,0.9986,0.7212
+560,Human Resources,0.9068,0.2328
+309,Product Support,0.5317,0.5065
+525,IT Support,0.3031,0.2398
+617,IT Support,0.8725,0.1119
+561,IT Support,0.7221,0.4158
+619,IT Support,0.5847,0.0827
+420,Service Outages and Maintenance,0.9933,0.5089
+593,IT Support,0.3877,0.2934
+208,IT Support,0.8445,0.6849
+552,Product Support,0.3431,0.932
+300,Service Outages and Maintenance,0.9932,0.9399
+535,Technical Support,0.5478,0.1121
+576,Product Support,0.3334,0.4609
+560,IT Support,0.5437,0.5076
+566,IT Support,0.6339,0.5544
+577,Product Support,0.6464,0.2525
+633,IT Support,0.6013,0.183
+128,Human Resources,0.9927,0.7655
+365,Billing and Payments,0.9912,0.1018
+92,Technical Support,0.3511,0.231
+234,Returns and Exchanges,0.4175,0.6987
+571,Product Support,0.7493,0.0993
+380,IT Support,0.5091,0.0262
+138,Service Outages and Maintenance,0.9935,0.0549
+364,Billing and Payments,0.61,0.6837
+590,Human Resources,0.9944,0.0367
+588,Technical Support,0.4405,0.2033
+531,Billing and Payments,0.9985,0.1849
+371,Technical Support,0.5275,0.6836
+656,Product Support,0.6482,0.0901
+576,Billing and Payments,0.9985,0.0806
+236,Product Support,0.3674,0.2441
+399,Technical Support,0.396,0.3664
+149,Customer Service,0.4132,0.7978
+85,Sales and Pre-Sales,0.8885,0.0719
+653,Billing and Payments,0.5001,0.1127
+547,Sales and Pre-Sales,0.8533,0.2066
+642,Technical Support,0.515,0.214
+345,Product Support,0.287,0.3842
+236,IT Support,0.5613,0.9014
+438,Technical Support,0.3078,0.0767
+577,Sales and Pre-Sales,0.9308,0.0851
+216,Technical Support,0.4851,0.3019
+570,Customer Service,0.61,0.6751
+586,Returns and Exchanges,0.8138,0.1684
+344,Product Support,0.5099,0.0587
+561,Sales and Pre-Sales,0.9815,0.14
+642,Customer Service,0.3252,0.1896
+297,IT Support,0.7111,0.2276
+867,Returns and Exchanges,0.3587,0.5788
+447,Product Support,0.2969,0.4062
+371,Human Resources,0.3374,0.1091
+577,Product Support,0.4065,0.6609
+94,Customer Service,0.5507,0.694
+173,IT Support,0.509,0.3161
+593,Technical Support,0.3393,0.1364
+534,Returns and Exchanges,0.3835,0.2413
+465,Technical Support,0.6261,0.3847
+343,Technical Support,0.5005,0.0425
+550,Technical Support,0.3222,0.8343
+537,Product Support,0.6395,0.0257
+333,Billing and Payments,0.4871,0.7591
+207,Human Resources,0.855,0.3374
+334,Customer Service,0.6209,0.389
+121,Product Support,0.6137,0.0487
+387,Service Outages and Maintenance,0.5216,0.9058
+621,Billing and Payments,0.9985,0.1789
+466,Product Support,0.5638,0.048
+538,Sales and Pre-Sales,0.9684,0.0264
+150,Technical Support,0.4016,0.1912
+625,IT Support,0.7027,0.1528
+492,Billing and Payments,0.9985,0.2308
+549,Product Support,0.519,0.1079
+582,Billing and Payments,0.9981,0.7537
+626,Product Support,0.3282,0.1263
+378,Human Resources,0.3724,0.4508
+620,Billing and Payments,0.9985,0.2328
+509,Billing and Payments,0.9985,0.3214
+610,Technical Support,0.5903,0.2618
+242,Returns and Exchanges,0.9886,0.1388
+393,IT Support,0.735,0.957
+550,Billing and Payments,0.9986,0.2615
+507,IT Support,0.4343,0.2759
+202,Returns and Exchanges,0.4871,0.27
+561,Customer Service,0.4684,0.3579
+200,Customer Service,0.3328,0.3345
+586,Technical Support,0.6128,0.3591
+160,General Inquiry,0.3459,0.3774
+536,Customer Service,0.4515,0.1565
+296,IT Support,0.7229,0.4634
+578,Billing and Payments,0.9985,0.1484
+643,Product Support,0.3106,0.3692
+497,Returns and Exchanges,0.541,0.1484
+660,Customer Service,0.4388,0.6518
+389,Customer Service,0.6053,0.1763
+405,Technical Support,0.3564,0.6077
+577,Billing and Payments,0.9984,0.5101
+507,Product Support,0.4544,0.4147
+541,Customer Service,0.4735,0.734
+504,Human Resources,0.9947,0.0916
+212,Technical Support,0.5171,0.1441
+140,Returns and Exchanges,0.8812,0.5663
+139,Technical Support,0.4989,0.6534
+329,Technical Support,0.518,0.1616
+125,Product Support,0.5136,0.6086
+660,Product Support,0.6945,0.2217
+389,Customer Service,0.5194,0.3706
+322,Service Outages and Maintenance,0.7282,0.1744
+421,Customer Service,0.5608,0.6116
+311,Technical Support,0.4731,0.4448
+506,Technical Support,0.4954,0.9171
+331,Customer Service,0.6465,0.6064
+540,IT Support,0.8204,0.4094
+489,Product Support,0.4114,0.1283
+620,Technical Support,0.4239,0.1441
+94,Returns and Exchanges,0.5011,0.1647
+129,Human Resources,0.7087,0.8709
+35,Billing and Payments,0.4196,0.6845
+552,Customer Service,0.3719,0.1967
+601,Product Support,0.3254,0.1784
+165,Service Outages and Maintenance,0.345,0.1271
+263,Customer Service,0.451,0.0512
+484,Billing and Payments,0.6271,0.1268
+193,IT Support,0.5528,0.6126
+403,Billing and Payments,0.9986,0.1278
+958,IT Support,0.8786,0.102
+240,Technical Support,0.3308,0.1902
+475,Product Support,0.4366,0.1718
+574,Product Support,0.3927,0.1528
+318,Billing and Payments,0.9984,0.0974
+376,Service Outages and Maintenance,0.9929,0.9518
+254,Technical Support,0.4876,0.3147
+464,Billing and Payments,0.8284,0.2995
+509,Billing and Payments,0.9985,0.1503
+245,Billing and Payments,0.9985,0.6387
+355,Technical Support,0.5327,0.6452
+536,IT Support,0.8204,0.1666
+281,Billing and Payments,0.9985,0.1694
+595,Customer Service,0.5339,0.1495
+544,Product Support,0.5542,0.1814
+334,Technical Support,0.4535,0.19
+589,Customer Service,0.3413,0.0547
+495,Technical Support,0.4577,0.2393
+283,Product Support,0.4277,0.78
+546,Product Support,0.4137,0.1613
+564,Product Support,0.4606,0.1431
+459,IT Support,0.4002,0.1291
+369,Customer Service,0.5262,0.3033
+554,Product Support,0.4777,0.7764
+405,Billing and Payments,0.9985,0.2166
+251,Customer Service,0.3198,0.18
+526,IT Support,0.2149,0.8237
+126,Returns and Exchanges,0.4788,0.0406
+153,Returns and Exchanges,0.3398,0.7926
+224,Billing and Payments,0.8995,0.6585
+488,Product Support,0.4866,0.9358
+527,Technical Support,0.5642,0.6359
+292,IT Support,0.4543,0.0608
+86,Customer Service,0.5021,0.3091
+68,Technical Support,0.3997,0.3417
+542,Customer Service,0.5054,0.2547
+579,IT Support,0.5104,0.4048
+191,Technical Support,0.5731,0.3007
+248,Product Support,0.3506,0.2439
+595,Technical Support,0.5924,0.8013
+220,Service Outages and Maintenance,0.8795,0.4516
+306,Technical Support,0.5027,0.2311
+389,Product Support,0.4618,0.2786
+378,Technical Support,0.4081,0.8182
+222,Customer Service,0.5274,0.7539
+551,Product Support,0.4548,0.4284
+380,Product Support,0.5247,0.1745
+601,Customer Service,0.4144,0.1244
+251,Customer Service,0.6346,0.8103
+471,Sales and Pre-Sales,0.3589,0.7127
+628,Technical Support,0.276,0.0747
+614,Returns and Exchanges,0.2885,0.1357
+623,IT Support,0.2932,0.1479
+263,Product Support,0.7201,0.7243
+311,Product Support,0.4671,0.1817
+351,Technical Support,0.3108,0.6669
+111,Technical Support,0.5698,0.6869
+656,Customer Service,0.4009,0.194
+383,Product Support,0.4514,0.8632
+532,Technical Support,0.5283,0.1243
+492,Customer Service,0.2835,0.3566
+457,Product Support,0.3619,0.6927
+121,Billing and Payments,0.9983,0.1358
+588,Product Support,0.3552,0.0841
+600,Billing and Payments,0.9925,0.4521
+363,Service Outages and Maintenance,0.2624,0.1485
+630,Customer Service,0.311,0.324
+680,Billing and Payments,0.9711,0.1132
+306,Product Support,0.4903,0.1786
+299,Customer Service,0.2342,0.2339
+565,Technical Support,0.2811,0.8247
+263,Technical Support,0.5164,0.9072
+406,Technical Support,0.522,0.7256
+594,Sales and Pre-Sales,0.3753,0.091
+447,Technical Support,0.5695,0.3307
+105,Customer Service,0.323,0.105
+350,Technical Support,0.3622,0.1914
+290,Returns and Exchanges,0.9724,0.8343
+581,IT Support,0.2607,0.6777
+354,Product Support,0.5456,0.0229
+168,Technical Support,0.4526,0.2693
+717,Customer Service,0.6409,0.1195
+573,Billing and Payments,0.9959,0.0591
+406,Customer Service,0.4489,0.0621
+426,Sales and Pre-Sales,0.9643,0.2507
+577,Product Support,0.2789,0.1072
+586,Service Outages and Maintenance,0.9926,0.8359
+619,Returns and Exchanges,0.3497,0.1206
+608,IT Support,0.7454,0.4458
+326,IT Support,0.8454,0.6535
+116,Customer Service,0.4649,0.1182
+650,Service Outages and Maintenance,0.9777,0.7732
+456,Service Outages and Maintenance,0.481,0.47
+556,Returns and Exchanges,0.8196,0.1762
+514,Returns and Exchanges,0.8029,0.1934
+443,Customer Service,0.4098,0.7858
+710,IT Support,0.8153,0.6961
+377,Technical Support,0.4501,0.2094
+580,IT Support,0.5828,0.1882
+674,Product Support,0.6192,0.2149
+599,IT Support,0.4908,0.1945
+409,Technical Support,0.5163,0.9014
+135,Product Support,0.457,0.2891
+596,Customer Service,0.4165,0.788
+639,Product Support,0.5231,0.5302
+639,Returns and Exchanges,0.6085,0.357
+233,Product Support,0.4576,0.1921
+339,Customer Service,0.3607,0.2738
+547,Product Support,0.56,0.818
+615,Product Support,0.3425,0.1406
+537,Customer Service,0.5202,0.126
+168,Customer Service,0.4369,0.0775
+255,IT Support,0.8341,0.0723
+589,IT Support,0.3068,0.1038
+520,Returns and Exchanges,0.7175,0.0573
+665,Product Support,0.3371,0.154
+118,Billing and Payments,0.9985,0.088
+476,Technical Support,0.3279,0.1582
+578,Product Support,0.4562,0.0902
+194,Customer Service,0.4251,0.6546
+201,IT Support,0.7915,0.0424
+499,Service Outages and Maintenance,0.8279,0.0967
+100,Technical Support,0.4931,0.6099
+444,Technical Support,0.5453,0.1853
+428,Service Outages and Maintenance,0.9928,0.6413
+344,Product Support,0.4483,0.3654
+317,IT Support,0.5173,0.2135
+347,Product Support,0.5041,0.5513
+465,Billing and Payments,0.377,0.0352
+420,Customer Service,0.3071,0.1984
+492,Technical Support,0.4449,0.058
+156,Billing and Payments,0.9981,0.3951
+260,Product Support,0.5607,0.6328
+64,Product Support,0.4,0.1777
+600,Customer Service,0.4581,0.2608
+500,Billing and Payments,0.9983,0.1279
+224,Product Support,0.3736,0.0691
+552,Technical Support,0.3321,0.4512
+543,Product Support,0.4614,0.2947
+614,Technical Support,0.3422,0.4891
+496,Technical Support,0.5621,0.1251
+503,Service Outages and Maintenance,0.9858,0.4799
+592,Product Support,0.3671,0.2853
+281,Product Support,0.4783,0.1358
+401,Product Support,0.3292,0.0933
+493,Customer Service,0.5643,0.7036
+625,Product Support,0.3532,0.0739
+123,Technical Support,0.5082,0.3547
+370,Technical Support,0.6041,0.2644
+313,Billing and Payments,0.7784,0.3389
+369,Returns and Exchanges,0.4211,0.564
+595,Service Outages and Maintenance,0.9795,0.8465
+700,Customer Service,0.4153,0.1233
+544,Technical Support,0.3193,0.6921
+362,Product Support,0.2723,0.0789
+488,Returns and Exchanges,0.532,0.2565
+458,IT Support,0.4636,0.8171
+564,Customer Service,0.3839,0.1159
+231,Customer Service,0.2863,0.1326
+371,Returns and Exchanges,0.3073,0.4359
+518,IT Support,0.767,0.6529
+504,Product Support,0.5681,0.0898
+472,Returns and Exchanges,0.5852,0.7375
+157,IT Support,0.5785,0.4068
+253,Returns and Exchanges,0.9845,0.1689
+381,Sales and Pre-Sales,0.9087,0.07
+692,Billing and Payments,0.9985,0.1393
+234,Product Support,0.32,0.9182
+585,Product Support,0.3748,0.0906
+599,Sales and Pre-Sales,0.9861,0.06
+182,Technical Support,0.4679,0.1847
+360,IT Support,0.7732,0.0496
+129,Product Support,0.329,0.8488
+503,IT Support,0.9014,0.0659
+387,Product Support,0.5211,0.4462
+273,Product Support,0.47,0.0763
+308,IT Support,0.447,0.1059
+539,IT Support,0.4251,0.1124
+532,Customer Service,0.3539,0.1702
+123,Technical Support,0.3312,0.3223
+189,Returns and Exchanges,0.9164,0.3196
+573,Technical Support,0.3044,0.8426
+364,Product Support,0.271,0.164
+146,Technical Support,0.4365,0.188
+157,Customer Service,0.5916,0.1863
+514,Customer Service,0.5362,0.8072
+555,Customer Service,0.5596,0.1158
+144,Sales and Pre-Sales,0.9755,0.0372
+134,Customer Service,0.4227,0.2023
+364,Technical Support,0.5216,0.7428
+541,Customer Service,0.3981,0.1153
+506,Customer Service,0.4203,0.1164
+550,Product Support,0.509,0.1584
+868,Customer Service,0.3609,0.4603
+555,Returns and Exchanges,0.6339,0.6078
+89,Product Support,0.3192,0.3078
+609,IT Support,0.8442,0.8001
+594,Human Resources,0.383,0.5721
+321,Customer Service,0.3059,0.2462
+261,Service Outages and Maintenance,0.5668,0.8278
+426,IT Support,0.3739,0.7147
+442,General Inquiry,0.3895,0.2242
+570,Customer Service,0.4074,0.1061
+619,Service Outages and Maintenance,0.993,0.9479
+545,Billing and Payments,0.3102,0.893
+355,IT Support,0.7542,0.7725
+562,Product Support,0.4913,0.5462
+597,Product Support,0.4096,0.7463
+433,IT Support,0.6467,0.4463
+346,Returns and Exchanges,0.6309,0.0821

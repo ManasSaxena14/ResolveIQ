@@ -1,0 +1,67 @@
+{
+  "n_reference": 2451,
+  "n_current": 401,
+  "psi_threshold": 0.2,
+  "p_value": 0.05,
+  "share_drifted": 0.5,
+  "drifted": [
+    "confidence",
+    "category"
+  ],
+  "features": [
+    {
+      "name": "text_length",
+      "kind": "numeric",
+      "test": "Kolmogorov-Smirnov",
+      "statistic": 0.0561,
+      "p_value": 0.219281,
+      "psi": 0.0489,
+      "drifted": false,
+      "reference_summary": "median 435 (IQR 263 to 567)",
+      "current_summary": "median 403 (IQR 245 to 551)"
+    },
+    {
+      "name": "confidence",
+      "kind": "numeric",
+      "test": "Kolmogorov-Smirnov",
+      "statistic": 0.1451,
+      "p_value": 1e-06,
+      "psi": 0.4121,
+      "drifted": true,
+      "reference_summary": "median 0.514 (IQR 0.408 to 0.709)",
+      "current_summary": "median 0.488 (IQR 0.39 to 0.578)"
+    },
+    {
+      "name": "risk_score",
+      "kind": "numeric",
+      "test": "Kolmogorov-Smirnov",
+      "statistic": 0.1143,
+      "p_value": 0.000222,
+      "psi": 0.0758,
+      "drifted": false,
+      "reference_summary": "median 0.283 (IQR 0.147 to 0.632)",
+      "current_summary": "median 0.389 (IQR 0.187 to 0.721)"
+    },
+    {
+      "name": "category",
+      "kind": "categorical",
+      "test": "Chi-square",
+      "statistic": 117.8876,
+      "p_value": 0.0,
+      "psi": 0.448,
+      "drifted": true,
+      "reference_summary": "Technical Support 20%, Product Support 19%, IT Support 17%",
+      "current_summary": "Technical Support 33%, IT Support 29%, Product Support 16%"
+    }
+  ],
+  "feedback": {
+    "total": 0,
+    "up": 0,
+    "down": 0,
+    "down_rate": 0.0
+  },
+  "retrain": true,
+  "retrain_reasons": [
+    "2 of 4 monitored features drifted (50%, limit 50%): confidence, category"
+  ]
+}
