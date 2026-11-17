@@ -6,7 +6,7 @@ and an MLOps layer tracks, tests and monitors all of them.
 
 ```
                     +--------------------------------------+
-  support ticket -->|  analyze(ticket)  (FastAPI / Gradio) |
+  support ticket -->|  analyze(ticket)  (FastAPI + React) |
                     +--------------------------------------+
                         |                |                |
              +----------+---+   +--------+------+   +-----+-----------+
@@ -58,11 +58,12 @@ Details: [monitoring.md](monitoring.md).
 ## Repository layout
 
 ```
-app.py              web UI entry point (local and Hugging Face Spaces)
+app.py              Gradio demo entry point (local and Hugging Face Spaces)
 configs/            configuration
 data/kb/            help center documents (synthetic)
 docs/               architecture, component docs, model cards, evaluation report
 eval/               RAG test set and evaluation script
+frontend/           React and TypeScript web app, served by the API from frontend/dist
 scripts/            offline jobs: index, training, evaluation, registry, drift, benchmarks
 src/resolveiq/      application package
   service.py        Phase 4: the three lanes behind one call
@@ -88,3 +89,4 @@ tests/              unit, component, contract and behaviour tests with test doub
 | 3 | Escalation risk model ([details](risk_model.md)) | Complete |
 | 4 | Service, API, UI, monitoring, deployment ([API](api.md), [monitoring](monitoring.md), [deployment](deployment.md)) | Complete |
 | 5 | Evaluation report, model cards, packaging ([report](evaluation_report.md)) | Complete |
+| 6 | React web app ([details](frontend.md)) | Complete |

@@ -17,6 +17,8 @@ contract tests in `tests/test_api.py`.
 | `POST /batch` | CSV of tickets in, list ranked by risk out | 413 file too large; 422 missing columns, empty rows, too many rows, not UTF-8 |
 | `POST /feedback` | Store a thumbs up or down for a request | 404 unknown request ID; 422 invalid rating |
 | `GET /health` | Status, model versions, index size | none |
+| `GET /requests` | Newest analyzed tickets with outputs and feedback, no text | 422 limit outside 1 to 500 |
+| `GET /stats` | Totals over the request log for the dashboard | none |
 
 Every response carries an `X-Request-ID` header. A caller can send its own ID in the same
 header to correlate logs.
@@ -147,6 +149,42 @@ are stored. Feedback feeds the retrain rule in [monitoring.md](monitoring.md).
 `status` is `degraded` when a component is missing, for example when no knowledge base
 index exists. `llm_configured` reports the configuration only; the health check does not
 call the language model.
+
+## GET /requests and GET /stats
+
+Both feed the Monitoring page of the web app and read only the request log, so they never
+return ticket text.
+
+`GET /requests?limit=50` returns the newest rows first:
+
+```json
+[
+  {
+    "request_id": "e3b9d6718911",
+    "created_at": "2026-11-17T08:31:02+00:00",
+    "channel": "email",
+    "category": "Billing and Payments",
+    "confidence": 0.9936,
+    "needs_review": false,
+    "risk_score": 0.8229,
+    "alert": true,
+    "text_length": 122,
+    "draft_status": "unavailable",
+    "latency_ms": 918.0,
+    "rating": "down"
+  }
+]
+```
+
+`GET /stats` returns totals over the whole log: `requests`, `alerts`, `needs_review`,
+`mean_risk`, `mean_confidence`, counts per `categories` and `draft_status`,
+`latency_median_ms`, `latency_p95_ms` and `feedback` (`total`, `up`, `down`, `down_rate`).
+
+## Web app
+
+When `frontend/dist` exists (`make web-build`), the API also serves the React app at `/`.
+API routes are registered first, so they always take precedence. See
+[frontend.md](frontend.md).
 
 ## Logging and privacy
 
