@@ -30,8 +30,12 @@ data/processed/
 models/
 results/rag/
 results/classifier/errors.csv
+logs/
 
 # OS and editors
+# Copies such as "notes 2.md" left behind by file sync tools
+* [0-9].*
+* [0-9]
 .DS_Store
 .idea/
 .vscode/

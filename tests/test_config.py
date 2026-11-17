@@ -90,3 +90,36 @@ def test_risk_defaults_are_valid():
     assert risk.label.source_column == "priority"
     assert risk.alert_cost_ratio in risk.cost_ratios
     assert risk.calibration in {"isotonic", "sigmoid"}
+
+
+def test_llm_provider_can_be_overridden_from_the_environment(monkeypatch):
+    monkeypatch.setenv("RESOLVEIQ_LLM_PROVIDER", "groq")
+
+    assert load_config(DEFAULT_CONFIG_PATH).llm.provider == "groq"
+
+
+def test_unknown_provider_override_is_rejected(monkeypatch):
+    monkeypatch.setenv("RESOLVEIQ_LLM_PROVIDER", "made-up")
+
+    with pytest.raises(ValidationError):
+        load_config(DEFAULT_CONFIG_PATH)
+
+
+def test_service_and_monitoring_defaults_are_valid():
+    settings = load_config(DEFAULT_CONFIG_PATH)
+
+    assert settings.service.model_source in {"registry", "local"}
+    assert settings.service.max_text_chars == 4000
+    assert set(settings.monitoring.numeric_features) <= {
+        "text_length",
+        "confidence",
+        "risk_score",
+        "latency_ms",
+    }
+
+
+def test_monitoring_needs_a_feature(tmp_path):
+    path = _write_config(tmp_path, monitoring={"numeric_features": [], "categorical_features": []})
+
+    with pytest.raises(ValidationError, match="at least one feature"):
+        load_config(path)

@@ -1,0 +1,6 @@
+group,tickets,classifier_accuracy,classifier_macro_f1,high_priority_rate,risk_pr_auc,alert_rate,caught
+Change,274,0.4526,0.497,0.4161,0.7637,0.6168,0.8421
+Incident,1005,0.4995,0.5164,0.4189,0.7918,0.6448,0.9169
+Problem,486,0.4671,0.5303,0.3868,0.746,0.5412,0.8351
+Request,686,0.4446,0.4781,0.3309,0.6533,0.5569,0.8106
+All,2451,0.4725,0.5213,0.3876,0.7489,0.5965,0.8663

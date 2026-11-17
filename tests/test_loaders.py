@@ -4,7 +4,13 @@ from types import SimpleNamespace
 import pytest
 
 from resolveiq.rag import loaders
-from resolveiq.rag.loaders import discover_files, html_to_text, load_documents, load_file
+from resolveiq.rag.loaders import (
+    discover_files,
+    html_to_text,
+    is_sync_duplicate,
+    load_documents,
+    load_file,
+)
 
 
 def test_discover_files_skips_unsupported_formats(kb_dir):
@@ -72,3 +78,21 @@ def test_pdf_keeps_page_numbers(tmp_path, monkeypatch):
     pages = loaders.load_file(Path(path))
 
     assert [(p.page, p.text) for p in pages] == [(1, "Page one text"), (2, ""), (3, "")]
+
+
+def test_sync_duplicates_and_hidden_files_are_skipped(kb_dir, caplog):
+    (kb_dir / "billing" / "refunds 2.md").write_text("Copy made by a sync tool", encoding="utf-8")
+    (kb_dir / ".draft.md").write_text("Hidden draft", encoding="utf-8")
+
+    with caplog.at_level("WARNING"):
+        names = [path.name for path in discover_files(kb_dir)]
+
+    assert names == ["account.html", "refunds.md", "shipping.txt"]
+    assert "Skipped 2 hidden or duplicate files" in caplog.text
+
+
+def test_is_sync_duplicate():
+    assert is_sync_duplicate("refunds 2.md")
+    assert is_sync_duplicate("notes 12")
+    assert not is_sync_duplicate("chapter 2 overview.md")
+    assert not is_sync_duplicate("refunds.md")

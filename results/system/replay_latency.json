@@ -1,0 +1,8 @@
+{
+  "split": "test",
+  "queues": "all",
+  "requests": 400,
+  "p50_ms": 40.1,
+  "p95_ms": 51.7,
+  "steps": "retrieval, classifier, risk (no language model)"
+}
