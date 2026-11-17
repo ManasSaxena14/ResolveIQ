@@ -2,9 +2,37 @@
 
 All notable changes to this project are documented in this file.
 
-## [Unreleased]
+## [1.0.0] - 2026-11-17
 
 ### Added
+
+- Packaging (Phase 5)
+  - Evaluation report with the RAG, classifier, risk, cost and system tables, results by
+    ticket type, five failure cases and limits
+  - Model card for the escalation risk model, and a script that publishes either model
+    to the Hugging Face Hub
+  - README with a screenshot, results summary, run instructions without Docker and
+    limitations
+
+- Service, UI and MLOps (Phase 4)
+  - `Copilot.analyze`: draft reply, category and risk in one call, with a partial result
+    when the language model is unavailable
+  - FastAPI service with `/analyze`, `/batch`, `/feedback` and `/health`, request IDs,
+    explicit 413, 422, 404 and 503 errors, and contract tests
+  - Gradio web UI with source links, a confidence bar, a risk gauge with reasons,
+    batch upload and feedback buttons
+  - SQLite request log and feedback store that keep text length and hash, never text
+  - Drift detection with KS and chi-square tests plus PSI, an HTML report, sample
+    reports and a retrain rule
+  - MLflow model registry with a `production` alias loaded by the service
+  - Retrieval-only RAG experiments on dev and a final holdout run
+  - API benchmark, in-process replay and per-ticket-type evaluation scripts
+  - Hosting without Docker: provider and model repository settings from the environment
+
+### Fixed
+
+- Knowledge base indexing skips hidden files and sync-tool duplicates such as
+  `refunds 2.md`
 
 - Escalation risk model (Phase 3)
   - Written proxy label (high priority) and a leakage checklist for every dataset column
