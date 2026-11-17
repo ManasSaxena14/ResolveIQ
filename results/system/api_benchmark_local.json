@@ -1,0 +1,18 @@
+{
+  "url": "http://127.0.0.1:8000",
+  "requests": 50,
+  "status_codes": {
+    "200": 50
+  },
+  "p50_ms": 43.9,
+  "p95_ms": 49.8,
+  "memory_idle_mb": 588.5,
+  "memory_peak_mb": 758.5,
+  "llm_configured": true,
+  "versions": {
+    "embedder": "BAAI/bge-small-en-v1.5",
+    "llm": "ollama/llama3.2",
+    "classifier": "distilbert-base-uncased-seed-42 (resolveiq-ticket-classifier/v1)",
+    "risk": "xgboost-943a93b (registry)"
+  }
+}
