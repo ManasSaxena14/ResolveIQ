@@ -174,3 +174,58 @@ def test_models_are_loaded_at_startup_when_not_given(embedder, vector_store):
     with TestClient(create_app(loader=loader)) as client:
         assert client.get("/health").status_code == 200
     assert calls == [1]
+
+
+def test_history_is_newest_first_with_feedback_and_no_text(client):
+    first = client.post("/analyze", json=TICKET).json()["request_id"]
+    second = client.post("/analyze", json={"text": "Server down again, urgent"}).json()
+    client.post("/feedback", json={"request_id": first, "rating": "down"})
+
+    rows = client.get("/requests", params={"limit": 10}).json()
+
+    assert [row["request_id"] for row in rows] == [second["request_id"], first]
+    assert rows[1]["rating"] == "down"
+    assert rows[0]["rating"] is None
+    assert "text" not in rows[0] and "text_hash" not in rows[0]
+    assert client.get("/requests", params={"limit": 0}).status_code == 422
+
+
+def test_stats_summarize_the_log(client):
+    client.post("/analyze", json=TICKET)
+    request_id = client.post("/analyze", json={"text": "Question about my invoice"}).json()[
+        "request_id"
+    ]
+    client.post("/feedback", json={"request_id": request_id, "rating": "up"})
+
+    stats = client.get("/stats").json()
+
+    assert stats["requests"] == 2
+    assert stats["alerts"] == 1
+    assert stats["categories"] == {"Billing and Payments": 2}
+    assert stats["draft_status"]["ok"] >= 1
+    assert stats["feedback"]["up"] == 1
+    assert stats["latency_median_ms"] is not None
+
+
+def test_history_and_stats_without_a_log(embedder, vector_store):
+    copilot = make_copilot(embedder, vector_store)
+    copilot.request_log = None
+    with TestClient(create_app(copilot)) as client:
+        assert client.get("/requests").json() == []
+        assert client.get("/stats").json()["requests"] == 0
+
+
+def test_built_frontend_is_served_next_to_the_api(copilot, tmp_path):
+    (tmp_path / "index.html").write_text("<!doctype html><title>ResolveIQ</title>")
+    (tmp_path / "assets").mkdir()
+    (tmp_path / "assets" / "app.js").write_text("console.log(1)")
+
+    with TestClient(create_app(copilot, web_dir=tmp_path)) as client:
+        assert "ResolveIQ" in client.get("/").text
+        assert client.get("/assets/app.js").status_code == 200
+        assert client.get("/health").json()["status"] == "ok"
+
+
+def test_no_frontend_means_no_root_page(copilot, tmp_path):
+    with TestClient(create_app(copilot, web_dir=tmp_path)) as client:
+        assert client.get("/").status_code == 404

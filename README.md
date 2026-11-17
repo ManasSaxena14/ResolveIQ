@@ -7,7 +7,7 @@ explainable escalation prediction, delivered through a tested and monitored API.
 ![python](https://img.shields.io/badge/python-3.12-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 
-![ResolveIQ web UI: a double-charge ticket with its retrieved sources, the Billing and Payments category and an 82% escalation risk with its reasons](docs/images/web_ui.jpg)
+![ResolveIQ web app: a double-charge ticket with its retrieved help center sources, the Billing and Payments category and an 82% escalation risk with its reasons](docs/images/web_app.jpg)
 
 ## The problem
 
@@ -27,7 +27,7 @@ Replies are drafts for a person to edit. Nothing is sent automatically.
 
 ```
                         +-----------------------------------------+
-  support ticket  --->  |  Copilot.analyze   (FastAPI and Gradio) |  ---> JSON / web page
+  support ticket  --->  |  Copilot.analyze   (FastAPI)            |  ---> JSON, React web app
                         +-----------------------------------------+
                            |                 |                  |
                  +---------+-----+   +-------+-------+   +------+----------+
@@ -73,9 +73,11 @@ cp .env.example .env             # add an API key only for a hosted language mod
 make index                       # build the knowledge base index
 make data risk-features risk     # ticket data and the escalation risk model
 make baseline classifier evaluate-classifier   # classifier (about 1 hour per seed)
-make api                         # API on http://127.0.0.1:8000, docs at /docs
-make ui                          # web UI on http://127.0.0.1:7860
+make web-install web-build      # React web app (needs Node.js 20 or later)
+make api                         # app and API on http://127.0.0.1:8000, API docs at /docs
 ```
+
+`make ui` starts the lighter Gradio page instead, used for the Hugging Face Spaces demo.
 
 For drafted replies, install [Ollama](https://ollama.com) and run `ollama pull llama3.2`,
 or set `RESOLVEIQ_LLM_PROVIDER` to `groq`, `gemini` or `openrouter` and add its key to
@@ -109,10 +111,15 @@ known at arrival; XGBoost with an 18-trial grid and calibration; an alert thresh
 a stated cost ratio; the top three SHAP reasons per ticket; batch scoring of a CSV.
 [docs/risk_model.md](docs/risk_model.md), [model card](docs/model_card_risk.md)
 
-**Service and MLOps.** FastAPI endpoints `/analyze`, `/batch`, `/feedback` and `/health`;
-a Gradio UI with feedback buttons; MLflow tracking and a model registry with a
-`production` alias; a SQLite request log that never stores ticket text; drift reports
-with a retrain rule; CI with linting and a coverage gate.
+**Web app.** A React and TypeScript app served by the API: an Analyze page with the
+three result cards and feedback, a Batch page that ranks a CSV by risk, and a Monitoring
+dashboard over the request log, in light and dark themes.
+[docs/frontend.md](docs/frontend.md)
+
+**Service and MLOps.** FastAPI endpoints `/analyze`, `/batch`, `/feedback`, `/health`,
+`/requests` and `/stats`; a Gradio page for the hosted demo; MLflow tracking and a model
+registry with a `production` alias; a SQLite request log that never stores ticket text;
+drift reports with a retrain rule; CI for the Python package and the web app.
 [docs/api.md](docs/api.md), [docs/monitoring.md](docs/monitoring.md),
 [docs/deployment.md](docs/deployment.md)
 
@@ -122,6 +129,7 @@ with a retrain rule; CI with linting and a coverage gate.
 make lint        # ruff lint and format check
 make test        # test suite
 make coverage    # test suite with the 70% coverage gate used in CI
+make web-test    # web app lint, type check and tests
 ```
 
 Tests replace the embedding model, vector database, language model and trained models
@@ -139,6 +147,7 @@ configs/config.yaml       all settings, validated at load time
 data/kb/                  synthetic help center for the fictional retailer Altura
 docs/                     architecture, component docs, model cards, evaluation report
 eval/                     RAG test set and evaluation script
+frontend/                 React and TypeScript web app served by the API
 scripts/                  offline jobs: index, training, evaluation, registry, drift, benchmarks
 src/resolveiq/
   config.py schemas.py    settings and the API request and response models

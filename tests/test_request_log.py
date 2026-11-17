@@ -75,3 +75,29 @@ def test_invalid_rating_is_rejected():
 
 def test_empty_feedback_rate_is_zero():
     assert RequestLog(":memory:").feedback_stats().down_rate == 0.0
+
+
+def test_summary_and_ratings():
+    log = RequestLog(":memory:")
+    log.record(_record("a", category="Billing", created_at="2026-01-01T00:00:00+00:00"))
+    log.record(_record("b", category="Billing", created_at="2026-01-02T00:00:00+00:00"))
+    log.record(_record("c", category="Technical", created_at="2026-01-03T00:00:00+00:00"))
+    log.add_feedback("a", "up")
+    log.add_feedback("a", "down")
+
+    summary = log.summary()
+
+    assert summary["requests"] == 3
+    assert summary["categories"] == {"Billing": 2, "Technical": 1}
+    assert summary["draft_status"] == {"ok": 3}
+    assert summary["latency_median_ms"] == 12.5
+    assert log.ratings(["a", "b"]) == {"a": "down"}
+    assert log.ratings([]) == {}
+
+
+def test_empty_summary():
+    summary = RequestLog(":memory:").summary()
+
+    assert summary["requests"] == 0
+    assert summary["mean_risk"] is None
+    assert summary["latency_median_ms"] is None

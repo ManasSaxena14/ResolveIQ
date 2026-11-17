@@ -2,6 +2,19 @@
 
 All notable changes to this project are documented in this file.
 
+## [1.1.0] - 2026-11-17
+
+### Added
+
+- React and TypeScript web app served by the API
+  - Analyze page with the draft, category and risk cards, linked sources, timings and
+    feedback
+  - Batch page with CSV upload, a ranked table, an alerts-only filter and CSV export
+  - Monitoring dashboard over the request log
+  - Live health status and light and dark themes
+  - Vitest and Testing Library tests, and a CI job for lint, type check, tests and build
+- `GET /requests` and `GET /stats` endpoints for the dashboard, without ticket text
+
 ## [1.0.0] - 2026-11-17
 
 ### Added

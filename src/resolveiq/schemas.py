@@ -115,3 +115,33 @@ class HealthResponse(_Model):
 
 class ErrorResponse(_Model):
     detail: str
+
+
+class RequestSummary(_Model):
+    """One row of the request log, as shown in the dashboard history. No ticket text."""
+
+    request_id: str
+    created_at: str
+    channel: str
+    category: str
+    confidence: float
+    needs_review: bool
+    risk_score: float
+    alert: bool
+    text_length: int
+    draft_status: str
+    latency_ms: float
+    rating: Literal["up", "down"] | None = None
+
+
+class StatsResponse(_Model):
+    requests: int
+    alerts: int
+    needs_review: int
+    mean_risk: float | None
+    mean_confidence: float | None
+    categories: dict[str, int]
+    draft_status: dict[str, int]
+    latency_median_ms: float | None
+    latency_p95_ms: float | None
+    feedback: dict[str, float]
