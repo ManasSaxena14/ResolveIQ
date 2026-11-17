@@ -1,6 +1,6 @@
 PYTHON ?= python
 
-.PHONY: help install install-dev lint format test coverage index eval data baseline classifier evaluate-classifier risk-features risk evaluate-risk register api ui drift-reference drift benchmark evaluate-groups clean
+.PHONY: help install install-dev lint format test coverage index eval data baseline classifier evaluate-classifier risk-features risk evaluate-risk register api ui drift-reference drift benchmark evaluate-groups web-install web-dev web-build web-test clean
 
 help:
 	@echo "install      Install runtime dependencies and the package"
@@ -25,6 +25,10 @@ help:
 	@echo "drift        Compare recent requests with the reference and write a drift report"
 	@echo "benchmark    Measure response time of a running API (start it with make api)"
 	@echo "evaluate-groups  Compare classifier and risk results across ticket types"
+	@echo "web-install  Install the web app dependencies (needs Node.js 20 or later)"
+	@echo "web-dev      Start the web app with hot reload on http://127.0.0.1:5173 (run make api too)"
+	@echo "web-build    Build the web app; make api then serves it on http://127.0.0.1:8000"
+	@echo "web-test     Lint, type check and test the web app"
 	@echo "clean        Remove caches and generated artifacts"
 
 install:
@@ -97,6 +101,18 @@ benchmark:
 
 evaluate-groups:
 	$(PYTHON) scripts/evaluate_groups.py
+
+web-install:
+	cd frontend && npm ci
+
+web-dev:
+	cd frontend && npm run dev
+
+web-build:
+	cd frontend && npm run build
+
+web-test:
+	cd frontend && npm run lint && npm run typecheck && npm test
 
 clean:
 	rm -rf .pytest_cache .ruff_cache .coverage htmlcov
