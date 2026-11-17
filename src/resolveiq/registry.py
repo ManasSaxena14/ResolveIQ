@@ -111,6 +111,36 @@ def register_model(
     return version
 
 
+HUB_ENV_VARS = {"classifier": "RESOLVEIQ_CLASSIFIER_REPO", "risk": "RESOLVEIQ_RISK_REPO"}
+META_FILES = {"classifier": "classifier_meta.json", "risk": "risk_meta.json"}
+
+
+def fetch_from_hub(settings: Settings, environ: Any = None) -> list[str]:
+    """Download published models into the local folders when they are missing.
+
+    Used by the hosted demo, where ``models/`` is not part of the repository.
+    The Hugging Face repository of each model is read from the environment
+    (``RESOLVEIQ_CLASSIFIER_REPO``, ``RESOLVEIQ_RISK_REPO``). Returns the kinds
+    that were downloaded.
+    """
+    import os
+
+    environ = os.environ if environ is None else environ
+    downloaded = []
+    for kind, variable in HUB_ENV_VARS.items():
+        repo_id = environ.get(variable, "").strip()
+        field = "classifier_dir" if kind == "classifier" else "risk_dir"
+        local = settings.resolve(getattr(settings.service, field))
+        if not repo_id or (local / META_FILES[kind]).is_file():
+            continue
+        from huggingface_hub import snapshot_download
+
+        logger.info("Downloading the %s from %s", kind, repo_id)
+        snapshot_download(repo_id=repo_id, local_dir=str(local))
+        downloaded.append(kind)
+    return downloaded
+
+
 def resolve_model_dir(settings: Settings, kind: str) -> ResolvedModel:
     """Folder to load a model from, following ``service.model_source``.
 

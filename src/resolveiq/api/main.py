@@ -47,8 +47,11 @@ REQUEST_ID_HEADER = "X-Request-ID"
 
 def _load_from_settings() -> Copilot:
     from resolveiq.config import get_settings
+    from resolveiq.registry import fetch_from_hub
 
-    return Copilot.from_settings(get_settings())
+    settings = get_settings()
+    fetch_from_hub(settings)
+    return Copilot.from_settings(settings)
 
 
 def create_app(
