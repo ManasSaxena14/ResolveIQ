@@ -318,7 +318,7 @@ class Copilot:
     def health(self) -> HealthResponse:
         components = {
             "retriever": self.answer_engine is not None,
-            "llm": getattr(self.answer_engine, "llm", None) is not None,
+            "llm_configured": getattr(self.answer_engine, "llm", None) is not None,
             "classifier": self.classifier is not None,
             "risk": self.risk_model is not None,
             "request_log": self.request_log is not None,
