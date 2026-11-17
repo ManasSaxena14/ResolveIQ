@@ -1,6 +1,6 @@
 PYTHON ?= python
 
-.PHONY: help install install-dev lint format test coverage index eval data baseline classifier evaluate-classifier risk-features risk evaluate-risk clean
+.PHONY: help install install-dev lint format test coverage index eval data baseline classifier evaluate-classifier risk-features risk evaluate-risk register api ui drift-reference drift benchmark evaluate-groups clean
 
 help:
 	@echo "install      Install runtime dependencies and the package"
@@ -18,6 +18,13 @@ help:
 	@echo "risk-features  Build escalation risk features from the ticket splits"
 	@echo "risk         Train the escalation risk models and choose the alert threshold"
 	@echo "evaluate-risk  Final test-set evaluation of the escalation risk model"
+	@echo "register     Register the production models in the MLflow model registry"
+	@echo "api          Start the FastAPI service on http://127.0.0.1:8000"
+	@echo "ui           Start the Gradio web UI on http://127.0.0.1:7860"
+	@echo "drift-reference  Build the drift reference profile from the validation split"
+	@echo "drift        Compare recent requests with the reference and write a drift report"
+	@echo "benchmark    Measure response time of a running API (start it with make api)"
+	@echo "evaluate-groups  Compare classifier and risk results across ticket types"
 	@echo "clean        Remove caches and generated artifacts"
 
 install:
@@ -69,6 +76,27 @@ risk:
 
 evaluate-risk:
 	$(PYTHON) scripts/evaluate_risk.py
+
+register:
+	$(PYTHON) scripts/register_models.py
+
+api:
+	uvicorn resolveiq.api.main:app --host 127.0.0.1 --port 8000
+
+ui:
+	$(PYTHON) app.py
+
+drift-reference:
+	$(PYTHON) scripts/drift_report.py --build-reference
+
+drift:
+	$(PYTHON) scripts/drift_report.py
+
+benchmark:
+	$(PYTHON) scripts/benchmark_api.py --requests 50 --output results/system/api_benchmark_local.json
+
+evaluate-groups:
+	$(PYTHON) scripts/evaluate_groups.py
 
 clean:
 	rm -rf .pytest_cache .ruff_cache .coverage htmlcov
