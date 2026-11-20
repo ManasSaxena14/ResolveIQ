@@ -33,6 +33,9 @@ The routes above, except `/health`, are counted per caller over a sliding minute
 | Anonymous, including the web app | Client address | 30 requests a minute |
 | With a key in `X-API-Key` | The key (keys come from `RESOLVEIQ_API_KEYS`, comma separated) | 300 requests a minute |
 
+Browsers on another origin (for example the static site on Render) are allowed through
+`RESOLVEIQ_CORS_ORIGINS`, a comma-separated list of origins.
+
 Responses carry `X-RateLimit-Limit` and `X-RateLimit-Remaining`. Over the limit the API
 answers **429** with `Retry-After` in seconds; an unknown key answers **401**. Counts are
 kept in memory, which suits one server process.
@@ -133,7 +136,9 @@ invented reference.
 ```
 
 `category` comes from gradient times input on the DistilBERT embeddings for the predicted
-queue, merged into whole words and scaled so the strongest is 1. `risk` gives each term's
+queue, merged into whole words and scaled so the strongest is 1. In the lite runtime
+(`RESOLVEIQ_RUNTIME=lite`), which has no gradients, it comes from the TF-IDF queue model
+instead. `risk` gives each term's
 exact contribution to the risk model's text score in log-odds; negative terms lower the
 risk.
 

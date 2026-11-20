@@ -100,8 +100,14 @@ curl -s http://127.0.0.1:8000/analyze -H "content-type: application/json" \
   -d '{"text": "I was charged twice this month and nobody has replied to my emails."}'
 ```
 
-Live demo: not deployed yet. One command publishes the full web app to Hugging Face
-Spaces without Docker (`make deploy-space`, see [docs/deployment.md](docs/deployment.md)).
+Live demo: not deployed yet. Two free options, both without Docker
+([docs/deployment.md](docs/deployment.md)):
+
+- **Render**: `render.yaml` runs a lite build of the API (the same models as 8-bit ONNX,
+  no PyTorch, 363 MB at peak, starts in about 3 seconds) plus the web app as a static site
+  that never sleeps and tells visitors when the API is waking. A free GitHub Actions job
+  can keep the API awake.
+- **Hugging Face Spaces**: `make deploy-space` publishes the full web app.
 
 ## Components
 

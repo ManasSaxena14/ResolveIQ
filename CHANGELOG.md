@@ -2,6 +2,24 @@
 
 All notable changes to this project are documented in this file.
 
+## [1.4.0] - 2026-11-20
+
+### Added
+
+- Lite runtime (`RESOLVEIQ_RUNTIME=lite`): the classifier and embedder as 8-bit ONNX
+  graphs with per-channel quantization, a NumPy index and no PyTorch, ChromaDB or
+  sentence-transformers. 347 MB idle, 363 MB under load, about 2.6 s to start; 90% label
+  agreement with the full classifier at equal accuracy and 0.997 embedding cosine
+- `scripts/export_lite.py` builds and checks the bundle, `publish_models.py lite`
+  publishes it and `scripts/fetch_lite.py` downloads it at build time
+- Render blueprint (`render.yaml`): the lite API and the web app as a static site, both
+  on free plans, with precompiled bytecode so waking up downloads and compiles nothing
+- The web app pings the API on load and explains when the free server is waking up
+- Optional keep-alive workflow that pings the Render API every 14 minutes
+- CORS for a separately hosted frontend (`RESOLVEIQ_CORS_ORIGINS`), and
+  `RESOLVEIQ_TRUST_PROXY` for per-visitor rate limits behind a proxy
+- A CI job that installs only `requirements-lite.txt`, as Render does
+
 ## [1.3.0] - 2026-11-20
 
 ### Added

@@ -5,6 +5,7 @@ ResolveIQ runs without Docker. The same code serves three targets.
 | Target | Command | Use |
 |---|---|---|
 | Local | `make web-build` then `uvicorn resolveiq.api.main:app` (React app and API), or `python app.py` (Gradio) | Development and live demos |
+| Render (free) | `render.yaml`: the lite API and the web app as a static site | Public demo that wakes fast |
 | Hugging Face Spaces | `app.py` with the Gradio SDK | Public demo |
 
 ## Local
@@ -88,6 +89,62 @@ make web-build && make space     # http://127.0.0.1:7860
 The older Gradio page (`app.py`) still works as a lighter alternative: set
 `app_file: app.py` in the Space README.
 
+## Render (free tier)
+
+Render's free web services have 512 MB of memory and sleep after 15 minutes without
+traffic. The full service needs about 760 MB, so Render runs the **lite runtime**: the same
+models as 8-bit ONNX graphs with a precomputed index and no PyTorch. It uses 347 MB at idle
+and 363 MB under load, starts in about 2.6 seconds once the container is up, and agrees
+with the full models closely (see [model_card_lite.md](model_card_lite.md)).
+
+`render.yaml` defines two free services:
+
+| Service | What it is | Sleeps |
+|---|---|---|
+| `resolveiq-api` | FastAPI in the lite runtime; the build installs `requirements-lite.txt`, precompiles the code and downloads the lite bundle | After 15 idle minutes |
+| `resolveiq-web` | The React app as a static site | Never; it shows visitors when the API is waking |
+
+1. Build and publish the lite bundle (once, and again after retraining):
+
+   ```bash
+   python scripts/export_lite.py
+   hf auth login
+   python scripts/publish_models.py lite --repo-id <user>/resolveiq-lite
+   ```
+
+2. In Render choose **New > Blueprint**, connect the GitHub repository and apply
+   `render.yaml`. Fill in the values it asks for:
+
+   | Service | Variable | Value |
+   |---|---|---|
+   | `resolveiq-api` | `RESOLVEIQ_LITE_REPO` | `<user>/resolveiq-lite` |
+   | `resolveiq-api` | `RESOLVEIQ_CORS_ORIGINS` | the static site address, e.g. `https://resolveiq-web.onrender.com` |
+   | `resolveiq-api` | `GROQ_API_KEY` | free tier key, account without billing |
+   | `resolveiq-web` | `VITE_API_BASE` | the API address, e.g. `https://resolveiq-api.onrender.com` |
+
+   Render adds a suffix when a name is taken; use the addresses it shows. After changing
+   `VITE_API_BASE`, redeploy the static site so the build picks it up.
+
+3. Optional, keep the API awake: set the repository variable `RENDER_API_URL` to the API
+   address (GitHub > Settings > Secrets and variables > Actions > Variables). The
+   `keep-alive` workflow then pings `/health` every 14 minutes. One service running all
+   month uses about 744 of Render's 750 free instance hours, so leave other free Render
+   services off, or skip this step and let the API sleep.
+
+**How fast is waking up?** Without the keep-alive, the first request after a quiet period
+waits for Render to start the container, typically 30 to 60 seconds on the free tier,
+plus about 3 seconds for the service itself. The bytecode is compiled at build time and
+the models are part of the build, so nothing is downloaded or compiled on wake-up. The web
+app loads instantly from the static site, pings the API as soon as it opens, and tells the
+visitor the server is waking while they type. Every request after that takes milliseconds
+plus the language model.
+
+Try the lite runtime locally exactly as Render runs it:
+
+```bash
+RESOLVEIQ_RUNTIME=lite uvicorn resolveiq.api.main:app --port 8000
+```
+
 ## Costs: everything is free
 
 The project uses only free software and free tiers. Nothing in it needs a payment method.
@@ -98,7 +155,8 @@ The project uses only free software and free tiers. Nothing in it needs a paymen
 | Language model, local | Ollama with llama3.2 on your own machine | Free |
 | Language model, hosted | Groq (`llama-3.1-8b-instant`) or Gemini (`gemini-2.5-flash`) on their free tiers, or an OpenRouter `:free` model | Free, with daily request limits |
 | Model storage | Hugging Face Hub, public model repositories | Free |
-| Public demo | Hugging Face Spaces on `cpu-basic` hardware; `deploy_space.py` always requests it | Free; the Space sleeps after a period without visitors and wakes on the next visit |
+| Public demo | Hugging Face Spaces on `cpu-basic` hardware (`deploy_space.py` always requests it), or Render's free web service plus a free static site | Free; both sleep after a period without visitors and wake on the next visit |
+| Keep-alive | A scheduled GitHub Actions workflow pinging the Render API | Free on a public repository, within Render's 750 free instance hours |
 | Experiment tracking | MLflow with a local SQLite file | Free |
 | Continuous integration | GitHub Actions on a public repository | Free |
 
