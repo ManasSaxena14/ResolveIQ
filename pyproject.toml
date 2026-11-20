@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "resolveiq"
-version = "1.1.0"
+version = "1.2.0"
 description = "AI support ticket intelligence platform: grounded reply drafting, ticket classification and escalation risk prediction."
 readme = "README.md"
 requires-python = ">=3.12"

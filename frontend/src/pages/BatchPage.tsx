@@ -1,4 +1,4 @@
-import { useRef, useState, type DragEvent } from 'react'
+import { useRef, useState, type CSSProperties, type DragEvent } from 'react'
 import { ApiError, scoreBatch } from '../api/client'
 import type { BatchResponse } from '../api/types'
 import { SAMPLE_CSV, percent, riskLevel, toCsv } from '../lib/format'
@@ -76,15 +76,18 @@ export function BatchPage() {
 
   return (
     <>
-      <div className="page-header">
+      <header className="page-header">
         <div>
-          <h1>Batch scoring</h1>
-          <p>Upload a CSV of tickets and get them ranked by escalation risk.</p>
+          <span className="eyebrow">02 / Batch</span>
+          <h1>
+            Rank the queue. <em>Worst first.</em>
+          </h1>
+          <p>Upload a CSV of tickets and get them ordered by escalation risk, with the reasons for each.</p>
         </div>
         <button type="button" className="btn btn-sm" onClick={() => download('sample_tickets.csv', SAMPLE_CSV)}>
           Download sample CSV
         </button>
-      </div>
+      </header>
 
       <div className="card" style={{ marginBottom: 16 }}>
         <label
@@ -103,15 +106,17 @@ export function BatchPage() {
             aria-label="Tickets CSV"
             onChange={(e) => choose(e.target.files?.[0])}
           />
-          <strong>{file ? file.name : 'Drop a CSV here or click to choose'}</strong>
+          <span className="eyebrow">{file ? 'Ready to score' : 'CSV intake'}</span>
+          <span className="dropzone-title">{file ? file.name : 'Drop a CSV here, or click to choose'}</span>
           <span className="small muted">
             Columns: <span className="mono">body</span> or <span className="mono">text</span> required;{' '}
             <span className="mono">subject</span>, <span className="mono">type</span> and{' '}
             <span className="mono">id</span> optional. Up to 2 MB and 2,000 rows.
           </span>
         </label>
-        <div style={{ display: 'flex', gap: 10, marginTop: 14 }}>
+        <div className="actions">
           <button type="button" className="btn btn-primary" disabled={!file || loading} onClick={run}>
+            <span className="dot" aria-hidden="true" />
             {loading ? 'Scoring...' : 'Score tickets'}
           </button>
           {file && (
@@ -129,32 +134,38 @@ export function BatchPage() {
           )}
         </div>
         {error && (
-          <div className="alert-banner error" role="alert" style={{ marginTop: 14, marginBottom: 0 }}>
-            {error}
+          <div className="alert-banner error" role="alert" style={{ marginTop: 14 }}>
+            <span className="mark" aria-hidden="true" />
+            <span>{error}</span>
           </div>
         )}
       </div>
 
       {result && (
         <>
-          <div className="tiles">
-            <div className="card">
-              <div className="tile-label">Tickets scored</div>
+          <div className="card tiles reveal">
+            <div className="tile">
+              <div className="eyebrow">Tickets scored</div>
               <div className="tile-value">{result.count.toLocaleString()}</div>
+              <div className="tile-sub">from {file?.name ?? 'the upload'}</div>
             </div>
-            <div className="card">
-              <div className="tile-label">Alerts</div>
-              <div className="tile-value">{result.alerts.toLocaleString()}</div>
+            <div className="tile">
+              <div className="eyebrow">Alerts</div>
+              <div className="tile-value" style={{ color: result.alerts ? 'var(--high)' : undefined }}>
+                {result.alerts.toLocaleString()}
+              </div>
               <div className="tile-sub">{percent(result.alerts / Math.max(result.count, 1))} of tickets</div>
             </div>
-            <div className="card">
-              <div className="tile-label">Highest risk</div>
+            <div className="tile">
+              <div className="eyebrow">Highest risk</div>
               <div className="tile-value">{percent(result.items[0]?.escalation_probability ?? 0)}</div>
-              <div className="tile-sub">ticket {result.items[0]?.id}</div>
+              <div className="tile-sub">
+                ticket <span className="mono">{result.items[0]?.id}</span>
+              </div>
             </div>
           </div>
 
-          <div className="card">
+          <div className="card reveal" style={{ '--i': 1 } as CSSProperties}>
             <div className="card-header">
               <h2 className="card-title">Ranked tickets</h2>
               <div style={{ display: 'flex', gap: 8 }}>
@@ -187,8 +198,10 @@ export function BatchPage() {
                     const level = riskLevel(item.escalation_probability, threshold)
                     return (
                       <tr key={`${item.rank}-${item.id}`}>
-                        <td className="num">{item.rank}</td>
-                        <td className="mono">{item.id}</td>
+                        <td className="num faint">{String(item.rank).padStart(2, '0')}</td>
+                        <td className="mono" style={{ whiteSpace: 'nowrap' }}>
+                          {item.id}
+                        </td>
                         <td>
                           <div className="risk-cell">
                             <span>{percent(item.escalation_probability)}</span>
@@ -199,7 +212,7 @@ export function BatchPage() {
                         </td>
                         <td>
                           {item.alert ? (
-                            <span className="badge badge-high">Alert</span>
+                            <span className="badge badge-dot badge-high">Alert</span>
                           ) : (
                             <span className="badge badge-neutral">No</span>
                           )}

@@ -7,6 +7,32 @@ Spaces.
 
 ![ResolveIQ web app analyzing a double-charge ticket](images/web_app.jpg)
 
+## Design
+
+The interface is designed as a triage instrument rather than a generic dashboard. The full
+direction, tokens and motion rules are in [frontend/DESIGN.md](../frontend/DESIGN.md).
+
+- **Verdict first.** After analysis, one strip answers where the ticket goes, how risky it
+  is and whether a reply is ready; the evidence follows below.
+- **Type with roles.** Instrument Serif for headlines and verdicts, Geist for interface
+  text, Geist Mono with tabular digits for every number. The fonts are bundled with the
+  app, so no request goes to a font service.
+- **One signal color.** Lime marks focus, the primary action and the active page. Risk
+  keeps its own green, amber and red scale.
+- **Instruments, not charts.** The risk meter is a ruled 0 to 100 scale with the alert
+  threshold marked, sources carry match bars, and response time is one proportional bar
+  that also shows time spent outside the named steps.
+- **Two themes.** Paper (light) and Night (dark) follow the system setting and can be
+  switched from the rail.
+- **Motion that explains change.** Results rise in sequence, meters fill and the risk
+  number counts up once. All motion stops when the system asks for reduced motion.
+- **Every screen size.** A navigation rail on desktop, a top bar on tablets and a bottom
+  tab bar on phones; grids collapse to one column and tables scroll inside their card.
+
+| Night theme, monitoring | Phone, analyze |
+|---|---|
+| ![Monitoring dashboard in the Night theme](images/web_app_night.jpg) | ![Analyze page on a phone](images/web_app_phone.jpg) |
+
 ## Pages
 
 | Page | What it does | API calls |
@@ -15,9 +41,8 @@ Spaces.
 | Batch | Drag and drop a CSV, download a sample file, see summary tiles and a ranked table with an alerts-only filter, export the ranking as CSV | `POST /batch` |
 | Monitoring | Volume, alert rate, review rate, latency and negative feedback, distributions of categories and draft outcomes, and the 50 most recent requests with their feedback | `GET /stats`, `GET /requests` |
 
-The top bar shows a live status from `GET /health` every 30 seconds (with model versions
-on hover) and switches between light and dark themes, following the system setting by
-default.
+The navigation shows a live status from `GET /health` every 30 seconds (with model
+versions on hover) and switches between the Paper and Night themes.
 
 Behaviour worth knowing:
 
@@ -60,19 +85,20 @@ frontend/
   vite.config.ts           dev proxy, build and test settings
   src/
     main.tsx               entry point
-    App.tsx                top bar, navigation, health status, theme
+    App.tsx                rail, top bar and tab bar navigation, health status, theme
     index.css              design tokens for both themes and all component styles
     api/types.ts           response types mirroring src/resolveiq/schemas.py
     api/client.ts          fetch wrappers and ApiError
     lib/format.ts          formatting helpers (percent, durations, source titles, CSV)
     lib/examples.ts        example tickets and form limits
-    components/            result cards and the risk gauge
+    components/            verdict strip, result cards, risk meter, timeline, logo
+    lib/useCountUp.ts      number count-up that respects reduced motion
     pages/                 Analyze, Batch and Monitoring
     test/                  test setup and fixtures
 ```
 
 There is no UI component library and no router: the app has three pages and a small
-design system, and staying with React alone keeps the bundle at about 76 KB gzipped.
+design system, and staying with React alone keeps the script at about 78 KB gzipped.
 
 ## Quality checks
 
