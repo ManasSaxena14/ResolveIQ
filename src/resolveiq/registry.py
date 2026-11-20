@@ -106,6 +106,7 @@ def register_model(
 
 
 HUB_ENV_VARS = {"classifier": "RESOLVEIQ_CLASSIFIER_REPO", "risk": "RESOLVEIQ_RISK_REPO"}
+LITE_REPO_ENV_VAR = "RESOLVEIQ_LITE_REPO"
 META_FILES = {"classifier": "classifier_meta.json", "risk": "risk_meta.json"}
 
 
@@ -121,6 +122,19 @@ def fetch_from_hub(settings: Settings, environ: Any = None) -> list[str]:
 
     environ = os.environ if environ is None else environ
     downloaded = []
+    if settings.service.runtime == "lite":
+        # The lite bundle holds both models and the index; nothing else is needed.
+        from resolveiq.lite import lite_ready
+
+        repo_id = environ.get(LITE_REPO_ENV_VAR, "").strip()
+        local = settings.resolve(settings.service.lite_dir)
+        if repo_id and not lite_ready(local):
+            from huggingface_hub import snapshot_download
+
+            logger.info("Downloading the lite bundle from %s", repo_id)
+            snapshot_download(repo_id=repo_id, local_dir=str(local))
+            downloaded.append("lite")
+        return downloaded
     for kind, variable in HUB_ENV_VARS.items():
         repo_id = environ.get(variable, "").strip()
         field = "classifier_dir" if kind == "classifier" else "risk_dir"

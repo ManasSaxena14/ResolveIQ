@@ -121,6 +121,12 @@ service:
   # back to the local folders below when the registry is unavailable (as on a
   # hosted demo). local: always use the folders.
   model_source: registry
+  # full: PyTorch, sentence-transformers and ChromaDB (about 760 MB of memory).
+  # lite: the same models as 8-bit ONNX graphs with a NumPy index, for small free
+  # hosts (under 512 MB, starts in seconds). Build it with scripts/export_lite.py.
+  # RESOLVEIQ_RUNTIME overrides this setting.
+  runtime: full
+  lite_dir: models/lite
   classifier_dir: models/classifier/production
   risk_dir: models/risk
   registry:

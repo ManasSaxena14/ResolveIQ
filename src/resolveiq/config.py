@@ -20,6 +20,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_CONFIG_PATH = PROJECT_ROOT / "configs" / "config.yaml"
 CONFIG_ENV_VAR = "RESOLVEIQ_CONFIG"
 PROVIDER_ENV_VAR = "RESOLVEIQ_LLM_PROVIDER"
+RUNTIME_ENV_VAR = "RESOLVEIQ_RUNTIME"
+TRUST_PROXY_ENV_VAR = "RESOLVEIQ_TRUST_PROXY"
 
 ProviderName = Literal["ollama", "gemini", "groq", "openrouter"]
 
@@ -192,6 +194,8 @@ class ServiceConfig(_StrictModel):
     max_upload_bytes: int = Field(gt=0)
     max_batch_rows: int = Field(gt=0)
     model_source: Literal["registry", "local"]
+    runtime: Literal["full", "lite"] = "full"
+    lite_dir: Path = Path("models/lite")
     classifier_dir: Path
     risk_dir: Path
     registry: RegistryConfig
@@ -253,8 +257,9 @@ def load_config(path: str | Path | None = None) -> Settings:
     The config file is chosen in this order: the ``path`` argument, the
     ``RESOLVEIQ_CONFIG`` environment variable, then ``configs/config.yaml``.
 
-    ``RESOLVEIQ_LLM_PROVIDER`` overrides ``llm.provider``, so a hosted demo can
-    use an API provider without editing the committed config.
+    ``RESOLVEIQ_LLM_PROVIDER`` overrides ``llm.provider``, ``RESOLVEIQ_RUNTIME``
+    overrides ``service.runtime`` and ``RESOLVEIQ_TRUST_PROXY=1`` trusts the
+    proxy's X-Forwarded-For header, so a hosted demo needs no config edits.
     """
     load_dotenv(PROJECT_ROOT / ".env", override=False)
     config_path = Path(path or os.environ.get(CONFIG_ENV_VAR) or DEFAULT_CONFIG_PATH)
@@ -265,6 +270,13 @@ def load_config(path: str | Path | None = None) -> Settings:
     provider = os.environ.get(PROVIDER_ENV_VAR, "").strip()
     if provider and isinstance(raw.get("llm"), dict):
         raw["llm"]["provider"] = provider
+    service = raw.get("service")
+    if isinstance(service, dict):
+        runtime = os.environ.get(RUNTIME_ENV_VAR, "").strip()
+        if runtime:
+            service["runtime"] = runtime
+        if os.environ.get(TRUST_PROXY_ENV_VAR, "").strip().lower() in {"1", "true", "yes"}:
+            service.setdefault("rate_limit", {})["trust_forwarded_for"] = True
     return Settings.model_validate(raw)
 
 

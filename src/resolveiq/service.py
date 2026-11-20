@@ -104,8 +104,84 @@ class Copilot:
         self.started = time.monotonic()
 
     @classmethod
+    def from_lite(cls, settings: Settings, with_llm: bool = True) -> Copilot:
+        """Load the lite runtime: ONNX models and a NumPy index, no PyTorch.
+
+        Starts in a few seconds and stays well under 512 MB of memory.
+        """
+        import json
+
+        from resolveiq.lite import (
+            INDEX_FILE,
+            LITE_META,
+            RISK_DIR,
+            NumpyVectorStore,
+            OnnxClassifier,
+            OnnxEmbedder,
+            lite_ready,
+        )
+        from resolveiq.rag.generate import AnswerEngine
+        from resolveiq.rag.ingest import read_manifest
+        from resolveiq.rag.llm import create_llm_client
+        from resolveiq.rag.retrieve import Retriever
+        from resolveiq.rag.store import BM25_FILENAME, BM25Index
+        from resolveiq.risk.predict import RiskModel
+
+        rag, llm = settings.rag, settings.llm
+        lite_dir = settings.resolve(settings.service.lite_dir)
+        if not lite_ready(lite_dir):
+            raise FileNotFoundError(
+                f"No lite bundle in {lite_dir}. Run scripts/export_lite.py or set "
+                "RESOLVEIQ_LITE_REPO to download one."
+            )
+        meta = json.loads((lite_dir / LITE_META).read_text(encoding="utf-8"))
+        risk_model = RiskModel.load(lite_dir / RISK_DIR)
+        classifier = OnnxClassifier.load(lite_dir, queue_model=risk_model.queue_model)
+        embedder = OnnxEmbedder.load(lite_dir, rag.embedding_model, rag.query_prefix)
+        retriever = Retriever(
+            embedder=embedder,
+            store=NumpyVectorStore.load(lite_dir / INDEX_FILE),
+            top_k=rag.top_k,
+            candidate_k=rag.candidate_k,
+            bm25=BM25Index.load(lite_dir / BM25_FILENAME) if rag.hybrid else None,
+            rrf_k=rag.rrf_k,
+        )
+        answer_engine = AnswerEngine(
+            retriever=retriever,
+            llm=create_llm_client(llm) if with_llm else None,
+            company_name=settings.project.company_name,
+            refusal_threshold=rag.refusal_threshold,
+            settings_snapshot={"runtime": "lite", "top_k": rag.top_k, "hybrid": rag.hybrid},
+        )
+        manifest = read_manifest(lite_dir) or {}
+        train = meta.get("classifier", {})
+        versions = {
+            "embedder": f"{rag.embedding_model} (onnx int8)",
+            "llm": f"{llm.provider}/{llm.active.model}" if with_llm else "disabled",
+            "classifier": f"{train.get('model_name', 'distilbert')}-seed-{train.get('seed', '?')}"
+            " (onnx int8)",
+            "risk": f"{risk_model.version} (lite)",
+        }
+        return cls(
+            answer_engine=answer_engine,
+            classifier=classifier,
+            risk_model=risk_model,
+            versions=versions,
+            request_log=RequestLog(settings.resolve(settings.service.request_log)),
+            max_text_chars=settings.service.max_text_chars,
+            max_upload_bytes=settings.service.max_upload_bytes,
+            max_batch_rows=settings.service.max_batch_rows,
+            index_info={
+                "files": int(manifest.get("files", 0)),
+                "chunks": int(manifest.get("chunks", 0)),
+            },
+        )
+
+    @classmethod
     def from_settings(cls, settings: Settings, with_llm: bool = True) -> Copilot:
         """Load every model named in the config. Slow: call once per process."""
+        if settings.service.runtime == "lite":
+            return cls.from_lite(settings, with_llm)
         from resolveiq.classifier.predict import TicketClassifier
         from resolveiq.rag.generate import AnswerEngine
         from resolveiq.rag.ingest import read_manifest

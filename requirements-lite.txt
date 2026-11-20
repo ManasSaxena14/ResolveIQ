@@ -1,0 +1,22 @@
+# Runtime dependencies of the lite runtime (service.runtime: lite), used on small
+# free hosts such as Render. No PyTorch, transformers, sentence-transformers,
+# ChromaDB, MLflow or Gradio: the models run as 8-bit ONNX graphs and the index is
+# a NumPy file built by scripts/export_lite.py. Versions match requirements.txt.
+fastapi==0.163.1
+uvicorn==0.54.0
+python-multipart==0.0.33
+pydantic==2.14.3
+PyYAML==6.0.3
+python-dotenv==1.2.4
+httpx==0.28.1
+numpy==2.5.4
+scipy==1.18.1
+scikit-learn==1.9.1
+joblib==1.6.0
+# The same library as xgboost without the CUDA packages, which a CPU host never uses.
+xgboost-cpu==3.4.1
+vaderSentiment==3.3.2
+rank-bm25==0.2.2
+onnxruntime==1.32.0
+tokenizers==0.23.3
+huggingface_hub==2.4.0

@@ -58,3 +58,31 @@ def test_hub_fetch_downloads_missing_models(settings, tmp_path, monkeypatch):
 
     assert downloaded == ["classifier"]
     assert calls == [{"repo_id": "u/clf", "local_dir": str(tmp_path / "classifier")}]
+
+
+def test_lite_runtime_downloads_only_the_lite_bundle(settings, tmp_path, monkeypatch):
+    calls = []
+    monkeypatch.setattr("huggingface_hub.snapshot_download", lambda **kwargs: calls.append(kwargs))
+    settings.service.runtime = "lite"
+    settings.service.lite_dir = tmp_path / "lite"
+
+    downloaded = fetch_from_hub(
+        settings,
+        environ={"RESOLVEIQ_LITE_REPO": "u/lite", "RESOLVEIQ_CLASSIFIER_REPO": "u/clf"},
+    )
+
+    assert downloaded == ["lite"]
+    assert calls == [{"repo_id": "u/lite", "local_dir": str(tmp_path / "lite")}]
+    assert fetch_from_hub(settings, environ={}) == []
+
+
+def test_lite_service_explains_a_missing_bundle(settings, tmp_path):
+    import pytest
+
+    from resolveiq.service import Copilot
+
+    settings.service.runtime = "lite"
+    settings.service.lite_dir = tmp_path / "missing"
+
+    with pytest.raises(FileNotFoundError, match="export_lite"):
+        Copilot.from_settings(settings, with_llm=False)

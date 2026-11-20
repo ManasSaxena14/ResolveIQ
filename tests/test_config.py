@@ -145,3 +145,23 @@ def test_default_config_uses_only_free_models():
     assert llm.free_only is True
     assert llm.provider == "ollama"
     assert llm.providers["openrouter"].model.endswith(":free")
+
+
+def test_runtime_and_proxy_can_be_set_from_the_environment(monkeypatch):
+    monkeypatch.setenv("RESOLVEIQ_RUNTIME", "lite")
+    monkeypatch.setenv("RESOLVEIQ_TRUST_PROXY", "1")
+
+    settings = load_config(DEFAULT_CONFIG_PATH)
+
+    assert settings.service.runtime == "lite"
+    assert settings.service.rate_limit.trust_forwarded_for is True
+
+
+def test_default_runtime_is_full_without_a_trusted_proxy(monkeypatch):
+    monkeypatch.delenv("RESOLVEIQ_RUNTIME", raising=False)
+    monkeypatch.delenv("RESOLVEIQ_TRUST_PROXY", raising=False)
+
+    settings = load_config(DEFAULT_CONFIG_PATH)
+
+    assert settings.service.runtime == "full"
+    assert settings.service.rate_limit.trust_forwarded_for is False
