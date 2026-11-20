@@ -58,7 +58,7 @@ Details: [monitoring.md](monitoring.md).
 ## Repository layout
 
 ```
-app.py              Gradio demo entry point (local and Hugging Face Spaces)
+app.py              Gradio page, a lighter alternative to the React web app
 configs/            configuration
 data/kb/            help center documents (synthetic)
 docs/               architecture, component docs, model cards, evaluation report

@@ -2,8 +2,7 @@
 
 The main user interface is a React and TypeScript single-page app in `frontend/`. FastAPI
 serves the built files next to the API, so one process and one port run the whole
-product. The Gradio page (`app.py`) stays as the lightweight demo for Hugging Face
-Spaces.
+product. The Gradio page (`app.py`) stays as a lighter alternative.
 
 ![ResolveIQ web app analyzing a double-charge ticket](images/web_app.jpg)
 

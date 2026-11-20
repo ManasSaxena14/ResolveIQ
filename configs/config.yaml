@@ -142,7 +142,7 @@ service:
     anonymous_per_minute: 30
     key_per_minute: 300
     # Read the client address from X-Forwarded-For. Only enable behind a proxy that
-    # sets it (such as Hugging Face Spaces); otherwise clients could spoof it.
+    # sets it (such as Render or Caddy on Oracle Cloud); otherwise clients could spoof it.
     trust_forwarded_for: false
   # Knowledge base files are linked from the UI so a reader can open the source.
   source_base_url: https://github.com/ManasSaxena14/ResolveIQ/blob/main/data/kb/

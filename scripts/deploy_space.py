@@ -1,5 +1,11 @@
 """Publish the full web app as a Hugging Face Space, without Docker.
 
+Note on cost: Hugging Face now requires a paid plan (PRO for personal accounts) to
+create Spaces that run code, including Gradio Spaces on the CPU basic hardware this
+script uses. ResolveIQ is set up to stay free, so the upload only runs with
+--paid-plan, confirming the account has that plan. --dry-run works without it. The
+free deployments are Oracle Cloud Always Free and Render (docs/deployment.md).
+
 Steps:
 
 1. build the React app (npm run build in frontend/), unless --skip-build;
@@ -14,8 +20,8 @@ with `hf auth login`, and set the Space variables and the language model key as
 described in docs/deployment.md (or pass --set-variables to set the variables).
 
 Usage:
-    python scripts/deploy_space.py --space <user>/resolveiq
     python scripts/deploy_space.py --space <user>/resolveiq --dry-run
+    python scripts/deploy_space.py --space <user>/resolveiq --paid-plan
 """
 
 from __future__ import annotations
@@ -145,12 +151,26 @@ def main() -> int:
     parser.add_argument("--skip-build", action="store_true", help="Use the existing build")
     parser.add_argument("--dry-run", action="store_true", help="Stage and list, do not upload")
     parser.add_argument(
+        "--paid-plan",
+        action="store_true",
+        help="Confirm the account has the paid plan Hugging Face requires for code Spaces",
+    )
+    parser.add_argument(
         "--set-variables",
         nargs=2,
         metavar=("CLASSIFIER_REPO", "RISK_REPO"),
         help="Also set RESOLVEIQ_CLASSIFIER_REPO and RESOLVEIQ_RISK_REPO on the Space",
     )
     args = parser.parse_args()
+
+    if not args.dry_run and not args.paid_plan:
+        print(
+            "Hugging Face requires a paid plan (PRO) to create Spaces that run code, and\n"
+            "ResolveIQ is set up to stay free. Use the free Oracle Cloud or Render\n"
+            "deployment in docs/deployment.md, or pass --paid-plan if your account has PRO.",
+            file=sys.stderr,
+        )
+        return 2
 
     if not args.skip_build:
         build_frontend()

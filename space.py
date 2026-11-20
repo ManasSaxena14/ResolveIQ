@@ -1,4 +1,8 @@
-"""Entry point for the public demo on Hugging Face Spaces.
+"""Entry point for a Hugging Face Space (needs a paid Hugging Face plan, see below).
+
+Hugging Face now requires a paid plan to create Spaces that run code, so the free
+deployments are Oracle Cloud and Render (docs/deployment.md). This file stays for
+accounts that have the plan, and it also runs the web app and API locally.
 
 Serves the React web app and the API from one process on the port the Space
 expects, without Docker:

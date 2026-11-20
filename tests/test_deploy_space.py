@@ -81,3 +81,10 @@ def test_paid_hardware_is_reported(capsys):
     assert "t4-small, which is paid" in capsys.readouterr().err
     assert deploy_space.warn_if_paid_hardware(Api(None), "u/s") is False
     assert deploy_space.FREE_HARDWARE == "cpu-basic"
+
+
+def test_upload_needs_an_explicit_paid_plan(monkeypatch, capsys):
+    monkeypatch.setattr("sys.argv", ["deploy_space.py", "--space", "u/s", "--skip-build"])
+
+    assert deploy_space.main() == 2
+    assert "requires a paid plan" in capsys.readouterr().err

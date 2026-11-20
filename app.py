@@ -1,4 +1,4 @@
-"""Web UI entry point, used locally and by Hugging Face Spaces.
+"""Gradio web UI entry point, a lighter alternative to the React web app.
 
 Run locally with ``python app.py`` and open http://127.0.0.1:7860.
 
