@@ -19,6 +19,8 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
+    // File sync tools (iCloud) leave copies such as "App 2.tsx"; never test them.
+    exclude: ['**/node_modules/**', '**/dist/**', '**/* [0-9]*'],
     css: false,
   },
 })
