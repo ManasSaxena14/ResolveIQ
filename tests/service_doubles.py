@@ -38,6 +38,16 @@ class StubLLM:
         return self.reply
 
 
+class ChunkedLLM(StubLLM):
+    """Streams its reply in word-sized pieces, like a hosted model."""
+
+    def stream(self, messages):
+        self.calls += 1
+        words = self.reply.split(" ")
+        for i, word in enumerate(words):
+            yield word if i == len(words) - 1 else word + " "
+
+
 class BrokenLLM(StubLLM):
     def complete(self, messages):
         raise LLMError("connection refused")

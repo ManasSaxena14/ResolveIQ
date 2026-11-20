@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import time
+from collections.abc import Iterator
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
 from resolveiq.config import Settings
-from resolveiq.rag.llm import LLMClient, create_llm_client
+from resolveiq.rag.llm import LLMClient, create_llm_client, stream_text
 from resolveiq.rag.prompts import REFUSAL_MESSAGE, build_messages, is_refusal
 from resolveiq.rag.retrieve import RetrievalResult, Retriever
 from resolveiq.rag.types import RetrievedChunk
@@ -118,7 +119,13 @@ class AnswerEngine:
             settings={**self.settings_snapshot, "best_similarity": retrieval.best_similarity},
         )
 
-    def answer(self, question: str) -> AnswerResult:
+    def stream(self, question: str) -> Iterator[tuple[str, Any]]:
+        """Answer while the language model writes.
+
+        Yields ``("sources", (sources, timings))`` once retrieval passes the refusal
+        rule, then ``("token", text)`` for each piece of the answer, and finally
+        ``("result", AnswerResult)``. Out-of-scope questions yield only the result.
+        """
         if self.llm is None:
             raise RuntimeError("AnswerEngine was created without a language model client")
         retrieval, retrieval_ms = self._retrieve(question)
@@ -126,16 +133,32 @@ class AnswerEngine:
         settings = {**self.settings_snapshot, "best_similarity": retrieval.best_similarity}
 
         if self._is_out_of_scope(retrieval):
-            return AnswerResult(REFUSAL_MESSAGE, True, [], timings, settings)
+            yield "result", AnswerResult(REFUSAL_MESSAGE, True, [], timings, settings)
+            return
 
+        sources = collect_sources(retrieval.chunks)
+        yield "sources", (sources, dict(timings))
         messages = build_messages(question, retrieval.chunks, self.company_name)
         started = time.perf_counter()
-        text = self.llm.complete(messages).strip()
+        pieces = []
+        for piece in stream_text(self.llm, messages):
+            pieces.append(piece)
+            yield "token", piece
         timings["generation"] = _elapsed_ms(started)
+        text = "".join(pieces).strip()
 
         if is_refusal(text):
-            return AnswerResult(REFUSAL_MESSAGE, True, [], timings, settings)
-        return AnswerResult(text, False, collect_sources(retrieval.chunks), timings, settings)
+            yield "result", AnswerResult(REFUSAL_MESSAGE, True, [], timings, settings)
+            return
+        yield "result", AnswerResult(text, False, sources, timings, settings)
+
+    def answer(self, question: str) -> AnswerResult:
+        result: AnswerResult | None = None
+        for kind, value in self.stream(question):
+            if kind == "result":
+                result = value
+        assert result is not None
+        return result
 
 
 def _elapsed_ms(started: float) -> float:

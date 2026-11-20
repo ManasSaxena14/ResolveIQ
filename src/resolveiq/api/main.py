@@ -18,16 +18,17 @@ if sys.platform == "darwin":
     # both start worker threads in one process. Must run before either is imported.
     os.environ.setdefault("OMP_NUM_THREADS", "1")
 
+import json
 import logging
 import time
 import uuid
-from collections.abc import AsyncIterator, Callable
+from collections.abc import AsyncIterator, Callable, Iterator
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Annotated, Any
 
 from fastapi import FastAPI, File, HTTPException, Query, Request, Response, UploadFile
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 from resolveiq import __version__
@@ -168,6 +169,40 @@ def create_app(
         if result.partial:
             return JSONResponse(status_code=503, content=result.response.model_dump())
         return result.response
+
+    @app.post(
+        "/analyze/stream",
+        response_class=StreamingResponse,
+        responses={
+            200: {
+                "content": {"text/event-stream": {}},
+                "description": (
+                    "Server-sent events: analysis (category and risk), sources, token "
+                    "(pieces of the draft), done (the complete /analyze response and "
+                    "whether it is partial), or error"
+                ),
+            },
+            422: {"description": "Empty or too long text"},
+        },
+    )
+    def analyze_stream(body: AnalyzeRequest, request: Request) -> StreamingResponse:
+        # Validation runs here, so bad input still gets a normal 422 response.
+        events = service(request).analyze_stream(body)
+
+        def encode() -> Iterator[str]:
+            try:
+                for name, data in events:
+                    yield f"event: {name}\ndata: {json.dumps(data)}\n\n"
+            except Exception:
+                logger.exception("Streaming analysis failed")
+                payload = json.dumps({"detail": "The analysis failed. Try again."})
+                yield f"event: error\ndata: {payload}\n\n"
+
+        return StreamingResponse(
+            encode(),
+            media_type="text/event-stream",
+            headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+        )
 
     @app.post(
         "/batch",

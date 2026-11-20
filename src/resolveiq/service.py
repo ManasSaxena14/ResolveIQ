@@ -16,6 +16,7 @@ import io
 import logging
 import time
 import uuid
+from collections.abc import Generator, Iterator
 from dataclasses import dataclass
 from typing import Any, Protocol
 
@@ -53,7 +54,7 @@ class PayloadTooLargeError(ValueError):
 
 
 class AnswerEngineLike(Protocol):
-    def answer(self, question: str) -> Any: ...
+    def stream(self, question: str) -> Iterator[tuple[str, Any]]: ...
     def retrieve_only(self, question: str) -> Any: ...
 
 
@@ -150,12 +151,29 @@ class Copilot:
             raise InputError(f"Ticket text is longer than {self.max_text_chars} characters")
 
     def analyze(self, request: AnalyzeRequest) -> AnalyzeResult:
+        """Run all three parts and return the complete result."""
+        final: dict[str, Any] = {}
+        for name, data in self.analyze_stream(request):
+            if name == "done":
+                final = data
+        return AnalyzeResult(AnalyzeResponse.model_validate(final["response"]), final["partial"])
+
+    def analyze_stream(self, request: AnalyzeRequest) -> Iterator[tuple[str, Any]]:
+        """Validate now, then yield events as each part finishes.
+
+        Events, in order: ``analysis`` (request ID, category and risk, which take
+        milliseconds), ``sources`` (when retrieval found relevant articles), ``token``
+        (each piece of the draft as the language model writes it) and ``done`` (the
+        complete response and whether it is partial). Validation errors are raised
+        here, before any event, so the API can still answer 422.
+        """
         self.validate(request)
+        return self._events(request)
+
+    def _events(self, request: AnalyzeRequest) -> Iterator[tuple[str, Any]]:
         request_id = uuid.uuid4().hex[:12]
         started = time.perf_counter()
         timings: dict[str, float] = {}
-
-        draft = self._draft(request, timings)
 
         step = time.perf_counter()
         prediction = self.classifier.predict_ticket(request.text, request.subject)
@@ -164,29 +182,43 @@ class Copilot:
         step = time.perf_counter()
         risk = self.risk_model.score(request.subject, request.text, request.ticket_type)
         timings["risk"] = _elapsed_ms(step)
-        timings["total"] = _elapsed_ms(started)
 
         top = sorted(prediction.probabilities.items(), key=lambda item: item[1], reverse=True)
+        category = CategoryOut(
+            label=prediction.label,
+            confidence=prediction.confidence,
+            needs_review=prediction.needs_review,
+            top=[CategoryScore(label=k, probability=v) for k, v in top[:TOP_CATEGORIES]],
+        )
+        risk_out = RiskOut(
+            escalation_probability=risk.escalation_probability,
+            alert=risk.alert,
+            threshold=self.risk_model.threshold,
+            reasons=list(risk.reasons),
+        )
+        yield (
+            "analysis",
+            {
+                "request_id": request_id,
+                "category": category.model_dump(),
+                "risk": risk_out.model_dump(),
+                "versions": self.versions,
+            },
+        )
+
+        draft = yield from self._draft_events(request, timings)
+        timings["total"] = _elapsed_ms(started)
+
         response = AnalyzeResponse(
             request_id=request_id,
             draft_reply=draft,
-            category=CategoryOut(
-                label=prediction.label,
-                confidence=prediction.confidence,
-                needs_review=prediction.needs_review,
-                top=[CategoryScore(label=k, probability=v) for k, v in top[:TOP_CATEGORIES]],
-            ),
-            risk=RiskOut(
-                escalation_probability=risk.escalation_probability,
-                alert=risk.alert,
-                threshold=self.risk_model.threshold,
-                reasons=list(risk.reasons),
-            ),
+            category=category,
+            risk=risk_out,
             timings_ms=timings,
             versions=self.versions,
         )
         self._record(request, response)
-        return AnalyzeResult(response, partial=draft.status == "unavailable")
+        yield "done", {"response": response.model_dump(), "partial": draft.status == "unavailable"}
 
     def _question(self, request: AnalyzeRequest) -> str:
         parts = [request.subject.strip(), request.text.strip()]
@@ -195,7 +227,10 @@ class Copilot:
         # The answer engine rejects questions over 4,000 characters.
         return "\n\n".join(part for part in parts if part)[:MAX_QUESTION_CHARS]
 
-    def _draft(self, request: AnalyzeRequest, timings: dict[str, float]) -> DraftReply:
+    def _draft_events(
+        self, request: AnalyzeRequest, timings: dict[str, float]
+    ) -> Generator[tuple[str, Any], None, DraftReply]:
+        """Yield ``sources`` and ``token`` events, then return the finished draft."""
         if self.answer_engine is None:
             return DraftReply(
                 text=None,
@@ -204,17 +239,30 @@ class Copilot:
                 error="Reply drafting is not configured (no knowledge base index)",
             )
         question = self._question(request)
+        sources: list[Any] | None = None
+        result: Any = None
         try:
-            result = self.answer_engine.answer(question)
+            for kind, value in self.answer_engine.stream(question):
+                if kind == "sources":
+                    sources, step_timings = value
+                    timings.update(step_timings)
+                    yield "sources", [source.model_dump() for source in _sources(sources)]
+                elif kind == "token":
+                    yield "token", {"text": value}
+                else:
+                    result = value
         except (LLMError, RuntimeError) as exc:
             log_event("llm_unavailable", error=type(exc).__name__)
-            fallback = self.answer_engine.retrieve_only(question)
-            timings["retrieval"] = fallback.timings_ms.get("retrieval", 0.0)
+            refused = False
+            if sources is None:
+                fallback = self.answer_engine.retrieve_only(question)
+                timings["retrieval"] = fallback.timings_ms.get("retrieval", 0.0)
+                sources, refused = fallback.sources, fallback.refused
             return DraftReply(
                 text=None,
                 status="unavailable",
-                refused=fallback.refused,
-                sources=_sources(fallback.sources),
+                refused=refused,
+                sources=_sources(sources),
                 error="The language model is unavailable; showing the retrieved sources only",
             )
         timings["retrieval"] = result.timings_ms.get("retrieval", 0.0)

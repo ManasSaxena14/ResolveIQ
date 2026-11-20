@@ -229,3 +229,62 @@ def test_built_frontend_is_served_next_to_the_api(copilot, tmp_path):
 def test_no_frontend_means_no_root_page(copilot, tmp_path):
     with TestClient(create_app(copilot, web_dir=tmp_path)) as client:
         assert client.get("/").status_code == 404
+
+
+def _events(text: str) -> list[tuple[str, dict]]:
+    import json
+
+    events = []
+    for block in text.strip().split("\n\n"):
+        lines = dict(line.split(": ", 1) for line in block.splitlines())
+        events.append((lines["event"], json.loads(lines["data"])))
+    return events
+
+
+def test_stream_sends_analysis_first_then_the_draft(embedder, vector_store):
+    from service_doubles import ChunkedLLM
+
+    copilot = make_copilot(embedder, vector_store, llm=ChunkedLLM())
+    with TestClient(create_app(copilot)) as client:
+        response = client.post("/analyze/stream", json=TICKET)
+
+    assert response.headers["content-type"].startswith("text/event-stream")
+    events = _events(response.text)
+    names = [name for name, _ in events]
+    assert names[0] == "analysis" and names[1] == "sources" and names[-1] == "done"
+    assert events[0][1]["category"]["label"] == "Billing and Payments"
+    tokens = "".join(data["text"] for name, data in events if name == "token")
+    done = events[-1][1]
+    assert tokens == done["response"]["draft_reply"]["text"]
+    assert names.count("token") > 1, "the draft arrives in pieces"
+    assert done["partial"] is False
+    AnalyzeResponse.model_validate(done["response"])
+
+
+def test_stream_reports_an_unavailable_model_in_the_done_event(embedder, vector_store):
+    copilot = make_copilot(embedder, vector_store, llm=BrokenLLM())
+    with TestClient(create_app(copilot)) as client:
+        events = _events(client.post("/analyze/stream", json=TICKET).text)
+
+    done = events[-1][1]
+    assert events[0][0] == "analysis"
+    assert done["partial"] is True
+    assert done["response"]["draft_reply"]["status"] == "unavailable"
+    assert done["response"]["draft_reply"]["sources"]
+
+
+def test_stream_validates_before_streaming(client):
+    assert client.post("/analyze/stream", json={"text": " "}).status_code == 422
+
+
+def test_stream_turns_unexpected_failures_into_an_error_event(embedder, vector_store):
+    copilot = make_copilot(embedder, vector_store)
+
+    def explode(*args, **kwargs):
+        raise ValueError("boom")
+
+    copilot.risk_model.score = explode
+    with TestClient(create_app(copilot)) as client:
+        events = _events(client.post("/analyze/stream", json=TICKET).text)
+
+    assert events == [("error", {"detail": "The analysis failed. Try again."})]
