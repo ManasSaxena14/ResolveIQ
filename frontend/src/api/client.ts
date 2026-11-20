@@ -1,4 +1,5 @@
 import type {
+  AnalysisEvent,
   AnalyzeRequest,
   AnalyzeResponse,
   BatchResponse,
@@ -6,7 +7,9 @@ import type {
   HealthResponse,
   Rating,
   RequestSummary,
+  Source,
   StatsResponse,
+  StreamHandlers,
 } from './types'
 
 /** Error with the HTTP status and the API's `detail` message. */
@@ -74,6 +77,78 @@ export async function analyzeTicket(payload: AnalyzeRequest): Promise<AnalyzeRes
     return { data: body as AnalyzeResponse, partial: response.status === 503 }
   }
   throw new ApiError(response.status, detailMessage(body, response.status))
+}
+
+/** Parse one server-sent event block ("event: x\ndata: {...}"). */
+export function parseEvent(block: string): { event: string; data: unknown } | null {
+  let event = 'message'
+  const data: string[] = []
+  for (const line of block.split('\n')) {
+    if (line.startsWith('event:')) event = line.slice(6).trim()
+    else if (line.startsWith('data:')) data.push(line.slice(5).trim())
+  }
+  if (!data.length) return null
+  try {
+    return { event, data: JSON.parse(data.join('\n')) }
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Analyze over /analyze/stream: category and risk arrive first, then the sources and
+ * the draft piece by piece. Resolves with the complete response, like analyzeTicket.
+ */
+export async function analyzeTicketStream(
+  payload: AnalyzeRequest,
+  handlers: StreamHandlers = {},
+): Promise<AnalyzeResult> {
+  let response: Response
+  try {
+    response = await fetch(`${BASE}/analyze/stream`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'text/event-stream' },
+      body: JSON.stringify(payload),
+    })
+  } catch {
+    throw new ApiError(0, 'The ResolveIQ API cannot be reached. Is the server running?')
+  }
+  if (!response.ok || !response.body) {
+    const body: unknown = await response.json().catch(() => null)
+    throw new ApiError(response.status, detailMessage(body, response.status))
+  }
+
+  const reader = response.body.pipeThrough(new TextDecoderStream()).getReader()
+  let buffer = ''
+  let final: AnalyzeResult | null = null
+  const handle = (block: string) => {
+    const parsed = parseEvent(block)
+    if (!parsed) return
+    const { event, data } = parsed
+    if (event === 'analysis') handlers.onAnalysis?.(data as AnalysisEvent)
+    else if (event === 'sources') handlers.onSources?.(data as Source[])
+    else if (event === 'token') handlers.onToken?.((data as { text: string }).text)
+    else if (event === 'done') {
+      const done = data as { response: AnalyzeResult['data']; partial: boolean }
+      final = { data: done.response, partial: done.partial }
+    } else if (event === 'error') {
+      throw new ApiError(500, (data as { detail?: string }).detail ?? 'The analysis failed.')
+    }
+  }
+  for (;;) {
+    const { value, done } = await reader.read()
+    if (value) buffer += value.replace(/\r\n/g, '\n')
+    let boundary = buffer.indexOf('\n\n')
+    while (boundary !== -1) {
+      handle(buffer.slice(0, boundary))
+      buffer = buffer.slice(boundary + 2)
+      boundary = buffer.indexOf('\n\n')
+    }
+    if (done) break
+  }
+  if (buffer.trim()) handle(buffer)
+  if (!final) throw new ApiError(500, 'The analysis ended before it was complete.')
+  return final
 }
 
 export function scoreBatch(file: File): Promise<BatchResponse> {

@@ -21,12 +21,31 @@ export interface Source {
   score: number | null
 }
 
+export interface Grounding {
+  sentences: number
+  cited_sentences: number
+  citations: number
+  coverage: number
+  invalid_citations: string[]
+}
+
 export interface DraftReply {
   text: string | null
   status: DraftStatus
   refused: boolean
   sources: Source[]
   error: string | null
+  grounding?: Grounding | null
+}
+
+export interface WordWeight {
+  term: string
+  weight: number
+}
+
+export interface Highlights {
+  category: WordWeight[]
+  risk: WordWeight[]
 }
 
 export interface CategoryScore {
@@ -55,6 +74,22 @@ export interface AnalyzeResponse {
   risk: Risk
   timings_ms: Record<string, number>
   versions: Record<string, string>
+  highlights?: Highlights
+}
+
+/** First event of /analyze/stream: everything except the draft. */
+export interface AnalysisEvent {
+  request_id: string
+  category: Category
+  risk: Risk
+  highlights: Highlights
+  versions: Record<string, string>
+}
+
+export interface StreamHandlers {
+  onAnalysis?: (event: AnalysisEvent) => void
+  onSources?: (sources: Source[]) => void
+  onToken?: (text: string) => void
 }
 
 export interface BatchItem {

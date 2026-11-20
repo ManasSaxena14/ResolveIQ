@@ -47,3 +47,50 @@ describe('API client', () => {
     })
   })
 })
+
+describe('streaming analysis', () => {
+  it('reports each stage and resolves with the final response', async () => {
+    const { analyzeTicketStream } = await import('./client')
+    const { eventStreamResponse, streamOf } = await import('../test/fixtures')
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(eventStreamResponse(streamOf(ANALYZE_RESPONSE)))
+    const seen: string[] = []
+    let text = ''
+
+    const result = await analyzeTicketStream(
+      { text: 'Charged twice' },
+      {
+        onAnalysis: (a) => seen.push(`analysis:${a.category.label}`),
+        onSources: (s) => seen.push(`sources:${s.length}`),
+        onToken: (t) => {
+          text += t
+        },
+      },
+    )
+
+    expect(seen).toEqual(['analysis:Billing and Payments', 'sources:1'])
+    expect(text).toBe(ANALYZE_RESPONSE.draft_reply.text)
+    expect(result.data.request_id).toBe('abc123def456')
+    expect(result.partial).toBe(false)
+  })
+
+  it('raises rate limits and stream errors as ApiError', async () => {
+    const { analyzeTicketStream } = await import('./client')
+    const { eventStreamResponse } = await import('../test/fixtures')
+    vi.spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce(jsonResponse({ detail: 'Too many requests. Try again in 12 seconds.' }, 429))
+      .mockResolvedValueOnce(eventStreamResponse([['error', { detail: 'The analysis failed. Try again.' }]]))
+      .mockResolvedValueOnce(eventStreamResponse([['analysis', {}]]))
+
+    await expect(analyzeTicketStream({ text: 'x' })).rejects.toMatchObject({ status: 429 })
+    await expect(analyzeTicketStream({ text: 'x' })).rejects.toThrow('The analysis failed')
+    await expect(analyzeTicketStream({ text: 'x' })).rejects.toThrow('ended before it was complete')
+  })
+
+  it('parses event blocks', async () => {
+    const { parseEvent } = await import('./client')
+
+    expect(parseEvent('event: token\ndata: {"text":"hi"}')).toEqual({ event: 'token', data: { text: 'hi' } })
+    expect(parseEvent(': comment')).toBeNull()
+    expect(parseEvent('data: not json')).toBeNull()
+  })
+})

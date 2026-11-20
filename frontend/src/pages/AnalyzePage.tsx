@@ -1,7 +1,17 @@
 import { useState, type CSSProperties, type FormEvent } from 'react'
-import { ApiError, analyzeTicket, sendFeedback } from '../api/client'
-import { CHANNELS, TICKET_TYPES, type AnalyzeResponse, type Rating, type TicketType } from '../api/types'
+import { ApiError, analyzeTicketStream, sendFeedback } from '../api/client'
+import {
+  CHANNELS,
+  TICKET_TYPES,
+  type AnalysisEvent,
+  type AnalyzeResponse,
+  type DraftReply,
+  type Rating,
+  type Source,
+  type TicketType,
+} from '../api/types'
 import { CategoryCard, DraftCard, RiskCard, Timeline, Verdict } from '../components/ResultCards'
+import { WhyCard } from '../components/WhyCard'
 import { EMPTY_FORM, EXAMPLES, MAX_CHARS, type FormState } from '../lib/examples'
 
 function ResultsSkeleton() {
@@ -95,9 +105,57 @@ function Feedback({ requestId }: { requestId: string }) {
   )
 }
 
+interface Live {
+  submitted: { subject: string; text: string }
+  analysis: AnalysisEvent | null
+  sources: Source[]
+  text: string
+  final: AnalyzeResponse | null
+}
+
+function Results({ live, analysis }: { live: Live; analysis: AnalysisEvent }) {
+  const final = live.final
+  const streamingDraft: DraftReply = {
+    text: live.text,
+    status: 'ok',
+    refused: false,
+    sources: live.sources,
+    error: null,
+  }
+  return (
+    <>
+      <Verdict
+        result={{ category: analysis.category, risk: analysis.risk, draft_reply: final?.draft_reply ?? null }}
+      />
+      <DraftCard draft={final?.draft_reply ?? streamingDraft} index={1} streaming={!final} />
+      <div className="results-row">
+        <CategoryCard category={analysis.category} index={2} />
+        <RiskCard risk={analysis.risk} index={3} />
+      </div>
+      <WhyCard
+        subject={live.submitted.subject}
+        text={live.submitted.text}
+        highlights={analysis.highlights}
+        index={4}
+      />
+      {final && (
+        <div className="card reveal meta" style={{ '--i': 5 } as CSSProperties}>
+          <Timeline timings={final.timings_ms} />
+          <div className="meta-row">
+            <span className="small faint">
+              Request <span className="mono">{final.request_id}</span>
+            </span>
+            <Feedback key={final.request_id} requestId={final.request_id} />
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
+
 export function AnalyzePage() {
   const [form, setForm] = useState<FormState>(EMPTY_FORM)
-  const [result, setResult] = useState<AnalyzeResponse | null>(null)
+  const [live, setLive] = useState<Live | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -113,11 +171,28 @@ export function AnalyzePage() {
     if (!canSubmit) return
     setLoading(true)
     setError('')
+    setLive({
+      submitted: { subject: form.subject, text: form.text },
+      analysis: null,
+      sources: [],
+      text: '',
+      final: null,
+    })
     try {
-      const { data } = await analyzeTicket(form)
-      setResult(data)
+      const { data } = await analyzeTicketStream(form, {
+        onAnalysis: (analysis) => setLive((current) => current && { ...current, analysis }),
+        onSources: (sources) => setLive((current) => current && { ...current, sources }),
+        onToken: (piece) => setLive((current) => current && { ...current, text: current.text + piece }),
+      })
+      setLive((current) => current && { ...current, final: data, analysis: current.analysis ?? {
+        request_id: data.request_id,
+        category: data.category,
+        risk: data.risk,
+        highlights: data.highlights ?? { category: [], risk: [] },
+        versions: data.versions,
+      } })
     } catch (err) {
-      setResult(null)
+      setLive(null)
       setError(err instanceof ApiError ? err.message : 'Something went wrong. Try again.')
     } finally {
       setLoading(false)
@@ -233,28 +308,11 @@ export function AnalyzePage() {
               <span>{error}</span>
             </div>
           )}
-          {loading ? (
+          {live && !live.analysis ? (
             <ResultsSkeleton />
-          ) : result ? (
-            <>
-              <Verdict result={result} />
-              <DraftCard draft={result.draft_reply} index={1} />
-              <div className="results-row">
-                <CategoryCard category={result.category} index={2} />
-                <RiskCard risk={result.risk} index={3} />
-              </div>
-              <div className="card reveal meta" style={{ '--i': 4 } as CSSProperties}>
-                <Timeline timings={result.timings_ms} />
-                <div className="meta-row">
-                  <span className="small faint">
-                    Request <span className="mono">{result.request_id}</span>
-                  </span>
-                  <Feedback key={result.request_id} requestId={result.request_id} />
-                </div>
-              </div>
-            </>
-          ) : (
-            !error && <EmptyResults />
+          ) : live?.analysis ? (
+            <Results live={live} analysis={live.analysis} />          ) : (
+            !error && !loading && <EmptyResults />
           )}
         </div>
       </div>

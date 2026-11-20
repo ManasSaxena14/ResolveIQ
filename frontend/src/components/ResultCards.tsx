@@ -1,5 +1,6 @@
 import { useState, type CSSProperties } from 'react'
-import type { AnalyzeResponse, Category, DraftReply, Risk } from '../api/types'
+import type { Category, DraftReply, Grounding, Risk, Source } from '../api/types'
+import { draftParts } from '../lib/highlight'
 import { milliseconds, percent, riskLevel, sentence, sourceSection, sourceTitle, sourceUrl } from '../lib/format'
 import { useCountUp } from '../lib/useCountUp'
 import { RiskMeter } from './RiskMeter'
@@ -19,11 +20,17 @@ const RISK_BADGE = {
 } as const
 
 /** Route, risk and draft at a glance; the evidence follows in the cards below. */
-export function Verdict({ result }: { result: AnalyzeResponse }) {
+export function Verdict({
+  result,
+}: {
+  result: { category: Category; risk: Risk; draft_reply: DraftReply | null }
+}) {
   const { category, risk, draft_reply: draft } = result
   const level = riskLevel(risk.escalation_probability, risk.threshold)
   const shown = useCountUp(risk.escalation_probability * 100)
-  const draftLabel = { ok: 'Ready to edit', refused: 'Not drafted', unavailable: 'Sources only' }[draft.status]
+  const draftLabel = draft
+    ? { ok: 'Ready to edit', refused: 'Not drafted', unavailable: 'Sources only' }[draft.status]
+    : 'Writing...'
 
   return (
     <section className="card verdict reveal" style={reveal(0)} aria-label="Verdict">
@@ -47,16 +54,67 @@ export function Verdict({ result }: { result: AnalyzeResponse }) {
         <span className="eyebrow">Reply</span>
         <span className="verdict-value">{draftLabel}</span>
         <span className="small muted">
-          {draft.sources.length} source{draft.sources.length === 1 ? '' : 's'} from the help center
+          {draft
+            ? `${draft.sources.length} source${draft.sources.length === 1 ? '' : 's'} from the help center`
+            : 'The draft streams in below'}
         </span>
       </div>
     </section>
   )
 }
 
-export function DraftCard({ draft, index = 1 }: { draft: DraftReply; index?: number }) {
+/** The draft with each citation turned into a numbered chip that points at its source. */
+function DraftText({ text, sources, streaming }: { text: string; sources: Source[]; streaming: boolean }) {
+  return (
+    <p className="draft-text" aria-live={streaming ? 'polite' : undefined}>
+      {draftParts(text, sources).map((part, i) =>
+        'citation' in part ? (
+          part.index !== null ? (
+            <a key={i} className="cite" href={`#source-${part.index}`} title={part.citation}>
+              {part.index}
+            </a>
+          ) : (
+            <span key={i} className="cite cite-invalid" title={`Not a retrieved source: ${part.citation}`}>
+              ?
+            </span>
+          )
+        ) : (
+          <span key={i}>{part.text}</span>
+        ),
+      )}
+      {streaming && <span className="caret" aria-hidden="true" />}
+    </p>
+  )
+}
+
+function GroundingLine({ grounding }: { grounding: Grounding }) {
+  const ok = grounding.invalid_citations.length === 0 && grounding.coverage >= 0.5
+  return (
+    <p className={`grounding small ${ok ? 'ok' : 'warn'}`}>
+      <span className="mono">
+        {grounding.cited_sentences}/{grounding.sentences}
+      </span>{' '}
+      sentences cite a source
+      {grounding.invalid_citations.length > 0
+        ? `. Check: ${grounding.invalid_citations.join('; ')} was not retrieved.`
+        : grounding.citations > 0
+          ? ', every citation points at a retrieved article.'
+          : '. No citations: verify every fact before sending.'}
+    </p>
+  )
+}
+
+export function DraftCard({
+  draft,
+  index = 1,
+  streaming = false,
+}: {
+  draft: DraftReply
+  index?: number
+  streaming?: boolean
+}) {
   const [copied, setCopied] = useState(false)
-  const badge = DRAFT_BADGE[draft.status]
+  const badge = streaming ? { label: 'Writing', className: 'badge-info' } : DRAFT_BADGE[draft.status]
 
   const copy = async () => {
     if (!draft.text) return
@@ -78,15 +136,17 @@ export function DraftCard({ draft, index = 1 }: { draft: DraftReply; index?: num
         <span className={`badge badge-dot ${badge.className}`}>{badge.label}</span>
       </div>
 
-      {draft.status === 'ok' && (
+      {streaming && <DraftText text={draft.text ?? ''} sources={draft.sources} streaming />}
+      {!streaming && draft.status === 'ok' && (
         <>
-          <p className="draft-text">{draft.text}</p>
+          <DraftText text={draft.text ?? ''} sources={draft.sources} streaming={false} />
+          {draft.grounding && <GroundingLine grounding={draft.grounding} />}
           <button type="button" className="btn btn-sm" onClick={copy}>
             {copied ? 'Copied' : 'Copy draft'}
           </button>
         </>
       )}
-      {draft.status === 'refused' && (
+      {!streaming && draft.status === 'refused' && (
         <div className="alert-banner info">
           <span className="mark" aria-hidden="true" />
           <span>
@@ -95,7 +155,7 @@ export function DraftCard({ draft, index = 1 }: { draft: DraftReply; index?: num
           </span>
         </div>
       )}
-      {draft.status === 'unavailable' && (
+      {!streaming && draft.status === 'unavailable' && (
         <div className="alert-banner warn">
           <span className="mark" aria-hidden="true" />
           <span>
@@ -110,7 +170,7 @@ export function DraftCard({ draft, index = 1 }: { draft: DraftReply; index?: num
           <p className="eyebrow section-label">Evidence from the help center</p>
           <ol className="sources">
             {draft.sources.map((source, i) => (
-              <li key={`${source.file}-${source.page}`} className="source">
+              <li key={`${source.file}-${source.page}`} className="source" id={`source-${i + 1}`}>
                 <span className="source-index">{String(i + 1).padStart(2, '0')}</span>
                 <div>
                   <a className="source-name" href={sourceUrl(source.file)} target="_blank" rel="noreferrer">
@@ -218,6 +278,7 @@ const STEPS = [
   { key: 'generation', label: 'Generation', color: 'var(--signal-fill)' },
   { key: 'classifier', label: 'Classifier', color: 'var(--ink-2)' },
   { key: 'risk', label: 'Risk', color: 'var(--medium)' },
+  { key: 'explain', label: 'Explain', color: 'var(--low)' },
 ] as const
 
 /** Where the time went, as one proportional bar. */

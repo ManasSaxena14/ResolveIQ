@@ -31,6 +31,9 @@
   --grain-opacity: 0.045;
   --glow: transparent;
   --logo-edge: 0;
+  --signal-mark: #a8cf1f;
+  --high-mark: #e0533d;
+  --low-mark: #3a9a64;
 
   --serif: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
   --sans: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -73,6 +76,9 @@
     --grain-opacity: 0.06;
     --glow: rgb(205 242 74 / 0.07);
     --logo-edge: 0.16;
+    --signal-mark: #cdf24a;
+    --high-mark: #ff7a66;
+    --low-mark: #6fd39a;
     --shadow: none;
   }
 }
@@ -105,6 +111,9 @@
   --grain-opacity: 0.06;
   --glow: rgb(205 242 74 / 0.07);
   --logo-edge: 0.16;
+  --signal-mark: #cdf24a;
+  --high-mark: #ff7a66;
+  --low-mark: #6fd39a;
   --shadow: none;
 }
 
@@ -1003,6 +1012,125 @@ kbd {
   gap: 8px;
 }
 
+/* ------------------------------------------------ citations and streaming */
+
+.cite {
+  display: inline-grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  margin: 0 2px;
+  border-radius: 6px;
+  vertical-align: 2px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  color: var(--signal-ink);
+  background: var(--signal-fill);
+  transition: transform 0.15s var(--ease);
+}
+a.cite:hover {
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+.cite-invalid {
+  color: var(--high);
+  background: var(--high-soft);
+  cursor: help;
+}
+.source:target {
+  background: var(--signal-soft);
+  border-radius: var(--radius-sm);
+}
+.caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  margin-left: 2px;
+  vertical-align: -2px;
+  background: var(--ink);
+  animation: blink 1s steps(2, start) infinite;
+}
+.grounding {
+  margin: -4px 0 14px;
+  color: var(--ink-2);
+}
+.grounding.ok .mono {
+  color: var(--low);
+}
+.grounding.warn {
+  color: var(--medium);
+}
+
+/* ------------------------------------------------------------- explain */
+
+.segmented {
+  display: inline-flex;
+  padding: 3px;
+  gap: 2px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-2);
+}
+.segmented button {
+  border: 0;
+  background: none;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 12.5px;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.segmented button[aria-pressed='true'] {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+}
+.segmented button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.why-text {
+  white-space: pre-wrap;
+  font-size: 15px;
+  line-height: 1.8;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+}
+.why-text mark {
+  color: inherit;
+  border-radius: 4px;
+  padding: 1px 2px;
+  transition: background 0.25s;
+}
+.why-terms {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.why-terms li {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px 11px;
+  font-size: 12.5px;
+}
+.why-terms .mono {
+  color: var(--ink-3);
+  font-size: 11.5px;
+}
+
 /* ---------------------------------------------------------- empty states */
 
 .empty {
@@ -1260,6 +1388,11 @@ th.num {
   }
   to {
     transform: scaleX(1);
+  }
+}
+@keyframes blink {
+  to {
+    visibility: hidden;
   }
 }
 @keyframes shimmer {

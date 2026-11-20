@@ -106,3 +106,64 @@ describe('Verdict and Timeline', () => {
     expect(screen.getByText('Generation')).toBeInTheDocument()
   })
 })
+
+describe('DraftCard while streaming and after', () => {
+  it('shows the text as it arrives with a cursor', () => {
+    const { container } = render(
+      <DraftCard
+        streaming
+        draft={{ text: 'The second charge is', status: 'ok', refused: false, sources: [], error: null }}
+      />,
+    )
+
+    expect(screen.getByText('Writing')).toBeInTheDocument()
+    expect(container.querySelector('.caret')).not.toBeNull()
+    expect(screen.queryByRole('button', { name: 'Copy draft' })).not.toBeInTheDocument()
+  })
+
+  it('reports grounding and flags citations to unknown sources', () => {
+    render(
+      <DraftCard
+        draft={{
+          ...ANALYZE_RESPONSE.draft_reply,
+          text: 'A hold [double-charges-and-pending-authorizations.md, page 1]. Free [ship.md, page 1].',
+          grounding: {
+            sentences: 2,
+            cited_sentences: 2,
+            citations: 2,
+            coverage: 1,
+            invalid_citations: ['ship.md, page 1'],
+          },
+        }}
+      />,
+    )
+
+    expect(screen.getByRole('link', { name: '1' })).toHaveAttribute('href', '#source-1')
+    expect(screen.getByTitle('Not a retrieved source: ship.md, page 1')).toBeInTheDocument()
+    expect(screen.getByText(/ship.md, page 1 was not retrieved/)).toBeInTheDocument()
+  })
+})
+
+describe('WhyCard', () => {
+  it('highlights category words and switches to risk words', async () => {
+    const { WhyCard } = await import('./WhyCard')
+    const userEvent = (await import('@testing-library/user-event')).default
+    const user = userEvent.setup()
+    const { container } = render(
+      <WhyCard subject="" text="Charged twice, refund please. Thanks" highlights={ANALYZE_RESPONSE.highlights!} />,
+    )
+
+    expect([...container.querySelectorAll('mark')].map((m) => m.textContent)).toEqual(['Charged', 'refund'])
+
+    await user.click(screen.getByRole('button', { name: 'Risk' }))
+    expect([...container.querySelectorAll('mark')].map((m) => m.textContent)).toEqual(['twice', 'Thanks'])
+    expect(screen.getByRole('list', { name: 'Top risk words' })).toHaveTextContent('+0.90')
+  })
+
+  it('renders nothing without highlights', async () => {
+    const { WhyCard } = await import('./WhyCard')
+    const { container } = render(<WhyCard subject="" text="Hi" highlights={{ category: [], risk: [] }} />)
+
+    expect(container).toBeEmptyDOMElement()
+  })
+})

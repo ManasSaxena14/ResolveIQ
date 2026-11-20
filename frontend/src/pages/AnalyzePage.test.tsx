@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { ANALYZE_RESPONSE, jsonResponse } from '../test/fixtures'
+import { ANALYZE_RESPONSE, eventStreamResponse, jsonResponse, streamOf } from '../test/fixtures'
 import { AnalyzePage } from './AnalyzePage'
 
 describe('AnalyzePage', () => {
@@ -9,7 +9,7 @@ describe('AnalyzePage', () => {
     const user = userEvent.setup()
     const fetchMock = vi
       .spyOn(globalThis, 'fetch')
-      .mockResolvedValueOnce(jsonResponse(ANALYZE_RESPONSE))
+      .mockResolvedValueOnce(eventStreamResponse(streamOf(ANALYZE_RESPONSE)))
       .mockResolvedValueOnce(jsonResponse({ request_id: 'abc123def456', rating: 'up', stored: true }))
     render(<AnalyzePage />)
 
@@ -17,8 +17,11 @@ describe('AnalyzePage', () => {
     await user.type(screen.getByLabelText('Customer message'), 'I was charged twice')
     await user.click(screen.getByRole('button', { name: 'Analyze ticket' }))
 
-    expect(await screen.findByText(/disappears within three days/)).toBeInTheDocument()
-    expect(screen.getByText('abc123def456')).toBeInTheDocument()
+    expect(await screen.findByText('abc123def456')).toBeInTheDocument()
+    expect(screen.getByText(/disappears within three days/)).toBeInTheDocument()
+    expect(fetchMock.mock.calls[0][0]).toBe('/analyze/stream')
+    expect(screen.getByRole('link', { name: '1' })).toHaveAttribute('href', '#source-1')
+    expect(screen.getByRole('region', { name: 'Why these results' })).toBeInTheDocument()
     expect(screen.getByText('905 ms')).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Helpful' }))
