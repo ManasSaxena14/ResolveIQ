@@ -2,6 +2,22 @@
 
 All notable changes to this project are documented in this file.
 
+## [1.2.0] - 2026-11-20
+
+### Changed
+
+- Redesigned the web app as a triage instrument (see `frontend/DESIGN.md`)
+  - Paper and Night themes, Instrument Serif, Geist and Geist Mono bundled locally
+  - A verdict strip that answers route, risk and reply before the evidence
+  - A ruled risk meter with the alert threshold, numbered sources with match bars and a
+    response-time bar that accounts for every millisecond
+  - Navigation rail on desktop, top bar on tablets, bottom tab bar on phones
+  - Staggered entrance, meter fills and a risk count-up, all off under reduced motion
+
+### Fixed
+
+- File sync duplicates such as `App 2.tsx` are excluded from type checking, tests and lint
+
 ## [1.1.0] - 2026-11-17
 
 ### Added

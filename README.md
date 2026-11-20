@@ -111,9 +111,10 @@ known at arrival; XGBoost with an 18-trial grid and calibration; an alert thresh
 a stated cost ratio; the top three SHAP reasons per ticket; batch scoring of a CSV.
 [docs/risk_model.md](docs/risk_model.md), [model card](docs/model_card_risk.md)
 
-**Web app.** A React and TypeScript app served by the API: an Analyze page with the
-three result cards and feedback, a Batch page that ranks a CSV by risk, and a Monitoring
-dashboard over the request log, in light and dark themes.
+**Web app.** A React and TypeScript app served by the API, designed as a triage
+instrument: a verdict strip that answers route, risk and reply first, a ruled risk meter,
+numbered evidence, a Batch page that ranks a CSV by risk and a Monitoring dashboard, in
+Paper and Night themes from phone to desktop.
 [docs/frontend.md](docs/frontend.md)
 
 **Service and MLOps.** FastAPI endpoints `/analyze`, `/batch`, `/feedback`, `/health`,

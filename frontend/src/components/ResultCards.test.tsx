@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { ANALYZE_RESPONSE } from '../test/fixtures'
-import { CategoryCard, DraftCard, RiskCard } from './ResultCards'
+import { CategoryCard, DraftCard, RiskCard, Timeline, Verdict } from './ResultCards'
 
 describe('DraftCard', () => {
   it('shows the draft and links each source', () => {
@@ -69,5 +69,40 @@ describe('RiskCard', () => {
     expect(screen.getByText('Low risk')).toBeInTheDocument()
     expect(screen.getByText('No alert')).toBeInTheDocument()
     expect(screen.getByText(/No single feature/)).toBeInTheDocument()
+  })
+})
+
+describe('Verdict and Timeline', () => {
+  it('summarizes route, risk and reply', () => {
+    render(<Verdict result={ANALYZE_RESPONSE} />)
+
+    const verdict = screen.getByRole('region', { name: 'Verdict' })
+    expect(verdict).toHaveTextContent('Billing and Payments')
+    expect(verdict).toHaveTextContent('Above the alert threshold')
+    expect(verdict).toHaveTextContent('Ready to edit')
+    expect(verdict).toHaveTextContent('1 source from the help center')
+    expect(verdict).not.toHaveTextContent('needs review')
+  })
+
+  it('flags low-confidence routing in the verdict', () => {
+    const result = { ...ANALYZE_RESPONSE, category: { ...ANALYZE_RESPONSE.category, needs_review: true } }
+    render(<Verdict result={result} />)
+
+    expect(screen.getByRole('region', { name: 'Verdict' })).toHaveTextContent('needs review')
+  })
+
+  it('accounts for time outside the named steps', () => {
+    render(<Timeline timings={{ retrieval: 20, classifier: 30, risk: 50, total: 1100 }} />)
+
+    expect(screen.getByText('1.1 s')).toBeInTheDocument()
+    expect(screen.getByText('Other')).toBeInTheDocument()
+    expect(screen.getByText('1.0 s')).toBeInTheDocument()
+  })
+
+  it('shows no extra segment when the steps add up', () => {
+    render(<Timeline timings={ANALYZE_RESPONSE.timings_ms} />)
+
+    expect(screen.queryByText('Other')).not.toBeInTheDocument()
+    expect(screen.getByText('Generation')).toBeInTheDocument()
   })
 })
