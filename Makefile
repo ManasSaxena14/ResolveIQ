@@ -1,6 +1,6 @@
 PYTHON ?= python
 
-.PHONY: help install install-dev lint format test coverage index eval data baseline classifier evaluate-classifier risk-features risk evaluate-risk register api ui drift-reference drift benchmark evaluate-groups web-install web-dev web-build web-test clean
+.PHONY: help install install-dev lint format test coverage index eval data baseline classifier evaluate-classifier risk-features risk evaluate-risk register api ui drift-reference drift benchmark evaluate-groups web-install web-dev web-build web-test space deploy-space clean
 
 help:
 	@echo "install      Install runtime dependencies and the package"
@@ -29,6 +29,8 @@ help:
 	@echo "web-dev      Start the web app with hot reload on http://127.0.0.1:5173 (run make api too)"
 	@echo "web-build    Build the web app; make api then serves it on http://127.0.0.1:8000"
 	@echo "web-test     Lint, type check and test the web app"
+	@echo "space        Run the public demo launcher locally on http://127.0.0.1:7860"
+	@echo "deploy-space Deploy to Hugging Face Spaces: SPACE=user/name CLASSIFIER=... RISK=..."
 	@echo "clean        Remove caches and generated artifacts"
 
 install:
@@ -113,6 +115,12 @@ web-build:
 
 web-test:
 	cd frontend && npm run lint && npm run typecheck && npm test
+
+space:
+	$(PYTHON) space.py
+
+deploy-space:
+	$(PYTHON) scripts/deploy_space.py --space $(SPACE) $(if $(CLASSIFIER),--set-variables $(CLASSIFIER) $(RISK),)
 
 clean:
 	rm -rf .pytest_cache .ruff_cache .coverage htmlcov

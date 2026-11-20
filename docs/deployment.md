@@ -37,47 +37,57 @@ On macOS, `app.py`, the API and the monitoring scripts set `OMP_NUM_THREADS=1` b
 importing PyTorch or XGBoost, because the two libraries bundle different OpenMP runtimes
 that crash when both start worker threads (see [risk_model.md](risk_model.md)).
 
-## Hugging Face Spaces
+## Hugging Face Spaces (public demo of the full web app)
 
-The Space runs `app.py`, the Gradio page; the React app needs the FastAPI server and is
-deployed with it (locally or on Render). The trained models are not in git, so they are published to the
-Hub first and downloaded when the Space starts.
+The Space runs `space.py`, which serves the React web app and the API from one process on
+the Space's port. No Docker is involved: the Space uses the Gradio SDK only as a Python
+runtime. The trained models are not in git, so they are published to the Hub first and
+downloaded when the Space starts; the web app is built locally and uploaded with the code,
+because a Space has no Node.js.
 
-1. Publish the models (needs a Hugging Face write token from `hf auth login`):
+1. Log in and publish the models (needs a Hugging Face **write** token):
 
    ```bash
+   hf auth login
    python scripts/publish_models.py classifier --repo-id <user>/resolveiq-ticket-classifier
    python scripts/publish_models.py risk --repo-id <user>/resolveiq-escalation-risk
    ```
 
-2. Create a Space with the Gradio SDK and push this repository to it. The Space reads its
-   settings from a YAML header at the top of its `README.md`, so add this header to the
-   copy of the README pushed to the Space:
+2. Build, stage and upload the Space, and set the two model variables in one step:
 
-   ```yaml
-   ---
-   title: ResolveIQ
-   sdk: gradio
-   app_file: app.py
-   python_version: "3.12"
-   license: mit
-   ---
+   ```bash
+   make deploy-space SPACE=<user>/resolveiq CLASSIFIER=<user>/resolveiq-ticket-classifier RISK=<user>/resolveiq-escalation-risk
    ```
 
-3. In the Space settings add:
+   `scripts/deploy_space.py` builds the frontend, copies only what the Space needs (the
+   package, configs, the help center, the built app, `space.py` and `requirements.txt`;
+   never `.env`, models, logs or local data), writes the Space README header and uploads
+   it. Add `--dry-run` to list the files without uploading.
+
+3. In the Space settings add the language model:
 
    | Name | Kind | Value |
    |---|---|---|
-   | `RESOLVEIQ_CLASSIFIER_REPO` | Variable | `<user>/resolveiq-ticket-classifier` |
-   | `RESOLVEIQ_RISK_REPO` | Variable | `<user>/resolveiq-escalation-risk` |
    | `RESOLVEIQ_LLM_PROVIDER` | Variable | `groq` (Ollama cannot run on Spaces) |
    | `GROQ_API_KEY` | Secret | your key |
+   | `RESOLVEIQ_API_KEYS` | Secret, optional | keys for programmatic clients |
 
 On first start the Space downloads the two models, builds the knowledge base index from
 `data/kb/` and downloads the embedding model, which takes a few minutes. The MLflow
 registry is not available there, so the service logs a warning and uses the downloaded
-folders. The service used about 760 MB of memory at peak in local measurements, which
-fits the free CPU hardware; check the current hardware limits on the Spaces pricing page.
+folders. On a Space, `space.py` trusts the proxy's `X-Forwarded-For` header so that each
+visitor gets their own rate limit. The service used about 760 MB of memory at peak in local
+measurements, which fits the free CPU hardware; check the current limits on the Spaces
+pricing page.
+
+Try exactly what the Space runs before deploying:
+
+```bash
+make web-build && make space     # http://127.0.0.1:7860
+```
+
+The older Gradio page (`app.py`) still works as a lighter alternative: set
+`app_file: app.py` in the Space README.
 
 ## Render (optional)
 
@@ -97,8 +107,10 @@ instance.
 
 - Keys live in `.env` locally and in Space secrets when hosted. `.env` is in
   `.gitignore`; rotate any key that was ever committed.
-- Ticket text is limited to 4,000 characters, batch files to 2 MB and 2,000 rows, and
-  the UI queue to two concurrent jobs.
+- Ticket text is limited to 4,000 characters and batch files to 2 MB and 2,000 rows.
+- API routes are rate limited per caller: 30 requests a minute without a key, 300 with a
+  key from `RESOLVEIQ_API_KEYS` (`service.rate_limit`). Over the limit the API answers
+  429 with `Retry-After`; an unknown key gets 401.
 - Ticket text and documents are treated as untrusted; the prompt tells the language model
   to ignore instructions inside them, and a test checks this.
 - The request log stores text length and a hash, never the text.
