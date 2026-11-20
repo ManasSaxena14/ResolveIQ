@@ -13,6 +13,8 @@ All notable changes to this project are documented in this file.
     response-time bar that accounts for every millisecond
   - Navigation rail on desktop, top bar on tablets, bottom tab bar on phones
   - Staggered entrance, meter fills and a risk count-up, all off under reduced motion
+  - A new logo: an R whose leg resolves into the lime verdict dot on a ticket-stub tile,
+    with a matching favicon, home screen icons, a link preview image and README logos
 
 ### Fixed
 
