@@ -314,3 +314,16 @@ def test_a_failing_explanation_does_not_fail_the_analysis(embedder, vector_store
     assert response.status_code == 200
     assert response.json()["highlights"]["category"] == []
     assert response.json()["highlights"]["risk"]
+
+
+def test_drafts_report_their_grounding(client):
+    draft = client.post("/analyze", json=TICKET).json()["draft_reply"]
+
+    assert draft["status"] == "ok"
+    assert draft["grounding"] == {
+        "sentences": 1,
+        "cited_sentences": 1,
+        "citations": 1,
+        "coverage": 1.0,
+        "invalid_citations": [],
+    }

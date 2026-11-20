@@ -151,3 +151,65 @@ def test_format_metrics_shows_rates_as_percentages():
     assert "87.5%" in text
     assert "40" in text
     assert "n/a" in text
+
+
+def _cited(answer: str, files: tuple[str, ...]) -> AnswerResult:
+    return AnswerResult(
+        answer=answer,
+        refused=False,
+        sources=[Source(f, 1, 0.7) for f in files],
+        timings_ms={"retrieval": 10.0, "generation": 900.0},
+        settings={"best_similarity": 0.7},
+    )
+
+
+def test_judgement_fills_correctness_support_and_citations():
+    from resolveiq.rag.grading import Judgement
+
+    result = _cited(
+        "You have 30 days [return-policy.md, page 1]. Shipping is free [ship.md, page 1].",
+        ("returns/return-policy.md",),
+    )
+
+    row = evaluate_case(_case(True), result, Judgement(True, False, "Adds free shipping."))
+
+    assert row["correct"] == 1
+    assert row["supported"] == 0
+    assert row["judge_reason"] == "Adds free shipping."
+    assert row["citation_coverage"] == 1.0
+    assert row["citations_valid"] == 0
+
+
+def test_judge_never_overrides_a_wrong_refusal():
+    from resolveiq.rag.grading import Judgement
+
+    row = evaluate_case(_case(True), _result(True), Judgement(True, True, "x"))
+
+    assert row["correct"] == 0
+    assert row["citation_coverage"] == ""
+
+
+def test_summary_reports_citation_and_support_rates(tmp_path):
+    from resolveiq.rag.grading import Judgement
+
+    rows = [
+        evaluate_case(
+            _case(True),
+            _cited("Thirty days [return-policy.md, page 1].", ("returns/return-policy.md",)),
+            Judgement(True, True, ""),
+        ),
+        evaluate_case(
+            _case(True),
+            _cited("Thirty days. No citation here.", ("returns/return-policy.md",)),
+            Judgement(False, False, ""),
+        ),
+    ]
+    path = tmp_path / "judged.csv"
+    write_results(rows, path)
+
+    metrics = summarize(read_results(path))
+
+    assert metrics["answer_correct_rate"] == 0.5
+    assert metrics["supported_rate"] == 0.5
+    assert metrics["citation_coverage"] == 0.5
+    assert metrics["citation_validity_rate"] == 1.0

@@ -7,6 +7,7 @@ Commands:
 Examples:
     python eval/run_rag_eval.py run --split dev --retrieval-only
     python eval/run_rag_eval.py run --split dev --run-name hybrid-top5
+    python eval/run_rag_eval.py run --split dev --run-name groq-judged --judge
     python eval/run_rag_eval.py score results/rag/hybrid-top5.csv
 
 The holdout split is reserved for the final run. Tune settings on dev only.
@@ -30,8 +31,10 @@ from resolveiq.rag.evaluation import (
     summarize,
     write_results,
 )
-from resolveiq.rag.generate import AnswerEngine
+from resolveiq.rag.generate import AnswerEngine, AnswerResult
+from resolveiq.rag.grading import judge_answer
 from resolveiq.rag.llm import LLMError
+from resolveiq.rag.loaders import load_file
 from resolveiq.tracking import tracked_run
 
 TESTSET_PATH = PROJECT_ROOT / "eval" / "rag_testset.csv"
@@ -41,12 +44,29 @@ def _log_metrics(mlflow, metrics: dict) -> None:
     mlflow.log_metrics({k: float(v) for k, v in metrics.items() if v is not None})
 
 
+def passages_for(settings: Settings, result: AnswerResult) -> str:
+    """The help center text behind each returned source, as the judge reads it."""
+    kb_dir = settings.resolve(settings.paths.kb_dir)
+    blocks = []
+    for source in result.sources:
+        path = kb_dir / source.file
+        if not path.is_file():
+            continue
+        pages = [p for p in load_file(path, source=source.file) if p.page == source.page]
+        text = " ".join(page.text for page in pages)[:4000]
+        blocks.append(f"[{source.file}, page {source.page}]\n{text}")
+    return "\n\n".join(blocks) or "(no passages)"
+
+
 def run(settings: Settings, args: argparse.Namespace) -> int:
     cases = select_split(load_testset(TESTSET_PATH), args.split)
     if args.split in {"holdout", "all"}:
         print("Note: the holdout split is reserved for the final evaluation run.")
 
-    mode = "retrieval" if args.retrieval_only else "full"
+    if args.judge and args.retrieval_only:
+        print("--judge needs answers; drop --retrieval-only.", file=sys.stderr)
+        return 2
+    mode = "retrieval" if args.retrieval_only else ("judged" if args.judge else "full")
     run_name = args.run_name or f"{mode}-{args.split}-{datetime.now():%Y%m%d-%H%M%S}"
     output = settings.resolve(settings.paths.results_dir) / "rag" / f"{run_name}.csv"
 
@@ -61,7 +81,19 @@ def run(settings: Settings, args: argparse.Namespace) -> int:
         except LLMError as exc:
             print(f"Stopped at {case.question_id}: {exc}", file=sys.stderr)
             return 1
-        rows.append(evaluate_case(case, result))
+        judgement = None
+        if args.judge and case.in_scope and not result.refused and engine.llm is not None:
+            try:
+                judgement = judge_answer(
+                    engine.llm,
+                    case.question,
+                    case.expected_answer,
+                    result.answer,
+                    passages_for(settings, result),
+                )
+            except LLMError as exc:
+                print(f"Judge failed on {case.question_id}: {exc}", file=sys.stderr)
+        rows.append(evaluate_case(case, result, judgement))
         print(f"[{number}/{len(cases)}] {case.question_id} refused={int(result.refused)}")
 
     write_results(rows, output)
@@ -71,13 +103,16 @@ def run(settings: Settings, args: argparse.Namespace) -> int:
     with tracked_run(settings, experiment="rag", run_name=run_name, tags=tags) as mlflow:
         if mlflow:
             mlflow.log_params({k: v for k, v in engine.settings_snapshot.items() if v is not None})
+            mlflow.log_param(
+                "judge", engine.settings_snapshot.get("llm_model") if args.judge else ""
+            )
             _log_metrics(mlflow, metrics)
             mlflow.log_artifact(str(output))
 
     print()
     print(format_metrics(metrics))
     print(f"\nResults written to {output}")
-    if not args.retrieval_only:
+    if not args.retrieval_only and not args.judge:
         print("Label the 'correct' column with 1 or 0, then run the score command.")
     return 0
 
@@ -111,6 +146,11 @@ def main() -> int:
     run_parser.add_argument("--split", choices=["dev", "holdout", "all"], default="dev")
     run_parser.add_argument("--retrieval-only", action="store_true", help="Skip generation")
     run_parser.add_argument("--run-name", help="Name for the results file and MLflow run")
+    run_parser.add_argument(
+        "--judge",
+        action="store_true",
+        help="Let the language model judge correctness and support instead of hand labels",
+    )
 
     score_parser = commands.add_parser("score", help="Score a hand-labeled results file")
     score_parser.add_argument("results", help="Path to a results CSV")

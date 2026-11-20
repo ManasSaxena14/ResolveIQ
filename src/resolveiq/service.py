@@ -23,6 +23,7 @@ from typing import Any, Protocol
 from resolveiq.classifier.data import build_text
 from resolveiq.config import Settings
 from resolveiq.monitoring.logging import RequestLog, RequestRecord, log_event, text_fingerprint
+from resolveiq.rag.grading import check_grounding
 from resolveiq.rag.llm import LLMError
 from resolveiq.schemas import (
     AnalyzeRequest,
@@ -32,6 +33,7 @@ from resolveiq.schemas import (
     CategoryOut,
     CategoryScore,
     DraftReply,
+    GroundingOut,
     HealthResponse,
     Highlights,
     RequestSummary,
@@ -297,11 +299,16 @@ class Copilot:
         timings["retrieval"] = result.timings_ms.get("retrieval", 0.0)
         if "generation" in result.timings_ms:
             timings["generation"] = result.timings_ms["generation"]
+        grounding = None
+        if not result.refused:
+            check = check_grounding(result.answer, [(s.file, s.page) for s in result.sources])
+            grounding = GroundingOut(**check.as_dict())
         return DraftReply(
             text=result.answer,
             status="refused" if result.refused else "ok",
             refused=result.refused,
             sources=_sources(result.sources),
+            grounding=grounding,
         )
 
     def _record(self, request: AnalyzeRequest, response: AnalyzeResponse) -> None:

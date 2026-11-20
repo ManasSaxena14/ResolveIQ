@@ -7,9 +7,13 @@ Two metrics are computed automatically for every run:
 * refusal behaviour: share of out-of-scope questions refused, and share of
   answerable questions wrongly refused
 
-Answer correctness needs a human judgement. Each run writes a results CSV with
-an empty ``correct`` column; fill it with 1 or 0 for the answerable questions
-and score the file with ``eval/run_rag_eval.py score``.
+Every full run also checks citations: the share of sentences that cite a source
+and whether each citation points at a retrieved source.
+
+Answer correctness is judged either by a person (fill the ``correct`` column
+with 1 or 0 and run ``eval/run_rag_eval.py score``) or by a language model with
+``run --judge``, which also records whether each claim is supported by the
+passages and the judge's reason.
 """
 
 from __future__ import annotations
@@ -21,6 +25,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from resolveiq.rag.generate import AnswerResult
+from resolveiq.rag.grading import Judgement, check_grounding
 
 TESTSET_COLUMNS = (
     "question_id",
@@ -46,6 +51,10 @@ RESULT_COLUMNS = (
     "refusal_correct",
     "latency_ms",
     "correct",
+    "citation_coverage",
+    "citations_valid",
+    "supported",
+    "judge_reason",
 )
 SPLITS = ("dev", "holdout")
 
@@ -100,13 +109,28 @@ def select_split(cases: Sequence[EvalCase], split: str) -> list[EvalCase]:
     return [case for case in cases if case.split == split]
 
 
-def evaluate_case(case: EvalCase, result: AnswerResult) -> dict[str, object]:
+def evaluate_case(
+    case: EvalCase, result: AnswerResult, judgement: Judgement | None = None
+) -> dict[str, object]:
     """Turn one answer into a results row with the automatic checks filled in."""
     returned_files = [source.file for source in result.sources]
     source_hit: object = int(case.source_file in returned_files) if case.in_scope else ""
     # Refusing an answerable question is always wrong, so it is scored here;
     # answered in-scope questions are left blank for a human to judge.
     correct: object = 0 if case.in_scope and result.refused else ""
+    coverage: object = ""
+    valid: object = ""
+    if result.answer and not result.refused:
+        grounding = check_grounding(result.answer, [(s.file, s.page) for s in result.sources])
+        coverage, valid = grounding.coverage, int(grounding.all_valid)
+    supported: object = ""
+    reason = ""
+    if judgement is not None:
+        if judgement.correct is not None and correct == "":
+            correct = int(judgement.correct)
+        if judgement.supported is not None:
+            supported = int(judgement.supported)
+        reason = judgement.reason
     return {
         "question_id": case.question_id,
         "split": case.split,
@@ -124,6 +148,10 @@ def evaluate_case(case: EvalCase, result: AnswerResult) -> dict[str, object]:
             sum(result.timings_ms.get(k, 0.0) for k in ("retrieval", "generation")), 1
         ),
         "correct": correct,
+        "citation_coverage": coverage,
+        "citations_valid": valid,
+        "supported": supported,
+        "judge_reason": reason,
     }
 
 
@@ -160,6 +188,12 @@ def summarize(rows: Sequence[dict[str, object]]) -> dict[str, float | int | None
     out_of_scope = [r for r in rows if _flag(r["in_scope"]) == 0]
     latencies = sorted(float(r["latency_ms"]) for r in rows if str(r["latency_ms"]).strip())
     labeled = [_flag(r["correct"]) for r in in_scope]
+    answered = [r for r in in_scope if _flag(r["refused"]) == 0]
+    coverages = [
+        float(r["citation_coverage"])
+        for r in answered
+        if str(r.get("citation_coverage", "")).strip()
+    ]
 
     def percentile(p: float) -> float | None:
         if not latencies:
@@ -176,6 +210,9 @@ def summarize(rows: Sequence[dict[str, object]]) -> dict[str, float | int | None
         "source_hit_rate": _rate(_flag(r["source_hit"]) for r in in_scope),
         "out_of_scope_refusal_rate": _rate(_flag(r["refused"]) for r in out_of_scope),
         "false_refusal_rate": _rate(_flag(r["refused"]) for r in in_scope),
+        "citation_coverage": round(statistics.mean(coverages), 4) if coverages else None,
+        "citation_validity_rate": _rate(_flag(r.get("citations_valid", "")) for r in answered),
+        "supported_rate": _rate(_flag(r.get("supported", "")) for r in answered),
         "latency_median_ms": statistics.median(latencies) if latencies else None,
         "latency_p95_ms": percentile(0.95),
     }

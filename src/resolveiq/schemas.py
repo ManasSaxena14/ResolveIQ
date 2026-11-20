@@ -43,12 +43,25 @@ class SourceOut(_Model):
     score: float | None = None
 
 
+class GroundingOut(_Model):
+    """How well a draft cites the help center."""
+
+    sentences: int
+    cited_sentences: int
+    citations: int
+    coverage: float = Field(description="Share of sentences that carry a citation")
+    invalid_citations: list[str] = Field(
+        default_factory=list, description="Citations that point at no retrieved source"
+    )
+
+
 class DraftReply(_Model):
     text: str | None = Field(description="Draft for an agent to edit; null when unavailable")
     status: DraftStatus
     refused: bool
     sources: list[SourceOut] = Field(default_factory=list)
     error: str | None = None
+    grounding: GroundingOut | None = None
 
 
 class CategoryScore(_Model):
