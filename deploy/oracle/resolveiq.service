@@ -1,0 +1,28 @@
+# systemd service for ResolveIQ on the Oracle Cloud server. setup.sh replaces
+# @APP_DIR@ and installs it as /etc/systemd/system/resolveiq.service.
+[Unit]
+Description=ResolveIQ API and web app
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=resolveiq
+Group=resolveiq
+WorkingDirectory=@APP_DIR@
+EnvironmentFile=/etc/resolveiq/resolveiq.env
+Environment=HF_HOME=@APP_DIR@/.cache/huggingface
+# Only Caddy on the same machine talks to the service; it sets X-Forwarded-For.
+ExecStart=@APP_DIR@/.venv/bin/uvicorn resolveiq.api.main:app --host 127.0.0.1 --port 8000 --proxy-headers --forwarded-allow-ips 127.0.0.1 --timeout-keep-alive 30
+Restart=always
+RestartSec=5
+# Hardening: no privilege escalation, a private /tmp, a read-only system, and write
+# access only to the app folder (request log, model cache).
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=@APP_DIR@
+
+[Install]
+WantedBy=multi-user.target

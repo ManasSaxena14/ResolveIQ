@@ -87,7 +87,7 @@ make web-install web-build      # React web app (needs Node.js 20 or later)
 make api                         # app and API on http://127.0.0.1:8000, API docs at /docs
 ```
 
-`make ui` starts the lighter Gradio page instead, used for the Hugging Face Spaces demo.
+`make ui` starts the lighter Gradio page instead.
 
 For drafted replies, install [Ollama](https://ollama.com) and run `ollama pull llama3.2`,
 or set `RESOLVEIQ_LLM_PROVIDER` to `groq`, `gemini` or `openrouter` and add its key to
@@ -107,7 +107,9 @@ Live demo: not deployed yet. Two free options, both without Docker
   no PyTorch, 363 MB at peak, starts in about 3 seconds) plus the web app as a static site
   that never sleeps and tells visitors when the API is waking. A free GitHub Actions job
   can keep the API awake.
-- **Hugging Face Spaces**: `make deploy-space` publishes the full web app.
+- **Oracle Cloud Always Free**: a server that never sleeps, with 12 GB of memory and
+  200 GB of disk, runs the full project behind free HTTPS.
+- Hugging Face Spaces now needs a paid plan to run apps, so it is not used.
 
 ## Components
 
@@ -161,8 +163,9 @@ Experiment runs: `mlflow ui --backend-store-uri sqlite:///mlflow.db --port 5001`
 ## Project structure
 
 ```
-app.py                    web UI entry point, also used by Hugging Face Spaces
+app.py                    Gradio page, a lighter alternative to the web app
 configs/config.yaml       all settings, validated at load time
+deploy/                   free deployments: Oracle Cloud server setup (Render uses render.yaml)
 data/kb/                  synthetic help center for the fictional retailer Altura
 docs/                     architecture, component docs, model cards, evaluation report
 eval/                     RAG test set and evaluation script

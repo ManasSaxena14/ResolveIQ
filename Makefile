@@ -1,6 +1,6 @@
 PYTHON ?= python
 
-.PHONY: help install install-dev lint format test coverage index eval data baseline classifier evaluate-classifier risk-features risk evaluate-risk register api ui drift-reference drift benchmark evaluate-groups web-install web-dev web-build web-test space deploy-space clean
+.PHONY: help install install-dev lint format test coverage index eval data baseline classifier evaluate-classifier risk-features risk evaluate-risk register api ui drift-reference drift benchmark evaluate-groups web-install web-dev web-build web-test space deploy-space oracle-push clean
 
 help:
 	@echo "install      Install runtime dependencies and the package"
@@ -30,7 +30,8 @@ help:
 	@echo "web-build    Build the web app; make api then serves it on http://127.0.0.1:8000"
 	@echo "web-test     Lint, type check and test the web app"
 	@echo "space        Run the public demo launcher locally on http://127.0.0.1:7860"
-	@echo "deploy-space Deploy to Hugging Face Spaces: SPACE=user/name CLASSIFIER=... RISK=..."
+	@echo "deploy-space Deploy to Hugging Face Spaces (needs a paid HF plan): SPACE=... PAID=1"
+	@echo "oracle-push  Copy the models and web app to the Oracle Cloud server: HOST=ubuntu@IP"
 	@echo "clean        Remove caches and generated artifacts"
 
 install:
@@ -120,7 +121,10 @@ space:
 	$(PYTHON) space.py
 
 deploy-space:
-	$(PYTHON) scripts/deploy_space.py --space $(SPACE) $(if $(CLASSIFIER),--set-variables $(CLASSIFIER) $(RISK),)
+	$(PYTHON) scripts/deploy_space.py --space $(SPACE) $(if $(PAID),--paid-plan,--dry-run) $(if $(CLASSIFIER),--set-variables $(CLASSIFIER) $(RISK),)
+
+oracle-push: web-build
+	bash deploy/oracle/push.sh $(HOST)
 
 clean:
 	rm -rf .pytest_cache .ruff_cache .coverage htmlcov

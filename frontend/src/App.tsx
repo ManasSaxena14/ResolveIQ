@@ -219,7 +219,7 @@ export default function App() {
         <div className="rail-foot">
           <Status health={health} down={down} waking={waking} />
           <div className="rail-foot-row">
-            <span className="eyebrow">v1.4</span>
+            <span className="eyebrow">v1.5</span>
             <ThemeButton dark={dark} onToggle={toggleTheme} />
           </div>
         </div>

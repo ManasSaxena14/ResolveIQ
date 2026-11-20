@@ -2,6 +2,21 @@
 
 All notable changes to this project are documented in this file.
 
+## [1.5.0] - 2026-11-20
+
+### Added
+
+- Oracle Cloud Always Free deployment in `deploy/oracle/`: a setup script for Ubuntu
+  24.04 on Ampere A1, a hardened systemd service, Caddy with free HTTPS on an sslip.io
+  name or your own domain, `make oracle-push` to copy the models and web app over SSH,
+  and an update script. Runs the full service on a server that never sleeps
+
+### Changed
+
+- Hugging Face Spaces that run code now need a paid plan, so they are no longer
+  presented as free: `deploy_space.py` uploads only with `--paid-plan`
+  (`make deploy-space PAID=1`), and the docs point to Oracle Cloud and Render
+
 ## [1.4.0] - 2026-11-20
 
 ### Added
