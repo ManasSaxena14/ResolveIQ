@@ -2,6 +2,24 @@
 
 All notable changes to this project are documented in this file.
 
+## [1.3.0] - 2026-11-20
+
+### Added
+
+- Streaming: `POST /analyze/stream` sends the category and risk first, then the draft as
+  the language model writes it; Ollama, Groq, OpenRouter and Gemini clients stream
+- Word highlights for both decisions (DistilBERT gradient times input, risk text model
+  contributions) and a Why card in the web app
+- Draft grounding: citation coverage and invalid citations on every draft, shown as
+  numbered citation chips in the web app
+- `run_rag_eval.py run --judge`: a language model judges correctness and support,
+  replacing hand labels, with citation and support rates in the summary
+- Rate limits per caller (30 a minute anonymous, 300 with an API key), API keys from
+  `RESOLVEIQ_API_KEYS`, 429 with `Retry-After` and 401 for unknown keys
+- Public demo of the full web app on Hugging Face Spaces without Docker: `space.py`
+  serves the React app and the API, and `scripts/deploy_space.py` builds, stages and
+  uploads it
+
 ## [1.2.0] - 2026-11-20
 
 ### Changed

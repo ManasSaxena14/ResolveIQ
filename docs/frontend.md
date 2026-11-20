@@ -37,7 +37,7 @@ direction, tokens and motion rules are in [frontend/DESIGN.md](../frontend/DESIG
 
 | Page | What it does | API calls |
 |---|---|---|
-| Analyze | Ticket form with type, channel and product, a character counter, example tickets and Ctrl or Cmd + Enter to submit. Shows the draft with linked help center sources and similarity bars, the category with its top probabilities and review flag, the risk gauge with the alert threshold and reasons, step timings and feedback buttons | `POST /analyze`, `POST /feedback` |
+| Analyze | Ticket form with type, channel and product, a character counter, example tickets and Ctrl or Cmd + Enter to submit. The verdict, category and risk appear as soon as they are computed and the draft is written out live. Citations become numbered chips that jump to their source, with a grounding line. A Why card highlights the words behind the category or the risk in the ticket itself. Step timings and feedback buttons follow | `POST /analyze/stream`, `POST /feedback` |
 | Batch | Drag and drop a CSV, download a sample file, see summary tiles and a ranked table with an alerts-only filter, export the ranking as CSV | `POST /batch` |
 | Monitoring | Volume, alert rate, review rate, latency and negative feedback, distributions of categories and draft outcomes, and the 50 most recent requests with their feedback | `GET /stats`, `GET /requests` |
 

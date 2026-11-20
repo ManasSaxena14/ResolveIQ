@@ -97,8 +97,8 @@ curl -s http://127.0.0.1:8000/analyze -H "content-type: application/json" \
   -d '{"text": "I was charged twice this month and nobody has replied to my emails."}'
 ```
 
-Live demo: not deployed yet. The Hugging Face Spaces setup is in
-[docs/deployment.md](docs/deployment.md).
+Live demo: not deployed yet. One command publishes the full web app to Hugging Face
+Spaces without Docker (`make deploy-space`, see [docs/deployment.md](docs/deployment.md)).
 
 ## Components
 
@@ -119,13 +119,15 @@ a stated cost ratio; the top three SHAP reasons per ticket; batch scoring of a C
 [docs/risk_model.md](docs/risk_model.md), [model card](docs/model_card_risk.md)
 
 **Web app.** A React and TypeScript app served by the API, designed as a triage
-instrument: a verdict strip that answers route, risk and reply first, a ruled risk meter,
-numbered evidence, a Batch page that ranks a CSV by risk and a Monitoring dashboard, in
-Paper and Night themes from phone to desktop.
+instrument: a verdict strip that answers route, risk and reply first, a draft that streams
+in with numbered citation chips, a Why card that highlights the words behind each
+decision, a ruled risk meter, a Batch page that ranks a CSV by risk and a Monitoring
+dashboard, in Paper and Night themes from phone to desktop.
 [docs/frontend.md](docs/frontend.md)
 
-**Service and MLOps.** FastAPI endpoints `/analyze`, `/batch`, `/feedback`, `/health`,
-`/requests` and `/stats`; a Gradio page for the hosted demo; MLflow tracking and a model
+**Service and MLOps.** FastAPI endpoints `/analyze`, `/analyze/stream`, `/batch`,
+`/feedback`, `/health`, `/requests` and `/stats` with per-caller rate limits and API keys;
+draft grounding checks and a language-model judge for evaluation; a Gradio page; MLflow tracking and a model
 registry with a `production` alias; a SQLite request log that never stores ticket text;
 drift reports with a retrain rule; CI for the Python package and the web app.
 [docs/api.md](docs/api.md), [docs/monitoring.md](docs/monitoring.md),

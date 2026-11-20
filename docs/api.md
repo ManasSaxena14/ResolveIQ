@@ -13,7 +13,8 @@ contract tests in `tests/test_api.py`.
 
 | Method and path | Purpose | Errors |
 |---|---|---|
-| `POST /analyze` | Draft reply, category and risk for one ticket | 422 empty, too long or unknown fields; 503 language model down, partial result still returned |
+| `POST /analyze` | Draft reply, category, risk and word highlights for one ticket | 422 empty, too long or unknown fields; 503 language model down, partial result still returned |
+| `POST /analyze/stream` | The same, as server-sent events: analysis first, then the draft as it is written | 422 before the stream starts |
 | `POST /batch` | CSV of tickets in, list ranked by risk out | 413 file too large; 422 missing columns, empty rows, too many rows, not UTF-8 |
 | `POST /feedback` | Store a thumbs up or down for a request | 404 unknown request ID; 422 invalid rating |
 | `GET /health` | Status, model versions, index size | none |
@@ -22,6 +23,19 @@ contract tests in `tests/test_api.py`.
 
 Every response carries an `X-Request-ID` header. A caller can send its own ID in the same
 header to correlate logs.
+
+## Rate limits and API keys
+
+The routes above, except `/health`, are counted per caller over a sliding minute:
+
+| Caller | Identified by | Limit (`service.rate_limit`) |
+|---|---|---|
+| Anonymous, including the web app | Client address | 30 requests a minute |
+| With a key in `X-API-Key` | The key (keys come from `RESOLVEIQ_API_KEYS`, comma separated) | 300 requests a minute |
+
+Responses carry `X-RateLimit-Limit` and `X-RateLimit-Remaining`. Over the limit the API
+answers **429** with `Retry-After` in seconds; an unknown key answers **401**. Counts are
+kept in memory, which suits one server process.
 
 ## POST /analyze
 
@@ -97,7 +111,48 @@ still returned:
 | `unavailable` | The language model failed or is not configured; category and risk are still valid | 503 |
 
 `timings_ms` contains `retrieval`, `generation` (when the model answered), `classifier`,
-`risk` and `total`.
+`risk`, `explain` (highlights) and `total`.
+
+`draft_reply.grounding` (when a draft was written) checks the draft's own citations:
+
+```json
+{"sentences": 3, "cited_sentences": 2, "citations": 2, "coverage": 0.6667,
+ "invalid_citations": []}
+```
+
+`invalid_citations` lists citations that point at no retrieved source, a sign of an
+invented reference.
+
+`highlights` lists the words behind each decision, for highlighting the ticket:
+
+```json
+{
+  "category": [{"term": "second", "weight": 1.0}, {"term": "twice", "weight": 0.94}],
+  "risk": [{"term": "twice", "weight": 0.40}, {"term": "charged twice", "weight": 0.21}]
+}
+```
+
+`category` comes from gradient times input on the DistilBERT embeddings for the predicted
+queue, merged into whole words and scaled so the strongest is 1. `risk` gives each term's
+exact contribution to the risk model's text score in log-odds; negative terms lower the
+risk.
+
+## POST /analyze/stream
+
+Same request body as `/analyze`. The response is `text/event-stream`:
+
+| Event | Data | When |
+|---|---|---|
+| `analysis` | `request_id`, `category`, `risk`, `highlights`, `versions` | After about 50 ms |
+| `sources` | The retrieved help center sources | When retrieval found relevant articles |
+| `token` | `{"text": "..."}`, a piece of the draft | While the language model writes |
+| `done` | `{"response": <the /analyze response>, "partial": false}` | At the end |
+| `error` | `{"detail": "..."}` | Only on an unexpected failure |
+
+```bash
+curl -N -X POST http://127.0.0.1:8000/analyze/stream \
+  -H "content-type: application/json" -d '{"text": "Where is my refund?"}'
+```
 
 ## POST /batch
 

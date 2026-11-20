@@ -81,9 +81,11 @@ Findings:
   questions. Questions that mention Altura ("What is the Altura stock price today?",
   similarity 0.74) look in scope to the embedding model. See failure case 1.
 
-The language model column and answer correctness can be filled with
-`python eval/run_rag_eval.py run --split dev --run-name <name>` once Ollama or an API key
-is set up, followed by hand labeling and the `score` command.
+The language model columns can be filled once Ollama or an API key is set up:
+`python eval/run_rag_eval.py run --split dev --run-name <name> --judge` writes the answers,
+lets the language model judge correctness and support against the help center passages,
+and reports citation coverage and validity. A model judging its own answers can be
+lenient, so the report should name the judge and spot-check a sample by hand.
 
 ### Table B: Ticket classifier (frozen test split, 2,451 tickets)
 
