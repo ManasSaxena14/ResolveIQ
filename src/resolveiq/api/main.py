@@ -31,6 +31,7 @@ from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from resolveiq import __version__
+from resolveiq.api.limits import API_KEY_HEADER, AccessPolicy
 from resolveiq.config import PROJECT_ROOT
 from resolveiq.schemas import (
     AnalyzeRequest,
@@ -50,6 +51,8 @@ logger = logging.getLogger("resolveiq.api")
 REQUEST_ID_HEADER = "X-Request-ID"
 # The React app is built into this folder by `npm run build` in frontend/.
 WEB_DIR = PROJECT_ROOT / "frontend" / "dist"
+# Routes that do model work or read the log; /health and the web app are never limited.
+LIMITED_PREFIXES = ("/analyze", "/batch", "/feedback", "/requests", "/stats")
 
 
 def _load_from_settings() -> Copilot:
@@ -61,14 +64,22 @@ def _load_from_settings() -> Copilot:
     return Copilot.from_settings(settings)
 
 
+def _default_access() -> AccessPolicy:
+    from resolveiq.config import get_settings
+
+    return AccessPolicy.from_config(get_settings().service.rate_limit)
+
+
 def create_app(
     copilot: Copilot | None = None,
     loader: Callable[[], Copilot] = _load_from_settings,
     web_dir: Path | None = WEB_DIR,
+    access: AccessPolicy | None = None,
 ) -> FastAPI:
     """Build the app. Pass a ready ``copilot`` in tests; otherwise ``loader`` runs at startup.
 
     When ``web_dir`` holds a built frontend, it is served at ``/`` next to the API.
+    ``access`` enables rate limiting and API keys; without it every request is allowed.
     """
 
     @asynccontextmanager
@@ -92,6 +103,29 @@ def create_app(
 
     def service(request: Request) -> Copilot:
         return request.app.state.copilot
+
+    @app.middleware("http")
+    async def rate_limit(request: Request, call_next: Any) -> Response:
+        if access is None or not request.url.path.startswith(LIMITED_PREFIXES):
+            return await call_next(request)
+        decision = access.check(
+            request.headers.get(API_KEY_HEADER),
+            request.client.host if request.client else None,
+            request.headers.get("X-Forwarded-For"),
+        )
+        if decision is None:
+            return JSONResponse(status_code=401, content={"detail": "Invalid API key"})
+        if not decision.allowed:
+            return JSONResponse(
+                status_code=429,
+                content={
+                    "detail": f"Too many requests. Try again in {decision.retry_after} seconds."
+                },
+                headers=decision.headers(),
+            )
+        response = await call_next(request)
+        response.headers.update(decision.headers())
+        return response
 
     @app.middleware("http")
     async def request_context(request: Request, call_next: Any) -> Response:
@@ -182,4 +216,4 @@ def create_app(
     return app
 
 
-app = create_app()
+app = create_app(access=_default_access())

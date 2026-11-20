@@ -166,6 +166,13 @@ class RegistryConfig(_StrictModel):
     cache_dir: Path
 
 
+class RateLimitConfig(_StrictModel):
+    enabled: bool = True
+    anonymous_per_minute: int = Field(gt=0)
+    key_per_minute: int = Field(gt=0)
+    trust_forwarded_for: bool = False
+
+
 class ServiceConfig(_StrictModel):
     max_text_chars: int = Field(gt=0)
     max_upload_bytes: int = Field(gt=0)
@@ -175,6 +182,7 @@ class ServiceConfig(_StrictModel):
     risk_dir: Path
     registry: RegistryConfig
     request_log: Path
+    rate_limit: RateLimitConfig
     source_base_url: str = ""
 
 

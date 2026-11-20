@@ -125,6 +125,15 @@ service:
     alias: production
     cache_dir: models/registry
   request_log: logs/requests.db
+  # Requests per minute on the API routes. Callers with a key from the
+  # RESOLVEIQ_API_KEYS environment variable get the higher limit.
+  rate_limit:
+    enabled: true
+    anonymous_per_minute: 30
+    key_per_minute: 300
+    # Read the client address from X-Forwarded-For. Only enable behind a proxy that
+    # sets it (Hugging Face Spaces, Render); otherwise clients could spoof it.
+    trust_forwarded_for: false
   # Knowledge base files are linked from the UI so a reader can open the source.
   source_base_url: https://github.com/ManasSaxena14/ResolveIQ/blob/main/data/kb/
 
