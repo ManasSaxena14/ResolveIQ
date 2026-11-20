@@ -1362,6 +1362,61 @@ th.num {
   margin-top: 16px;
 }
 
+/* ------------------------------------------------------------ wake-up */
+
+.wake-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 1180px;
+  width: calc(100% - 80px);
+  margin: 20px auto 0;
+  padding: 12px 16px;
+  border: 1px solid color-mix(in srgb, var(--medium) 30%, transparent);
+  border-radius: var(--radius);
+  background: var(--medium-soft);
+  font-size: 13.5px;
+  animation: rise 0.3s var(--ease);
+}
+.wake-dots {
+  display: inline-flex;
+  gap: 4px;
+}
+.wake-dots i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--medium);
+  animation: pulse 1.2s infinite ease-in-out;
+}
+.wake-dots i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.wake-dots i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+@keyframes pulse {
+  0%,
+  80%,
+  100% {
+    opacity: 0.25;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+@media (max-width: 1023px) {
+  .wake-banner {
+    width: calc(100% - 48px);
+  }
+}
+@media (max-width: 639px) {
+  .wake-banner {
+    width: calc(100% - 32px);
+    margin-top: 14px;
+  }
+}
+
 /* ---------------------------------------------------------- animations */
 
 @keyframes rise {

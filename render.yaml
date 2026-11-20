@@ -1,0 +1,59 @@
+# Render blueprint: two free services, no Docker.
+#
+#   resolveiq-api  the FastAPI service in the lite runtime (ONNX models, no PyTorch),
+#                  which fits the free instance's 512 MB and wakes up in seconds
+#   resolveiq-web  the React app as a static site, which is free, never sleeps and
+#                  shows visitors that the API is waking up
+#
+# In Render: New > Blueprint, pick this repository, then fill in the values marked
+# sync: false. See docs/deployment.md.
+services:
+  - type: web
+    name: resolveiq-api
+    runtime: python
+    plan: free
+    buildCommand: >-
+      pip install --no-cache-dir -r requirements-lite.txt &&
+      pip install --no-cache-dir -e . --no-deps &&
+      python -m compileall -q src &&
+      python scripts/fetch_lite.py
+    startCommand: >-
+      uvicorn resolveiq.api.main:app --host 0.0.0.0 --port $PORT
+      --proxy-headers --forwarded-allow-ips '*' --timeout-keep-alive 30
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: RESOLVEIQ_RUNTIME
+        value: lite
+      - key: RESOLVEIQ_TRUST_PROXY
+        value: "1"
+      - key: OMP_NUM_THREADS
+        value: "1"
+      - key: RESOLVEIQ_LLM_PROVIDER
+        value: groq
+      # The Hugging Face repository of the lite bundle, e.g. <user>/resolveiq-lite.
+      - key: RESOLVEIQ_LITE_REPO
+        sync: false
+      # The address of resolveiq-web, e.g. https://resolveiq-web.onrender.com.
+      - key: RESOLVEIQ_CORS_ORIGINS
+        sync: false
+      # Free tier key from console.groq.com, on an account without billing.
+      - key: GROQ_API_KEY
+        sync: false
+
+  - type: web
+    name: resolveiq-web
+    runtime: static
+    buildCommand: cd frontend && npm ci && npm run build
+    staticPublishPath: frontend/dist
+    autoDeploy: true
+    headers:
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+    envVars:
+      # The address of resolveiq-api, e.g. https://resolveiq-api.onrender.com.
+      - key: VITE_API_BASE
+        sync: false

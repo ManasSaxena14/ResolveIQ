@@ -67,3 +67,32 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  lite:
+    # Installs only requirements-lite.txt, as the Render build does, and checks that
+    # the lite runtime imports and passes its tests without PyTorch or ChromaDB.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-lite.txt
+
+      - name: Install the lite dependencies only
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-lite.txt
+          pip install -e . --no-deps
+          pip install pytest==9.2.0
+
+      - name: Import the service without heavy libraries
+        env:
+          RESOLVEIQ_RUNTIME: lite
+        run: |
+          python -c "import sys, resolveiq.api.main, resolveiq.lite; heavy = [m for m in ('torch', 'transformers', 'chromadb', 'sentence_transformers') if m in sys.modules]; assert not heavy, heavy; print('lite imports ok')"
+
+      - name: Test the lite runtime
+        run: pytest tests/test_lite.py tests/test_limits.py -q

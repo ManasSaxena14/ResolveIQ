@@ -30,35 +30,67 @@ function readTheme(): Theme | null {
   }
 }
 
+const WAKING_AFTER_MS = 2500
+
+/**
+ * Polls /health. On free hosting the API sleeps when idle and takes up to a minute to
+ * wake, so a check that has not answered after a moment is reported as "waking".
+ */
 function useHealth() {
   const [health, setHealth] = useState<HealthResponse | null>(null)
   const [down, setDown] = useState(false)
+  const [waking, setWaking] = useState(false)
 
   useEffect(() => {
     let active = true
+    let timer = 0
+    const schedule = (ms: number) => {
+      timer = window.setTimeout(() => void check(), ms)
+    }
     const check = async () => {
+      const slow = window.setTimeout(() => active && setWaking(true), WAKING_AFTER_MS)
       try {
         const data = await getHealth()
-        if (active) {
-          setHealth(data)
-          setDown(false)
-        }
+        if (!active) return
+        setHealth(data)
+        setDown(false)
+        setWaking(false)
+        schedule(30_000)
       } catch {
-        if (active) setDown(true)
+        if (!active) return
+        setDown(true)
+        schedule(5_000)
+      } finally {
+        window.clearTimeout(slow)
       }
     }
     void check()
-    const timer = window.setInterval(() => void check(), 30_000)
     return () => {
       active = false
-      window.clearInterval(timer)
+      window.clearTimeout(timer)
     }
   }, [])
 
-  return { health, down }
+  return { health, down, waking }
 }
 
-function Status({ health, down }: { health: HealthResponse | null; down: boolean }) {
+function Status({
+  health,
+  down,
+  waking,
+}: {
+  health: HealthResponse | null
+  down: boolean
+  waking: boolean
+}) {
+  if (waking && !health) {
+    return (
+      <span className="status degraded">
+        <span className="light" />
+        <span className="status-label">Waking up</span>
+      </span>
+    )
+  }
   if (down) {
     return (
       <span className="status down">
@@ -125,7 +157,7 @@ function Brand() {
 export default function App() {
   const [page, setPage] = useState<PageKey>(pageFromHash)
   const [theme, setTheme] = useState<Theme | null>(readTheme)
-  const { health, down } = useHealth()
+  const { health, down, waking } = useHealth()
 
   useEffect(() => {
     const onHash = () => setPage(pageFromHash())
@@ -185,9 +217,9 @@ export default function App() {
           {navItems(true)}
         </nav>
         <div className="rail-foot">
-          <Status health={health} down={down} />
+          <Status health={health} down={down} waking={waking} />
           <div className="rail-foot-row">
-            <span className="eyebrow">v1.3</span>
+            <span className="eyebrow">v1.4</span>
             <ThemeButton dark={dark} onToggle={toggleTheme} />
           </div>
         </div>
@@ -200,10 +232,22 @@ export default function App() {
             {navItems(false)}
           </nav>
           <div className="topbar-end">
-            <Status health={health} down={down} />
+            <Status health={health} down={down} waking={waking} />
             <ThemeButton dark={dark} onToggle={toggleTheme} />
           </div>
         </header>
+
+        {waking && !health && (
+          <div className="wake-banner" role="status">
+            <span className="wake-dots" aria-hidden="true">
+              <i />
+              <i />
+              <i />
+            </span>
+            The free server is waking up after a quiet period. This takes up to a minute
+            once; everything after that is fast. You can start typing now.
+          </div>
+        )}
 
         <main className="page" key={page}>
           <Page />

@@ -1,0 +1,32 @@
+name: keep-alive
+
+# Render's free web services sleep after 15 minutes without traffic and take up to a
+# minute to wake. Pinging /health every 14 minutes keeps the API awake. One service
+# running all month uses about 744 of the 750 free instance hours Render includes,
+# and scheduled workflows are free on public repositories.
+#
+# Set the repository variable RENDER_API_URL (Settings > Secrets and variables >
+# Actions > Variables), for example https://resolveiq-api.onrender.com. Without it
+# the job does nothing. GitHub may delay scheduled runs at busy times, so the API can
+# still fall asleep now and then; the web app then shows that it is waking up.
+
+on:
+  schedule:
+    - cron: "*/14 * * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  ping:
+    if: vars.RENDER_API_URL != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Ping the API
+        env:
+          URL: ${{ vars.RENDER_API_URL }}
+        run: |
+          curl --fail --silent --show-error --max-time 120 --retry 2 --retry-delay 10 \
+            "${URL%/}/health" > /dev/null
+          echo "API awake"

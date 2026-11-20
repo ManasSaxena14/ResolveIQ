@@ -28,6 +28,7 @@ from pathlib import Path
 from typing import Annotated, Any
 
 from fastapi import FastAPI, File, HTTPException, Query, Request, Response, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -54,6 +55,9 @@ REQUEST_ID_HEADER = "X-Request-ID"
 WEB_DIR = PROJECT_ROOT / "frontend" / "dist"
 # Routes that do model work or read the log; /health and the web app are never limited.
 LIMITED_PREFIXES = ("/analyze", "/batch", "/feedback", "/requests", "/stats")
+# Origins allowed to call the API from a browser, for a frontend hosted elsewhere
+# (for example a Render static site). Comma separated; empty means same origin only.
+CORS_ENV_VAR = "RESOLVEIQ_CORS_ORIGINS"
 
 
 def _load_from_settings() -> Copilot:
@@ -63,6 +67,11 @@ def _load_from_settings() -> Copilot:
     settings = get_settings()
     fetch_from_hub(settings)
     return Copilot.from_settings(settings)
+
+
+def cors_origins_from_env() -> list[str]:
+    raw = os.environ.get(CORS_ENV_VAR, "")
+    return [origin.strip().rstrip("/") for origin in raw.split(",") if origin.strip()]
 
 
 def _default_access() -> AccessPolicy:
@@ -76,6 +85,7 @@ def create_app(
     loader: Callable[[], Copilot] = _load_from_settings,
     web_dir: Path | None = WEB_DIR,
     access: AccessPolicy | None = None,
+    cors_origins: list[str] | None = None,
 ) -> FastAPI:
     """Build the app. Pass a ready ``copilot`` in tests; otherwise ``loader`` runs at startup.
 
@@ -107,7 +117,8 @@ def create_app(
 
     @app.middleware("http")
     async def rate_limit(request: Request, call_next: Any) -> Response:
-        if access is None or not request.url.path.startswith(LIMITED_PREFIXES):
+        limited = request.url.path.startswith(LIMITED_PREFIXES) and request.method != "OPTIONS"
+        if access is None or not limited:
             return await call_next(request)
         decision = access.check(
             request.headers.get(API_KEY_HEADER),
@@ -244,6 +255,23 @@ def create_app(
         """Totals over the request log for the monitoring dashboard."""
         return service(request).stats()
 
+    if cors_origins:
+        # Added last, so it wraps everything: rate-limit and error responses carry the
+        # CORS headers too and a browser can read them.
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=cors_origins,
+            allow_methods=["GET", "POST"],
+            allow_headers=["Content-Type", API_KEY_HEADER, REQUEST_ID_HEADER],
+            expose_headers=[
+                REQUEST_ID_HEADER,
+                "Retry-After",
+                "X-RateLimit-Limit",
+                "X-RateLimit-Remaining",
+            ],
+            max_age=600,
+        )
+
     # Mounted last so every API route above takes precedence.
     if web_dir is not None and (web_dir / "index.html").is_file():
         app.mount("/", StaticFiles(directory=web_dir, html=True), name="web")
@@ -251,4 +279,4 @@ def create_app(
     return app
 
 
-app = create_app(access=_default_access())
+app = create_app(access=_default_access(), cors_origins=cors_origins_from_env())

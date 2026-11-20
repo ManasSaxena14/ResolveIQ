@@ -7,6 +7,7 @@ are left out. Requires a Hugging Face account and a write token, either from
 Usage:
     python scripts/publish_models.py classifier --repo-id <user>/resolveiq-ticket-classifier
     python scripts/publish_models.py risk --repo-id <user>/resolveiq-escalation-risk
+    python scripts/publish_models.py lite --repo-id <user>/resolveiq-lite
 
 A hosted demo downloads the published models at startup when the
 RESOLVEIQ_CLASSIFIER_REPO and RESOLVEIQ_RISK_REPO variables are set
@@ -24,7 +25,13 @@ from pathlib import Path
 from resolveiq.config import PROJECT_ROOT, load_config
 from resolveiq.registry import META_FILES, clean_copy
 
-CARDS = {"classifier": "model_card_classifier.md", "risk": "model_card_risk.md"}
+CARDS = {
+    "classifier": "model_card_classifier.md",
+    "risk": "model_card_risk.md",
+    "lite": "model_card_lite.md",
+}
+FOLDERS = {"classifier": "classifier_dir", "risk": "risk_dir", "lite": "lite_dir"}
+MARKERS = {**META_FILES, "lite": "lite_meta.json"}
 
 
 def main() -> int:
@@ -39,16 +46,19 @@ def main() -> int:
     from huggingface_hub import HfApi
 
     settings = load_config()
-    field = "classifier_dir" if args.model == "classifier" else "risk_dir"
-    model_dir = settings.resolve(getattr(settings.service, field))
-    if not (model_dir / META_FILES[args.model]).is_file():
+    model_dir = settings.resolve(getattr(settings.service, FOLDERS[args.model]))
+    if not (model_dir / MARKERS[args.model]).is_file():
         print(f"{model_dir} has no trained model. Train and evaluate it first.", file=sys.stderr)
         return 1
 
     api = HfApi()
     api.create_repo(args.repo_id, repo_type="model", private=args.private, exist_ok=True)
     with tempfile.TemporaryDirectory() as tmp:
-        staged = clean_copy(model_dir, Path(tmp) / "model")
+        staged = Path(tmp) / "model"
+        if args.model == "lite":
+            shutil.copytree(model_dir, staged, ignore=shutil.ignore_patterns("* [0-9]*", ".*"))
+        else:
+            clean_copy(model_dir, staged)
         shutil.copyfile(PROJECT_ROOT / "docs" / CARDS[args.model], staged / "README.md")
         api.upload_folder(
             repo_id=args.repo_id,

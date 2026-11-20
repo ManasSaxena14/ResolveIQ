@@ -103,3 +103,39 @@ def test_api_returns_429_with_retry_after(embedder, vector_store):
     assert keyed.headers["X-RateLimit-Limit"] == "5"
     assert bad_key.status_code == 401
     assert health == [200] * 5, "health checks are never limited"
+
+
+def test_cors_allows_the_configured_frontend_and_wraps_429(embedder, vector_store):
+    access = AccessPolicy(_config(anonymous_per_minute=1))
+    app = create_app(
+        make_copilot(embedder, vector_store),
+        access=access,
+        cors_origins=["https://resolveiq-web.onrender.com"],
+    )
+    origin = {"Origin": "https://resolveiq-web.onrender.com"}
+
+    with TestClient(app) as client:
+        preflight = client.options(
+            "/analyze",
+            headers={**origin, "Access-Control-Request-Method": "POST",
+                     "Access-Control-Request-Headers": "content-type"},
+        )  # fmt: skip
+        first = client.get("/stats", headers=origin)
+        limited = client.get("/stats", headers=origin)
+        foreign = client.get("/health", headers={"Origin": "https://evil.example"})
+
+    assert preflight.status_code == 200
+    assert first.headers["access-control-allow-origin"] == origin["Origin"]
+    assert limited.status_code == 429
+    assert limited.headers["access-control-allow-origin"] == origin["Origin"]
+    assert "retry-after" in limited.headers["access-control-expose-headers"].lower()
+    assert "access-control-allow-origin" not in foreign.headers
+
+
+def test_cors_origins_come_from_the_environment(monkeypatch):
+    from resolveiq.api.main import cors_origins_from_env
+
+    monkeypatch.setenv("RESOLVEIQ_CORS_ORIGINS", "https://a.example/, https://b.example")
+    assert cors_origins_from_env() == ["https://a.example", "https://b.example"]
+    monkeypatch.delenv("RESOLVEIQ_CORS_ORIGINS")
+    assert cors_origins_from_env() == []
