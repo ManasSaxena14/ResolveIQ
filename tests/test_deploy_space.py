@@ -60,3 +60,24 @@ def test_default_include_list_never_ships_secrets_or_models():
         entry.startswith((".env", "models", "logs", "data/raw", "data/processed", "mlruns"))
         for entry in deploy_space.INCLUDE
     )
+
+
+def test_paid_hardware_is_reported(capsys):
+    class Runtime:
+        def __init__(self, hardware):
+            self.requested_hardware = hardware
+
+    class Api:
+        def __init__(self, hardware):
+            self.hardware = hardware
+
+        def get_space_runtime(self, space):
+            if self.hardware is None:
+                raise RuntimeError("not found")
+            return Runtime(self.hardware)
+
+    assert deploy_space.warn_if_paid_hardware(Api("cpu-basic"), "u/s") is False
+    assert deploy_space.warn_if_paid_hardware(Api("t4-small"), "u/s") is True
+    assert "t4-small, which is paid" in capsys.readouterr().err
+    assert deploy_space.warn_if_paid_hardware(Api(None), "u/s") is False
+    assert deploy_space.FREE_HARDWARE == "cpu-basic"

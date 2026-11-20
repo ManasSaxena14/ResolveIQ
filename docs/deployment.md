@@ -6,7 +6,6 @@ ResolveIQ runs without Docker. The same code serves three targets.
 |---|---|---|
 | Local | `make web-build` then `uvicorn resolveiq.api.main:app` (React app and API), or `python app.py` (Gradio) | Development and live demos |
 | Hugging Face Spaces | `app.py` with the Gradio SDK | Public demo |
-| Render (optional) | `uvicorn resolveiq.api.main:app --host 0.0.0.0 --port $PORT` | Public API |
 
 ## Local
 
@@ -89,19 +88,31 @@ make web-build && make space     # http://127.0.0.1:7860
 The older Gradio page (`app.py`) still works as a lighter alternative: set
 `app_file: app.py` in the Space README.
 
-## Render (optional)
+## Costs: everything is free
 
-Create a web service from the GitHub repository:
+The project uses only free software and free tiers. Nothing in it needs a payment method.
 
-| Setting | Value |
-|---|---|
-| Build command | `pip install -r requirements.txt && pip install -e . --no-deps && cd frontend && npm ci && npm run build` |
-| Start command | `uvicorn resolveiq.api.main:app --host 0.0.0.0 --port $PORT` |
-| Environment | the same variables as the Space |
+| Part | What is used | Cost |
+|---|---|---|
+| Code, data and models | Open-source libraries (MIT, BSD, Apache), fonts under the SIL Open Font License, the public ticket dataset (CC BY-NC 4.0) and open models (DistilBERT, bge-small, XGBoost) | Free |
+| Language model, local | Ollama with llama3.2 on your own machine | Free |
+| Language model, hosted | Groq (`llama-3.1-8b-instant`) or Gemini (`gemini-2.5-flash`) on their free tiers, or an OpenRouter `:free` model | Free, with daily request limits |
+| Model storage | Hugging Face Hub, public model repositories | Free |
+| Public demo | Hugging Face Spaces on `cpu-basic` hardware; `deploy_space.py` always requests it | Free; the Space sleeps after a period without visitors and wakes on the next visit |
+| Experiment tracking | MLflow with a local SQLite file | Free |
+| Continuous integration | GitHub Actions on a public repository | Free |
 
-Free instances have little memory (512 MB at the time of writing), less than the service
-needs with PyTorch and DistilBERT loaded, so treat this target as optional or use a paid
-instance.
+Guards that keep it free:
+
+- `llm.free_only: true` (the default) makes the config check reject an OpenRouter model
+  that is not a `:free` variant, so the service cannot start on a paid model by mistake.
+- Groq and Gemini only charge once billing is set up on the account. Create the keys on
+  accounts without billing, and the free tier simply returns a rate-limit error (HTTP 429)
+  when its daily quota is used; the service then shows the draft as unavailable and still
+  returns the category and risk.
+- `scripts/deploy_space.py` creates the Space on `cpu-basic` and warns if an existing
+  Space was switched to paid hardware. Paid add-ons such as persistent storage are not
+  used: the request log on a Space starts empty after each restart.
 
 ## Security habits
 

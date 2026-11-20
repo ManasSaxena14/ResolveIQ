@@ -64,8 +64,12 @@ class ProviderConfig(_StrictModel):
     api_key_env: str | None = None
 
 
+FREE_OPENROUTER_SUFFIX = ":free"
+
+
 class LLMConfig(_StrictModel):
     provider: ProviderName
+    free_only: bool = True
     temperature: float = Field(ge=0.0, le=2.0)
     max_tokens: int = Field(gt=0)
     timeout_seconds: float = Field(gt=0)
@@ -75,6 +79,16 @@ class LLMConfig(_StrictModel):
     def _check_active_provider(self) -> LLMConfig:
         if self.provider not in self.providers:
             raise ValueError(f"llm.providers has no entry for active provider '{self.provider}'")
+        openrouter = self.providers.get("openrouter")
+        if (
+            self.free_only
+            and openrouter is not None
+            and not openrouter.model.endswith(FREE_OPENROUTER_SUFFIX)
+        ):
+            raise ValueError(
+                f"llm.free_only is true, so the OpenRouter model must be a free variant "
+                f"ending in '{FREE_OPENROUTER_SUFFIX}', got '{openrouter.model}'"
+            )
         return self
 
     @property

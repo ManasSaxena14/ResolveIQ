@@ -26,6 +26,10 @@ rag:
 
 llm:
   provider: ollama         # ollama | gemini | groq | openrouter
+  # Only free models: Ollama runs locally; Groq and Gemini are used on their free
+  # tiers (create the key on an account without billing); OpenRouter models must be
+  # one of its ":free" variants, which the config check enforces while this is true.
+  free_only: true
   temperature: 0.1
   max_tokens: 512
   timeout_seconds: 60
@@ -132,7 +136,7 @@ service:
     anonymous_per_minute: 30
     key_per_minute: 300
     # Read the client address from X-Forwarded-For. Only enable behind a proxy that
-    # sets it (Hugging Face Spaces, Render); otherwise clients could spoof it.
+    # sets it (such as Hugging Face Spaces); otherwise clients could spoof it.
     trust_forwarded_for: false
   # Knowledge base files are linked from the UI so a reader can open the source.
   source_base_url: https://github.com/ManasSaxena14/ResolveIQ/blob/main/data/kb/

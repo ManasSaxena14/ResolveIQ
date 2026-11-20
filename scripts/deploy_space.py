@@ -67,6 +67,26 @@ Demo on synthetic data. Do not enter personal data.
 """
 
 
+FREE_HARDWARE = "cpu-basic"
+
+
+def warn_if_paid_hardware(api: object, space: str) -> bool:
+    """Warn when the Space runs on anything but free hardware. Returns True if paid."""
+    try:
+        runtime = api.get_space_runtime(space)  # type: ignore[attr-defined]
+    except Exception:
+        return False
+    hardware = getattr(runtime, "requested_hardware", None) or getattr(runtime, "hardware", None)
+    if hardware and str(hardware) != FREE_HARDWARE:
+        print(
+            f"Warning: {space} is set to {hardware}, which is paid. Switch it back to "
+            f"{FREE_HARDWARE} in the Space settings to keep the demo free.",
+            file=sys.stderr,
+        )
+        return True
+    return False
+
+
 def gradio_version() -> str:
     for line in (PROJECT_ROOT / "requirements.txt").read_text(encoding="utf-8").splitlines():
         if line.startswith("gradio=="):
@@ -148,7 +168,14 @@ def main() -> int:
         from huggingface_hub import HfApi
 
         api = HfApi()
-        api.create_repo(args.space, repo_type="space", space_sdk="gradio", exist_ok=True)
+        api.create_repo(
+            args.space,
+            repo_type="space",
+            space_sdk="gradio",
+            space_hardware=FREE_HARDWARE,
+            exist_ok=True,
+        )
+        warn_if_paid_hardware(api, args.space)
         if args.set_variables:
             classifier_repo, risk_repo = args.set_variables
             api.add_space_variable(args.space, "RESOLVEIQ_CLASSIFIER_REPO", classifier_repo)

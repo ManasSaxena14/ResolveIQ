@@ -123,3 +123,25 @@ def test_monitoring_needs_a_feature(tmp_path):
 
     with pytest.raises(ValidationError, match="at least one feature"):
         load_config(path)
+
+
+def test_free_only_rejects_a_paid_openrouter_model(tmp_path):
+    raw = yaml.safe_load(DEFAULT_CONFIG_PATH.read_text(encoding="utf-8"))
+    raw["llm"]["providers"]["openrouter"]["model"] = "openai/gpt-4o"
+    path = tmp_path / "config.yaml"
+    path.write_text(yaml.safe_dump(raw), encoding="utf-8")
+
+    with pytest.raises(ValidationError, match="free variant"):
+        load_config(path)
+
+    raw["llm"]["free_only"] = False
+    path.write_text(yaml.safe_dump(raw), encoding="utf-8")
+    assert load_config(path).llm.free_only is False
+
+
+def test_default_config_uses_only_free_models():
+    llm = load_config(DEFAULT_CONFIG_PATH).llm
+
+    assert llm.free_only is True
+    assert llm.provider == "ollama"
+    assert llm.providers["openrouter"].model.endswith(":free")

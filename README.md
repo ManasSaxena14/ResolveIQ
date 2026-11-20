@@ -71,7 +71,10 @@ has not been measured yet; the report explains how to run it.
 
 ## Run it
 
-Requirements: Python 3.12 on macOS or Linux. **Docker is not required.**
+Requirements: Python 3.12 on macOS or Linux. **Docker is not required, and nothing costs
+money:** every library, model, font and service is free, hosted language models run on
+their free tiers, and the demo uses free Hugging Face hardware (see the costs section in
+[docs/deployment.md](docs/deployment.md)).
 
 ```bash
 python3.12 -m venv .venv && source .venv/bin/activate

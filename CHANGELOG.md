@@ -19,6 +19,13 @@ All notable changes to this project are documented in this file.
 - Public demo of the full web app on Hugging Face Spaces without Docker: `space.py`
   serves the React app and the API, and `scripts/deploy_space.py` builds, stages and
   uploads it
+- Free-only guarantee: `llm.free_only` rejects paid OpenRouter models, the Space is
+  always created on free `cpu-basic` hardware with a warning for paid hardware, and a
+  costs section lists every service and its free limits
+
+### Removed
+
+- The Render deployment option, whose free tier cannot hold the models
 
 ## [1.2.0] - 2026-11-20
 
