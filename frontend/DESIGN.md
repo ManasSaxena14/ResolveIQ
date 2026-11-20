@@ -41,6 +41,24 @@ of decorative charts.
 
 Fonts are bundled with the app (`@fontsource`), so no request leaves for a font service.
 
+## Logo
+
+The mark is an R whose leg resolves into the lime verdict dot, set on a ticket-stub tile
+with notched sides: a ticket comes in, a decision comes out. The tile stays ink in both
+themes, with a hairline edge on dark backgrounds, and the name sets "Resolve" in Geist
+with "IQ" in Instrument Serif italic in the signal color.
+
+| Asset | Use |
+|---|---|
+| `src/components/Logo.tsx` | Mark and wordmark in the app |
+| `public/favicon.svg` | Browser tab |
+| `public/apple-touch-icon.png`, `public/icon-512.png` | Home screen and install icons |
+| `public/og-image.png` | Link previews (1200 x 630) |
+| `docs/images/logo-light.png`, `logo-dark.png` | README header |
+
+Keep clear space of half the tile around the mark, never recolor the dot and never
+place the mark below 16 px.
+
 ## Layout
 
 - Desktop (1024 px and wider): a fixed left rail with the brand, numbered navigation,

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getHealth } from './api/client'
 import type { HealthResponse } from './api/types'
-import { Logo } from './components/Logo'
+import { Wordmark } from './components/Logo'
 import { AnalyzePage } from './pages/AnalyzePage'
 import { BatchPage } from './pages/BatchPage'
 import { MonitoringPage } from './pages/MonitoringPage'
@@ -117,10 +117,7 @@ function ThemeButton({ dark, onToggle }: { dark: boolean; onToggle: () => void }
 function Brand() {
   return (
     <a className="brand" href="#/analyze" aria-label="ResolveIQ home">
-      <Logo />
-      <span>
-        Resolve<em>IQ</em>
-      </span>
+      <Wordmark />
     </a>
   )
 }

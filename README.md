@@ -1,3 +1,10 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/logo-dark.png">
+    <img alt="ResolveIQ" src="docs/images/logo-light.png" width="345">
+  </picture>
+</p>
+
 # ResolveIQ: AI Support Ticket Intelligence Platform
 
 Retrieval-augmented reply generation, transformer-based ticket classification and
