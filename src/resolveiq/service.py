@@ -33,10 +33,12 @@ from resolveiq.schemas import (
     CategoryScore,
     DraftReply,
     HealthResponse,
+    Highlights,
     RequestSummary,
     RiskOut,
     SourceOut,
     StatsResponse,
+    WordWeight,
 )
 
 logger = logging.getLogger(__name__)
@@ -183,6 +185,10 @@ class Copilot:
         risk = self.risk_model.score(request.subject, request.text, request.ticket_type)
         timings["risk"] = _elapsed_ms(step)
 
+        step = time.perf_counter()
+        highlights = self._highlights(request)
+        timings["explain"] = _elapsed_ms(step)
+
         top = sorted(prediction.probabilities.items(), key=lambda item: item[1], reverse=True)
         category = CategoryOut(
             label=prediction.label,
@@ -202,6 +208,7 @@ class Copilot:
                 "request_id": request_id,
                 "category": category.model_dump(),
                 "risk": risk_out.model_dump(),
+                "highlights": highlights.model_dump(),
                 "versions": self.versions,
             },
         )
@@ -216,9 +223,31 @@ class Copilot:
             risk=risk_out,
             timings_ms=timings,
             versions=self.versions,
+            highlights=highlights,
         )
         self._record(request, response)
         yield "done", {"response": response.model_dump(), "partial": draft.status == "unavailable"}
+
+    def _highlights(self, request: AnalyzeRequest) -> Highlights:
+        """Word weights from each model that can explain itself; never fails the request."""
+        found: dict[str, list[WordWeight]] = {}
+        sources = {
+            "category": getattr(self.classifier, "word_weights", None),
+            "risk": getattr(self.risk_model, "word_weights", None),
+        }
+        for name, explain in sources.items():
+            if not callable(explain):
+                continue
+            try:
+                if name == "category":
+                    pairs = explain(request.text, request.subject)
+                else:
+                    pairs = explain(request.subject, request.text)
+            except Exception as exc:  # an explanation must never break the analysis
+                logger.warning("Could not explain the %s: %s", name, exc)
+                continue
+            found[name] = [WordWeight(term=term, weight=weight) for term, weight in pairs]
+        return Highlights(**found)
 
     def _question(self, request: AnalyzeRequest) -> str:
         parts = [request.subject.strip(), request.text.strip()]

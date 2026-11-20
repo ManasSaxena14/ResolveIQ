@@ -56,6 +56,10 @@ class BrokenLLM(StubLLM):
 class KeywordClassifier:
     """Billing for money words, Technical Support otherwise."""
 
+    def word_weights(self, body: str, subject: str = "", k: int = 8):
+        text = f"{subject} {body}".lower()
+        return [(w, 1.0) for w in ("charge", "refund", "invoice") if w in text][:k]
+
     def predict_ticket(self, body: str, subject: str = "") -> Prediction:
         text = f"{subject} {body}".lower()
         billing = any(word in text for word in ("charge", "refund", "invoice"))
@@ -91,6 +95,11 @@ class KeywordRiskModel:
 
     def score(self, subject: str, body: str, ticket_type: str = "") -> RiskScore:
         return self._score(f"{subject} {body}")
+
+    def word_weights(self, subject: str, body: str, k: int = 8):
+        text = f"{subject} {body}".lower()
+        weights = [(w, 0.8) for w in ("urgent", "down", "twice", "again") if w in text]
+        return (weights + ([("thanks", -0.3)] if "thanks" in text else []))[:k]
 
     def score_texts(self, texts, ticket_types, k: int = 3):
         return [self._score(text) for text in texts]

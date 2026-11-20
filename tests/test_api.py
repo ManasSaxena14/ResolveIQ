@@ -288,3 +288,29 @@ def test_stream_turns_unexpected_failures_into_an_error_event(embedder, vector_s
         events = _events(client.post("/analyze/stream", json=TICKET).text)
 
     assert events == [("error", {"detail": "The analysis failed. Try again."})]
+
+
+def test_analysis_includes_word_highlights(client):
+    body = client.post("/analyze", json={"text": "Charged twice, refund please. Thanks"}).json()
+
+    assert body["highlights"]["category"] == [
+        {"term": "charge", "weight": 1.0},
+        {"term": "refund", "weight": 1.0},
+    ]
+    assert {"term": "twice", "weight": 0.8} in body["highlights"]["risk"]
+    assert {"term": "thanks", "weight": -0.3} in body["highlights"]["risk"]
+
+
+def test_a_failing_explanation_does_not_fail_the_analysis(embedder, vector_store):
+    copilot = make_copilot(embedder, vector_store)
+
+    def explode(*args, **kwargs):
+        raise RuntimeError("no gradients")
+
+    copilot.classifier.word_weights = explode
+    with TestClient(create_app(copilot)) as client:
+        response = client.post("/analyze", json=TICKET)
+
+    assert response.status_code == 200
+    assert response.json()["highlights"]["category"] == []
+    assert response.json()["highlights"]["risk"]

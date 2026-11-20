@@ -287,3 +287,22 @@ def test_xgboost_uses_one_thread_next_to_pytorch_on_macos(monkeypatch):
 
     monkeypatch.setattr("resolveiq.risk.train.sys.platform", "linux")
     assert xgboost_threads() is None
+
+
+def test_word_weights_explain_the_text_score_in_both_directions(trained):
+    model = RiskModel.load(trained["dir"])
+
+    urgent = dict(model.word_weights("URGENT outage", "The server is down again!"))
+    calm = dict(model.word_weights("Invoice", "A question about my payment plan"))
+
+    assert urgent and max(urgent.values()) > 0
+    assert calm and min(calm.values()) < 0, "calm wording lowers the score"
+    magnitudes = [abs(v) for v in urgent.values()]
+    assert magnitudes == sorted(magnitudes, reverse=True)
+
+
+def test_word_weights_need_a_text_model(trained):
+    model = RiskModel.load(trained["dir"])
+    model.text_model = None
+
+    assert model.word_weights("a", "b") == []

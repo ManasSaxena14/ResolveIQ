@@ -57,6 +57,25 @@ def text_model_terms(text_model: Any, text: str, k: int = 3) -> list[str]:
     return [str(vocabulary[row.col[i]]) for i in order[:k] if contributions[i] > 0]
 
 
+def text_model_contributions(text_model: Any, text: str, k: int = 8) -> list[tuple[str, float]]:
+    """Terms in ``text`` with the largest effect on the text score, either direction.
+
+    Positive weights raise the escalation score and negative weights lower it, in
+    log-odds of the text model. Sorted by absolute effect.
+    """
+    vectorizer = text_model.named_steps["tfidf"]
+    coefficients = text_model.named_steps["clf"].coef_[0]
+    row = vectorizer.transform([text]).tocoo()
+    contributions = row.data * coefficients[row.col]
+    vocabulary = vectorizer.get_feature_names_out()
+    order = np.argsort(-np.abs(contributions))
+    return [
+        (str(vocabulary[row.col[i]]), round(float(contributions[i]), 4))
+        for i in order[:k]
+        if abs(contributions[i]) > 1e-6
+    ]
+
+
 def describe_feature(
     name: str,
     value: float,

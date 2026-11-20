@@ -21,7 +21,13 @@ from typing import Any
 import numpy as np
 
 from resolveiq.classifier.data import build_text
-from resolveiq.risk.explain import Reason, shap_values, text_model_terms, top_reasons
+from resolveiq.risk.explain import (
+    Reason,
+    shap_values,
+    text_model_contributions,
+    text_model_terms,
+    top_reasons,
+)
 from resolveiq.risk.features import FeatureSchema, feature_matrix
 from resolveiq.risk.train import (
     ProbabilityCalibrator,
@@ -153,6 +159,12 @@ class RiskModel:
                 )
             )
         return scores
+
+    def word_weights(self, subject: str, body: str, k: int = 8) -> list[tuple[str, float]]:
+        """Words that move the text score most, for highlighting. Empty without a text model."""
+        if self.text_model is None:
+            return []
+        return text_model_contributions(self.text_model, build_text(subject, body), k)
 
     def score(self, subject: str, body: str, ticket_type: str = "") -> RiskScore:
         """Score one raw ticket. The text is cleaned and masked first."""

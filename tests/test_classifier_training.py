@@ -190,3 +190,32 @@ def test_class_weights_can_be_disabled(tmp_path, tiny_model_and_tokenizer):
     )  # fmt: skip
 
     assert np.isfinite(result.history[0]["train_loss"])
+
+
+def test_word_weights_are_whole_words_scaled_to_one(tiny_model_and_tokenizer):
+    model, tokenizer = tiny_model_and_tokenizer
+    classifier = TicketClassifier(model, tokenizer, LABELS, 32, 0.5, torch.device("cpu"))
+
+    weights = classifier.word_weights("server down, please refund the charge", "outage")
+
+    assert weights, "a ticket with known words gets highlights"
+    assert weights[0][1] == 1.0
+    assert all(0 < weight <= 1.0 for _, weight in weights)
+    assert all(word.isalpha() and word not in {"please", "the"} for word, _ in weights)
+    assert all(p.grad is None for p in model.parameters()), "gradients are cleared"
+    assert classifier.word_weights("", "") == []
+
+
+def test_word_scores_merge_pieces_and_skip_noise():
+    from resolveiq.classifier.predict import word_scores
+
+    text = "Refunding the charge, refunding"
+    # [CLS] refund ##ing the charge , refund ##ing [SEP]
+    offsets = [(0, 0), (0, 6), (6, 9), (10, 13), (14, 20), (20, 21), (22, 28), (28, 31), (0, 0)]
+    scores = [9.0, 0.5, 0.25, 5.0, 2.0, 3.0, 0.25, 0.25, 9.0]
+
+    weights = dict(word_scores(text, offsets, scores))
+
+    # charge 2.0 is the strongest; both "refunding" add up to 1.25; "the" and "," drop.
+    assert weights == {"charge": 1.0, "refunding": 0.625}
+    assert word_scores(text, offsets, [-1.0] * len(scores)) == []

@@ -70,6 +70,23 @@ class RiskOut(_Model):
     reasons: list[str]
 
 
+class WordWeight(_Model):
+    term: str
+    weight: float
+
+
+class Highlights(_Model):
+    """Words behind each decision, for highlighting the ticket text.
+
+    ``category`` holds words that pushed the classifier toward the predicted queue,
+    scaled so the strongest is 1. ``risk`` holds terms of the risk text model with their
+    effect in log-odds: positive raises the escalation risk, negative lowers it.
+    """
+
+    category: list[WordWeight] = Field(default_factory=list)
+    risk: list[WordWeight] = Field(default_factory=list)
+
+
 class AnalyzeResponse(_Model):
     request_id: str
     draft_reply: DraftReply
@@ -77,6 +94,7 @@ class AnalyzeResponse(_Model):
     risk: RiskOut
     timings_ms: dict[str, float]
     versions: dict[str, str]
+    highlights: Highlights = Field(default_factory=Highlights)
 
 
 class BatchItem(_Model):
