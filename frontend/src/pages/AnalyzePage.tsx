@@ -1,24 +1,23 @@
-import { useState, type FormEvent } from 'react'
+import { useState, type CSSProperties, type FormEvent } from 'react'
 import { ApiError, analyzeTicket, sendFeedback } from '../api/client'
 import { CHANNELS, TICKET_TYPES, type AnalyzeResponse, type Rating, type TicketType } from '../api/types'
-import { CategoryCard, DraftCard, RiskCard } from '../components/ResultCards'
+import { CategoryCard, DraftCard, RiskCard, Timeline, Verdict } from '../components/ResultCards'
 import { EMPTY_FORM, EXAMPLES, MAX_CHARS, type FormState } from '../lib/examples'
-import { milliseconds } from '../lib/format'
-
-const TIMING_LABELS: Record<string, string> = {
-  retrieval: 'Retrieval',
-  generation: 'Generation',
-  classifier: 'Classifier',
-  risk: 'Risk',
-  total: 'Total',
-}
 
 function ResultsSkeleton() {
   return (
     <div className="results" aria-busy="true" aria-label="Analyzing">
+      <div className="card verdict">
+        {[0, 1, 2].map((i) => (
+          <div className="verdict-cell" key={i}>
+            <div className="skeleton" style={{ height: 10, width: 70 }} />
+            <div className="skeleton" style={{ height: 30, width: '75%' }} />
+          </div>
+        ))}
+      </div>
       <div className="card">
-        <div className="skeleton" style={{ height: 14, width: 120, marginBottom: 16 }} />
-        <div className="skeleton" style={{ height: 70 }} />
+        <div className="skeleton" style={{ height: 10, width: 90, marginBottom: 18 }} />
+        <div className="skeleton" style={{ height: 96 }} />
       </div>
       <div className="results-row">
         <div className="card">
@@ -35,20 +34,29 @@ function ResultsSkeleton() {
 function EmptyResults() {
   return (
     <div className="card empty">
-      <h2>Paste a ticket to get started</h2>
-      <p>ResolveIQ returns three things for every ticket, each with its evidence.</p>
+      <span className="eyebrow">Waiting for a ticket</span>
+      <h2>
+        One message in, <em>three decisions out.</em>
+      </h2>
+      <p className="muted" style={{ maxWidth: 480 }}>
+        Paste a customer message or pick an example. ResolveIQ answers where it goes, how likely it
+        is to escalate and what to reply, and shows the evidence for each.
+      </p>
       <div className="empty-steps">
         <div className="empty-step">
+          <span className="eyebrow">01</span>
           <strong>Draft reply</strong>
-          Grounded in the help center, with linked sources
+          Grounded in the help center, every fact linked to its source
         </div>
         <div className="empty-step">
+          <span className="eyebrow">02</span>
           <strong>Category</strong>
-          The queue to route to, flagged when unsure
+          The queue to route to, flagged when the model is unsure
         </div>
         <div className="empty-step">
+          <span className="eyebrow">03</span>
           <strong>Escalation risk</strong>
-          Probability, alert and the top reasons
+          A calibrated probability, an alert and the top reasons
         </div>
       </div>
     </div>
@@ -72,23 +80,17 @@ function Feedback({ requestId }: { requestId: string }) {
   return (
     <div className="feedback">
       <span className="small muted">{rating ? 'Thanks for the feedback' : 'Was this helpful?'}</span>
-      <button
-        type="button"
-        className="btn btn-sm"
-        aria-pressed={rating === 'up'}
-        onClick={() => vote('up')}
-      >
+      <button type="button" className="btn btn-sm" aria-pressed={rating === 'up'} onClick={() => vote('up')}>
         Helpful
       </button>
-      <button
-        type="button"
-        className="btn btn-sm"
-        aria-pressed={rating === 'down'}
-        onClick={() => vote('down')}
-      >
+      <button type="button" className="btn btn-sm" aria-pressed={rating === 'down'} onClick={() => vote('down')}>
         Not helpful
       </button>
-      {error && <span className="small" style={{ color: 'var(--high)' }}>{error}</span>}
+      {error && (
+        <span className="small" style={{ color: 'var(--high)' }}>
+          {error}
+        </span>
+      )}
     </div>
   )
 }
@@ -124,15 +126,22 @@ export function AnalyzePage() {
 
   return (
     <>
-      <div className="page-header">
+      <header className="page-header">
         <div>
-          <h1>Analyze a ticket</h1>
-          <p>Draft a reply, route it and judge its escalation risk in one step.</p>
+          <span className="eyebrow">01 / Triage</span>
+          <h1>
+            Read the ticket. <em>Decide faster.</em>
+          </h1>
+          <p>Draft a grounded reply, route it to the right queue and judge its escalation risk in one step.</p>
         </div>
-      </div>
+      </header>
 
       <div className="grid-analyze">
-        <form className="card" onSubmit={submit} aria-label="Ticket">
+        <form className="card composer" onSubmit={submit} aria-label="Ticket">
+          <div className="card-header">
+            <h2 className="card-title">Incoming ticket</h2>
+            <span className="badge badge-neutral">Synthetic data only</span>
+          </div>
           <div className="field">
             <label htmlFor="subject">Subject (optional)</label>
             <input
@@ -140,6 +149,7 @@ export function AnalyzePage() {
               className="input"
               value={form.subject}
               maxLength={300}
+              placeholder="Charged twice"
               onChange={(e) => update('subject', e.target.value)}
             />
           </div>
@@ -156,8 +166,10 @@ export function AnalyzePage() {
               }}
             />
             <div className="field-hint">
-              <span>Press Ctrl or Cmd + Enter to analyze</span>
-              <span className={tooLong ? 'over' : undefined}>
+              <span>
+                <kbd>Ctrl</kbd> or <kbd>Cmd</kbd> + <kbd>Enter</kbd> to analyze
+              </span>
+              <span className={`mono${tooLong ? ' over' : ''}`}>
                 {length.toLocaleString()} / {MAX_CHARS.toLocaleString()}
               </span>
             </div>
@@ -179,12 +191,7 @@ export function AnalyzePage() {
             </div>
             <div className="field">
               <label htmlFor="channel">Channel</label>
-              <select
-                id="channel"
-                className="select"
-                value={form.channel}
-                onChange={(e) => update('channel', e.target.value)}
-              >
+              <select id="channel" className="select" value={form.channel} onChange={(e) => update('channel', e.target.value)}>
                 <option value="">Unknown</option>
                 {CHANNELS.map((channel) => (
                   <option key={channel} value={channel}>
@@ -200,59 +207,52 @@ export function AnalyzePage() {
                 className="input"
                 value={form.product}
                 maxLength={100}
+                placeholder="Optional"
                 onChange={(e) => update('product', e.target.value)}
               />
             </div>
           </div>
           <button type="submit" className="btn btn-primary btn-block" disabled={!canSubmit}>
+            <span className="dot" aria-hidden="true" />
             {loading ? 'Analyzing...' : 'Analyze ticket'}
           </button>
           <div className="examples" aria-label="Examples">
-            <span className="small faint">Try:</span>
+            <span className="eyebrow">Try</span>
             {EXAMPLES.map((example) => (
-              <button
-                key={example.label}
-                type="button"
-                className="chip"
-                onClick={() => setForm(example.form)}
-              >
+              <button key={example.label} type="button" className="chip" onClick={() => setForm(example.form)}>
                 {example.label}
               </button>
             ))}
           </div>
         </form>
 
-        <div>
+        <div className="results" aria-live="polite">
           {error && (
             <div className="alert-banner error" role="alert">
-              {error}
+              <span className="mark" aria-hidden="true" />
+              <span>{error}</span>
             </div>
           )}
           {loading ? (
             <ResultsSkeleton />
           ) : result ? (
-            <div className="results">
-              <DraftCard draft={result.draft_reply} />
+            <>
+              <Verdict result={result} />
+              <DraftCard draft={result.draft_reply} index={1} />
               <div className="results-row">
-                <CategoryCard category={result.category} />
-                <RiskCard risk={result.risk} />
+                <CategoryCard category={result.category} index={2} />
+                <RiskCard risk={result.risk} index={3} />
               </div>
-              <div className="card meta">
-                <div>
-                  <div className="timings">
-                    {Object.entries(result.timings_ms).map(([key, value]) => (
-                      <span key={key}>
-                        {TIMING_LABELS[key] ?? key} <strong>{milliseconds(value)}</strong>
-                      </span>
-                    ))}
-                  </div>
-                  <div className="small faint" style={{ marginTop: 4 }}>
+              <div className="card reveal meta" style={{ '--i': 4 } as CSSProperties}>
+                <Timeline timings={result.timings_ms} />
+                <div className="meta-row">
+                  <span className="small faint">
                     Request <span className="mono">{result.request_id}</span>
-                  </div>
+                  </span>
+                  <Feedback key={result.request_id} requestId={result.request_id} />
                 </div>
-                <Feedback key={result.request_id} requestId={result.request_id} />
               </div>
-            </div>
+            </>
           ) : (
             !error && <EmptyResults />
           )}

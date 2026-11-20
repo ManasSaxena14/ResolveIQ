@@ -1,7 +1,10 @@
-import { useState } from 'react'
-import type { Category, DraftReply, Risk } from '../api/types'
-import { percent, riskLevel, sentence, sourceSection, sourceTitle, sourceUrl } from '../lib/format'
-import { RiskGauge } from './RiskGauge'
+import { useState, type CSSProperties } from 'react'
+import type { AnalyzeResponse, Category, DraftReply, Risk } from '../api/types'
+import { milliseconds, percent, riskLevel, sentence, sourceSection, sourceTitle, sourceUrl } from '../lib/format'
+import { useCountUp } from '../lib/useCountUp'
+import { RiskMeter } from './RiskMeter'
+
+const reveal = (index: number) => ({ '--i': index }) as CSSProperties
 
 const DRAFT_BADGE = {
   ok: { label: 'Grounded draft', className: 'badge-ok' },
@@ -9,7 +12,49 @@ const DRAFT_BADGE = {
   unavailable: { label: 'Draft unavailable', className: 'badge-warn' },
 } as const
 
-export function DraftCard({ draft }: { draft: DraftReply }) {
+const RISK_BADGE = {
+  low: { label: 'Low risk', className: 'badge-low' },
+  medium: { label: 'Elevated risk', className: 'badge-medium' },
+  high: { label: 'High risk', className: 'badge-high' },
+} as const
+
+/** Route, risk and draft at a glance; the evidence follows in the cards below. */
+export function Verdict({ result }: { result: AnalyzeResponse }) {
+  const { category, risk, draft_reply: draft } = result
+  const level = riskLevel(risk.escalation_probability, risk.threshold)
+  const shown = useCountUp(risk.escalation_probability * 100)
+  const draftLabel = { ok: 'Ready to edit', refused: 'Not drafted', unavailable: 'Sources only' }[draft.status]
+
+  return (
+    <section className="card verdict reveal" style={reveal(0)} aria-label="Verdict">
+      <div className="verdict-cell">
+        <span className="eyebrow">Route to</span>
+        <span className="verdict-value">{category.label}</span>
+        <span className="small muted">
+          <span className="mono">{percent(category.confidence)}</span> confidence
+          {category.needs_review && <span style={{ color: 'var(--medium)' }}>, needs review</span>}
+        </span>
+      </div>
+      <div className="verdict-cell">
+        <span className="eyebrow">Escalation risk</span>
+        <span className={`verdict-number ${level}`} aria-hidden="true">
+          {Math.round(shown)}
+          <span style={{ fontSize: '0.5em', marginLeft: 2 }}>%</span>
+        </span>
+        <span className="small muted">{risk.alert ? 'Above the alert threshold' : 'Below the alert threshold'}</span>
+      </div>
+      <div className="verdict-cell">
+        <span className="eyebrow">Reply</span>
+        <span className="verdict-value">{draftLabel}</span>
+        <span className="small muted">
+          {draft.sources.length} source{draft.sources.length === 1 ? '' : 's'} from the help center
+        </span>
+      </div>
+    </section>
+  )
+}
+
+export function DraftCard({ draft, index = 1 }: { draft: DraftReply; index?: number }) {
   const [copied, setCopied] = useState(false)
   const badge = DRAFT_BADGE[draft.status]
 
@@ -18,14 +63,14 @@ export function DraftCard({ draft }: { draft: DraftReply }) {
     try {
       await navigator.clipboard.writeText(draft.text)
       setCopied(true)
-      window.setTimeout(() => setCopied(false), 1500)
+      window.setTimeout(() => setCopied(false), 1600)
     } catch {
       setCopied(false)
     }
   }
 
   return (
-    <section className="card" aria-labelledby="draft-title">
+    <section className="card reveal" style={reveal(index)} aria-labelledby="draft-title">
       <div className="card-header">
         <h2 id="draft-title" className="card-title">
           Draft reply
@@ -43,51 +88,58 @@ export function DraftCard({ draft }: { draft: DraftReply }) {
       )}
       {draft.status === 'refused' && (
         <div className="alert-banner info">
-          The knowledge base has nothing on this question, so no reply was drafted. Answer it
-          manually or route it to the right team.
+          <span className="mark" aria-hidden="true" />
+          <span>
+            The help center has nothing on this question, so no reply was drafted. Answer it
+            yourself or route it to the right team.
+          </span>
         </div>
       )}
       {draft.status === 'unavailable' && (
         <div className="alert-banner warn">
-          {sentence(draft.error ?? 'The language model is unavailable')} The category and risk
-          below are still valid.
+          <span className="mark" aria-hidden="true" />
+          <span>
+            {sentence(draft.error ?? 'The language model is unavailable')} The category and risk
+            below are still valid.
+          </span>
         </div>
       )}
 
       {draft.sources.length > 0 && (
-        <div style={{ marginTop: draft.status === 'ok' ? 18 : 0 }}>
-          <p className="section-label">Sources from the help center</p>
-          <ul className="sources">
-            {draft.sources.map((source) => (
+        <>
+          <p className="eyebrow section-label">Evidence from the help center</p>
+          <ol className="sources">
+            {draft.sources.map((source, i) => (
               <li key={`${source.file}-${source.page}`} className="source">
+                <span className="source-index">{String(i + 1).padStart(2, '0')}</span>
                 <div>
                   <a className="source-name" href={sourceUrl(source.file)} target="_blank" rel="noreferrer">
                     {sourceTitle(source.file)}
                   </a>
                   <div className="source-meta">
-                    {sourceSection(source.file)} &middot; page {source.page}
+                    {sourceSection(source.file)} / page {source.page}
                   </div>
                 </div>
                 {source.score !== null && (
                   <div className="source-score" title="Cosine similarity to the ticket">
-                    <span>{source.score.toFixed(2)} similarity</span>
-                    <div className="bar">
-                      <span style={{ width: percent(source.score) }} />
+                    <span>{source.score.toFixed(2)} match</span>
+                    <div className="bar signal">
+                      <span style={{ width: percent(source.score), animationDelay: `${120 + i * 60}ms` }} />
                     </div>
                   </div>
                 )}
               </li>
             ))}
-          </ul>
-        </div>
+          </ol>
+        </>
       )}
     </section>
   )
 }
 
-export function CategoryCard({ category }: { category: Category }) {
+export function CategoryCard({ category, index = 2 }: { category: Category; index?: number }) {
   return (
-    <section className="card" aria-labelledby="category-title">
+    <section className="card reveal" style={reveal(index)} aria-labelledby="category-title">
       <div className="card-header">
         <h2 id="category-title" className="card-title">
           Category
@@ -100,18 +152,24 @@ export function CategoryCard({ category }: { category: Category }) {
       </div>
       <div className="category-label">{category.label}</div>
       <div className="muted small">
-        {percent(category.confidence)} confidence
-        {category.needs_review && ' - below the review threshold, a person should confirm'}
+        <span className="mono">{percent(category.confidence)}</span> confidence
+        {category.needs_review && ', below the review threshold. A person should confirm.'}
       </div>
       <div className="prob-list">
-        {category.top.map((item) => (
+        {category.top.map((item, i) => (
           <div className="prob-row" key={item.label}>
             <div className="prob-row-head">
               <span>{item.label}</span>
-              <span className="muted">{percent(item.probability)}</span>
+              <span className="mono">{percent(item.probability)}</span>
             </div>
             <div className="bar">
-              <span style={{ width: percent(item.probability) }} />
+              <span
+                style={{
+                  width: percent(item.probability),
+                  opacity: i === 0 ? 1 : 0.35,
+                  animationDelay: `${180 + i * 70}ms`,
+                }}
+              />
             </div>
           </div>
         ))}
@@ -120,30 +178,26 @@ export function CategoryCard({ category }: { category: Category }) {
   )
 }
 
-const RISK_BADGE = {
-  low: { label: 'Low risk', className: 'badge-low' },
-  medium: { label: 'Elevated risk', className: 'badge-medium' },
-  high: { label: 'High risk', className: 'badge-high' },
-} as const
-
-export function RiskCard({ risk }: { risk: Risk }) {
-  const badge = RISK_BADGE[riskLevel(risk.escalation_probability, risk.threshold)]
+export function RiskCard({ risk, index = 3 }: { risk: Risk; index?: number }) {
+  const level = riskLevel(risk.escalation_probability, risk.threshold)
+  const badge = RISK_BADGE[level]
   return (
-    <section className="card" aria-labelledby="risk-title">
+    <section className="card reveal" style={reveal(index)} aria-labelledby="risk-title">
       <div className="card-header">
         <h2 id="risk-title" className="card-title">
           Escalation risk
         </h2>
         <span className={`badge badge-dot ${badge.className}`}>{badge.label}</span>
       </div>
-      <RiskGauge probability={risk.escalation_probability} threshold={risk.threshold} />
-      <p className="small" style={{ textAlign: 'center', margin: '6px 0 0' }}>
+      <RiskMeter probability={risk.escalation_probability} threshold={risk.threshold} />
+      <div className="alert-line">
         {risk.alert ? (
-          <strong style={{ color: 'var(--high)' }}>Alert: prioritize this ticket</strong>
+          <strong style={{ color: 'var(--high)', fontWeight: 600 }}>Alert: prioritize this ticket</strong>
         ) : (
           <span className="muted">No alert</span>
         )}
-      </p>
+        <span className="mono faint small">p = {risk.escalation_probability.toFixed(2)}</span>
+      </div>
       {risk.reasons.length > 0 ? (
         <ol className="reasons" aria-label="Top reasons">
           {risk.reasons.map((reason) => (
@@ -151,8 +205,58 @@ export function RiskCard({ risk }: { risk: Risk }) {
           ))}
         </ol>
       ) : (
-        <p className="muted small">No single feature raises the risk noticeably.</p>
+        <p className="muted small" style={{ marginTop: 16 }}>
+          No single feature raises the risk noticeably.
+        </p>
       )}
     </section>
+  )
+}
+
+const STEPS = [
+  { key: 'retrieval', label: 'Retrieval', color: 'var(--info)' },
+  { key: 'generation', label: 'Generation', color: 'var(--signal-fill)' },
+  { key: 'classifier', label: 'Classifier', color: 'var(--ink-2)' },
+  { key: 'risk', label: 'Risk', color: 'var(--medium)' },
+] as const
+
+/** Where the time went, as one proportional bar. */
+export function Timeline({ timings }: { timings: Record<string, number> }) {
+  const known = STEPS.filter((step) => timings[step.key] !== undefined).map((step) => ({
+    ...step,
+    ms: timings[step.key],
+  }))
+  const measured = known.reduce((sum, step) => sum + step.ms, 0)
+  const total = timings.total ?? measured
+  // Time outside the named steps, for example a language model call that failed.
+  const other = total - measured
+  const steps =
+    other > Math.max(5, total * 0.03)
+      ? [...known, { key: 'other', label: 'Other', color: 'var(--line-strong)', ms: other }]
+      : known
+  const scale = steps.reduce((sum, step) => sum + step.ms, 0) || 1
+  return (
+    <div className="meta">
+      <div className="meta-row">
+        <span className="card-title">Response time</span>
+        <span className="mono">{milliseconds(total)}</span>
+      </div>
+      <div className="timeline" aria-hidden="true">
+        {steps.map((step) => (
+          <span
+            key={step.key}
+            style={{ width: `${(step.ms / scale) * 100}%`, background: step.color }}
+          />
+        ))}
+      </div>
+      <div className="timeline-legend">
+        {steps.map((step) => (
+          <span key={step.key}>
+            <i style={{ background: step.color }} />
+            {step.label} <span className="mono">{milliseconds(step.ms)}</span>
+          </span>
+        ))}
+      </div>
+    </div>
   )
 }
