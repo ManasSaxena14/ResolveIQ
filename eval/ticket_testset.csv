@@ -1,0 +1,81 @@
+id,split,subject,body,accepted_queues,urgent
+h01,dev,Wrong amount on invoice,The invoice for my March order shows a delivery fee that was not on the checkout page. Can you correct it and send me a new copy?,Billing and Payments,0
+h02,holdout,Card taken three times,My card was charged three times for one pair of headphones and my rent payment bounced because of it. I need the money back today.,Billing and Payments,1
+h03,dev,Refund has not arrived,You confirmed my refund two weeks ago but nothing has reached my bank account. Can you check where it is?,Billing and Payments;Returns and Exchanges,0
+h04,holdout,Change payment method,I would like to pay for my membership with a different card from next month. Where do I update it?,Billing and Payments,0
+h05,dev,Payment I did not make,There is a purchase of 900 dollars on my saved card that nobody in my family made. Please block the account before more is spent.,Billing and Payments,1
+h06,holdout,Gift card balance,"How can I see how much is left on my gift card, and can I use two of them on the same order?",Billing and Payments;General Inquiry,0
+h07,dev,Subscription still billed,I cancelled in January and I am still being billed every month. This is the fourth time I am writing and I will dispute the charges with my bank.,Billing and Payments,1
+h08,holdout,VAT receipt,"Could you send a receipt with our company tax number for order 20418? It is for our yearly accounts, no hurry.",Billing and Payments,0
+h09,dev,Return unopened speaker,I bought a speaker as a gift and it is still sealed. What is the process for sending it back?,Returns and Exchanges,0
+h10,holdout,Wrong item in the box,I ordered a blue jacket in medium and received a green one in small. How do I swap it for the right one?,Returns and Exchanges,0
+h11,dev,Return label does not work,The courier refused my parcel because the return label has expired. The return window closes tomorrow and I do not want to lose my money.,Returns and Exchanges,1
+h12,holdout,Exchange for another size,These shoes are too tight. Could I exchange them for half a size larger?,Returns and Exchanges,0
+h13,dev,"Dangerous battery, want to send back",The power bank I received started smoking while charging and burned the table. I want to return it and I need to know whether it is safe to post.,Returns and Exchanges;Product Support,1
+h14,holdout,How long for a return,I sent my tablet back on Monday. When should I expect you to confirm that you have it?,Returns and Exchanges,0
+h15,dev,Missing part in return,I returned a camera last week and only now noticed that my own memory card is still inside. Can it be sent to me?,Returns and Exchanges;Customer Service,0
+h16,holdout,Trade for a newer model,I bought the watch ten days ago and you have just released a new one. May I return mine and pay the difference?,Returns and Exchanges;Sales and Pre-Sales,0
+h17,dev,Rude reply from your team,The person I spoke to on the phone hung up on me when I asked for a manager. I would like to make a complaint.,Customer Service,0
+h18,holdout,Third time I ask,I have written three times about the same order and each answer is a copied text that does not help. Please give this to somebody who can decide.,Customer Service,1
+h19,dev,Change delivery address,I moved house yesterday. Could you send my order to the new address instead of the old one?,Customer Service,0
+h20,holdout,Thank you to your agent,I just want to say that Priya in your chat was patient and solved everything. Please pass on my thanks.,Customer Service;General Inquiry,0
+h21,dev,Order not delivered,My parcel was due on Friday and the tracking has not moved since Wednesday. Where is it?,Customer Service,0
+h22,holdout,Medicine cooler lost in delivery,The cooler I ordered for my father's insulin was marked delivered but it is not here and he needs it tonight. Please find it.,Customer Service,1
+h23,dev,Update my name,I got married and would like the name on my account to be changed. Which document do you need?,Customer Service,0
+h24,holdout,Cancel an order,I ordered two by mistake. Please cancel one of them if it has not left the warehouse.,Customer Service;Returns and Exchanges,0
+h25,dev,Opening hours,"Are your stores open on public holidays, and until what time?",General Inquiry;Customer Service,0
+h26,holdout,Do you have a shop in Leeds,I would like to see the sofa before buying. Is there a branch near Leeds?,General Inquiry;Sales and Pre-Sales,0
+h27,dev,Recycling,Do you collect old appliances for recycling when you deliver a new one?,General Inquiry,0
+h28,holdout,Company history,I am a student writing about family businesses. When was your company founded and by whom?,General Inquiry,0
+h29,dev,Newsletter,Please tell me how to stop receiving the weekly newsletter.,General Inquiry;Customer Service,0
+h30,holdout,Press question before print,I am a reporter and our story about your recall goes to print in one hour. I need a statement from your press office now.,General Inquiry,1
+h31,dev,Parking at the store,Is there free parking next to the main store and how long can I stay?,General Inquiry,0
+h32,holdout,Where are the products made,Could you tell me which countries your furniture comes from?,General Inquiry;Sales and Pre-Sales,0
+h33,dev,Bulk order for a school,We need 120 tablets for a school in September. Do you offer a discount for that quantity and can we get a quote?,Sales and Pre-Sales,0
+h34,holdout,Difference between two models,I cannot decide between the Pro and the Air. Which one is better for editing video?,Sales and Pre-Sales;Product Support,0
+h35,dev,Will it be in stock,The grey armchair is sold out. Do you know when it will be available again?,Sales and Pre-Sales;General Inquiry,0
+h36,holdout,Student price,"Do you have a lower price for students, and what proof is required?",Sales and Pre-Sales;General Inquiry,0
+h37,dev,Quote needed before noon,Our board decides at noon today between you and a competitor. Without your quote for 400 laptops by then we will sign with them.,Sales and Pre-Sales,1
+h38,holdout,Demo for our team,Could someone show us how the business plan works before we decide to buy?,Sales and Pre-Sales,0
+h39,dev,Price match,Another shop sells the same television for 50 dollars less. Would you match that price?,Sales and Pre-Sales;Billing and Payments,0
+h40,holdout,Pre-order question,"If I pre-order the phone now, will I be charged today or when it ships?",Sales and Pre-Sales;Billing and Payments,0
+h41,dev,Screen flickers,The television I bought in June flickers when the picture is dark. I have tried another cable. What else can I try?,Product Support;Technical Support,0
+h42,holdout,How to pair the earbuds,I cannot find how to connect the earbuds to a second phone. Could you explain the steps?,Product Support;Technical Support,0
+h43,dev,Coffee machine leaks on the socket,Water is running out of the new coffee machine onto the power socket and there are sparks. What should I do?,Product Support,1
+h44,holdout,Battery lasts two hours,My laptop is three months old and the battery only lasts two hours. Is that covered by the warranty?,Product Support;Returns and Exchanges,0
+h45,dev,Instruction manual,The manual was missing from the box of the bread maker. Can you email me one?,Product Support;Customer Service,0
+h46,holdout,Vacuum makes a loud noise,Since last week the vacuum cleaner makes a grinding noise on carpet. Does it need a new brush?,Product Support;Technical Support,0
+h47,dev,Baby monitor stops at night,The baby monitor loses its picture every night and last night we did not hear our sick baby. We need a working one immediately.,Product Support;Technical Support,1
+h48,holdout,Cleaning the non-stick pan,What can I use to clean the pan without damaging the coating?,Product Support;General Inquiry,0
+h49,dev,App closes when I pay,"Every time I press pay, the app closes. I have reinstalled it twice and my phone is up to date.",Technical Support;Product Support,0
+h50,holdout,Cannot reset password,"The password reset email never arrives, also not in spam. How else can I get into my account?",Technical Support;IT Support,0
+h51,dev,Somebody is in my account,I received alerts that my password and email were changed and I did not do it. My saved cards are in there. Please lock it.,Technical Support;IT Support;Customer Service,1
+h52,holdout,Website shows blank page,The order page stays white in my browser. It works on my neighbor's computer.,Technical Support,0
+h53,dev,Integration returns errors,"Our warehouse system has received error 500 from your orders interface since this morning and we cannot ship anything to 2,000 customers.",Technical Support;Service Outages and Maintenance,1
+h54,holdout,Two-factor code rejected,The app says my sign-in code is wrong although I type it at once. Is the clock on my phone the problem?,Technical Support;IT Support,0
+h55,dev,Photos do not upload,I want to add photos to my review but the upload bar stops at 90 percent.,Technical Support,0
+h56,holdout,Export is missing columns,The file I download from my purchase history no longer has the date column. Can it be added back?,Technical Support;Product Support,0
+h57,dev,New laptop for a new colleague,A new colleague starts on the first of next month and will need a laptop and a mailbox.,IT Support;Human Resources,0
+h58,holdout,VPN drops at home,My work VPN disconnects every half hour since I changed my router. Can you help me set it up?,IT Support;Technical Support,0
+h59,dev,Printer on floor two,The printer on the second floor prints empty pages. Please send someone when you have time.,IT Support,0
+h60,holdout,Ransom note on our file server,"All files on the shared server have been renamed and a message asks for money. Please act now, it is spreading.",IT Support;Technical Support,1
+h61,dev,Access to shared folder,May I have read access to the marketing folder? My manager agrees.,IT Support,0
+h62,holdout,Software installation,I would like the diagram program installed on my work computer. There is no rush.,IT Support,0
+h63,dev,Nobody in the office can sign in,Since eight this morning none of our forty people can sign in to their work computers. Everything has stopped.,IT Support;Service Outages and Maintenance;Technical Support,1
+h64,holdout,Mailbox full,My mailbox says that it is nearly full. Can the limit be raised?,IT Support,0
+h65,dev,Is the website down,Your website has not opened for an hour for me or my friends. Is there a problem on your side?,Service Outages and Maintenance;Technical Support,0
+h66,holdout,Checkout down during our sale,The whole checkout has been unavailable for two hours in the middle of our sale and we are losing thousands every minute.,Service Outages and Maintenance;Technical Support,1
+h67,dev,Planned maintenance,Will the order tracking be available during the maintenance on Sunday night?,Service Outages and Maintenance,0
+h68,holdout,Payment terminals offline in all stores,All card terminals in our twelve stores went offline at the same time and customers are leaving. We need this fixed at once.,Service Outages and Maintenance;Technical Support;Billing and Payments,1
+h69,dev,When will it be back,The status page has said that the service is degraded since Tuesday. Is there a new estimate?,Service Outages and Maintenance,0
+h70,holdout,Outage report,Could you send the report about last month's outage for our records?,Service Outages and Maintenance,0
+h71,dev,Alarm service not responding,The home alarm service is not answering at all and our burglary alarms are unprotected tonight. Please restore it now.,Service Outages and Maintenance;Technical Support,1
+h72,holdout,Maintenance notice too late,I received the maintenance notice after the work had started. Could it be sent two days earlier next time?,Service Outages and Maintenance;Customer Service,0
+h73,dev,Job application status,I applied for the store manager position three weeks ago. Can you tell me whether it is still open?,Human Resources,0
+h74,holdout,Holiday allowance,How many days of paid leave do I have left this year and how do I request them?,Human Resources,0
+h75,dev,Harassed by my supervisor,My supervisor threatened me again yesterday and I am afraid to come to work tomorrow. I need to speak to someone today.,Human Resources,1
+h76,holdout,Payslip question,My payslip for May shows fewer hours than I worked. Whom can I ask about it?,Human Resources;Billing and Payments,0
+h77,dev,Reference letter,I left the company in April and need a letter confirming my employment.,Human Resources,0
+h78,holdout,Parental leave,I would like to know how to apply for parental leave from November.,Human Resources,0
+h79,dev,Internship for my studies,Do you take interns in the design team during the winter term?,Human Resources;General Inquiry,0
+h80,holdout,Salary not paid,My salary has not been paid for two months and I cannot pay my rent this week. Please settle this now.,Human Resources;Billing and Payments,1

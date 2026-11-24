@@ -1,0 +1,289 @@
+id,body,queue,urgent
+s001,The coupon code I entered was accepted but the discount does not appear on my statement.,Billing and Payments,0
+s002,Could you split my payment for the dining table into three monthly parts?,Billing and Payments,0
+s003,"I was billed in euros although I live in Canada. Why, and which rate did you use?",Billing and Payments,0
+s004,"You took 4,800 dollars for an order of 48 dollars and my account is now overdrawn. Reverse it today please.",Billing and Payments,1
+s005,My bank says the payment is pending while your site says it failed. Should I pay again?,Billing and Payments,0
+s006,"A stranger is buying laptops with my stored card right now, I am getting the messages as I write.",Billing and Payments,1
+s007,Can I have one combined invoice for all orders placed in April?,Billing and Payments,0
+s008,The price on my receipt is higher than the price tag in the shop.,Billing and Payments,0
+s009,I need to correct the company name on an invoice.,Billing and Payments,0
+s010,"Our bank will close our account tomorrow unless the duplicate payment of 30,000 is returned this morning.",Billing and Payments,1
+s011,Is it possible to pay on delivery with cash?,Billing and Payments,0
+s012,I returned half of the order but the whole shipping fee was kept.,Billing and Payments,0
+s013,Please explain the line called service charge on my bill.,Billing and Payments,0
+s014,Do you accept American Express and mobile wallets?,Billing and Payments,0
+s015,The membership renewed at a higher rate than the one I signed up for.,Billing and Payments,0
+s016,"I have asked five times for the 1,200 dollars you owe me. I will go to small claims court on Thursday.",Billing and Payments,1
+s017,My refund went to an old card that I no longer have. What happens now?,Billing and Payments,0
+s018,Where can I download last year's invoices?,Billing and Payments,0
+s019,HELLO!!! Quick question!!! Does the store card give points on gift cards?,Billing and Payments,0
+s020,Money is leaving my account every hour with your company name on it. Stop it now.,Billing and Payments,1
+s021,May I get a receipt by post instead of email?,Billing and Payments,0
+s022,The deposit for my kitchen order has not been taken off the final amount.,Billing and Payments,0
+s023,The lamp I received does not match my living room. How can I give it back?,Returns and Exchanges,0
+s024,I have lost the receipt. Can I still bring back a toaster bought last month?,Returns and Exchanges,0
+s025,Can a friend return something for me at the shop?,Returns and Exchanges,0
+s026,The car seat I bought came apart while my baby was in it. I want it collected and refunded today.,Returns and Exchanges,1
+s027,"Please send a new return label, the first one printed without a barcode.",Returns and Exchanges,0
+s028,Is there a fee for sending back a mattress that has been opened?,Returns and Exchanges,0
+s029,I would like store credit instead of getting the money back.,Returns and Exchanges,0
+s030,The curtains are the wrong length. Can I swap them for the longer ones?,Returns and Exchanges,0
+s031,I was sent somebody else's prescription glasses and mine are gone. I cannot drive to work without them.,Returns and Exchanges,1
+s032,My return has been at the warehouse for three weeks with no answer.,Returns and Exchanges,0
+s033,Can final sale items be exchanged?,Returns and Exchanges,0
+s034,Where is the nearest drop-off point for a return parcel?,Returns and Exchanges,0
+s035,The book set I was given has the same volume twice. Could one be exchanged?,Returns and Exchanges,0
+s036,The heater I want to return caught fire in my bedroom this evening. Tell me what to do with it.,Returns and Exchanges,1
+s037,How do I pack a large monitor for collection?,Returns and Exchanges,0
+s038,"I changed my mind about the carpet, it has not been unrolled.",Returns and Exchanges,0
+s039,URGENT!! Do you take back socks if I do not like the color?,Returns and Exchanges,0
+s040,The exchange you sent is the same wrong size again.,Returns and Exchanges,0
+s041,"Return courier did not come today, can we choose another day?",Returns and Exchanges,0
+s042,My return was refused by mistake and I have no money left for food this week. Please release it.,Returns and Exchanges,1
+s043,Can I return a gift without the giver knowing?,Returns and Exchanges,0
+s044,The perfume arrived opened. I would prefer a sealed bottle.,Returns and Exchanges,0
+s045,My order says shipped but the courier has no record of it.,Customer Service,0
+s046,Please add an apartment number to the delivery that is planned for Thursday.,Customer Service,0
+s047,Nobody called me back on Monday as promised.,Customer Service,0
+s048,The fridge with my mother's medication was to be delivered this morning. She needs it before tonight and nobody answers.,Customer Service,1
+s049,I want to praise the driver who carried the washing machine upstairs.,Customer Service,0
+s050,Could my parcel be left with the neighbor?,Customer Service,0
+s051,The agent in the chat gave me wrong information about the warranty.,Customer Service,0
+s052,"I am standing outside in the snow with my children, the delivery has our only house key inside. Please call me.",Customer Service,1
+s053,I have two customer accounts and would like to merge them.,Customer Service,0
+s054,Can I choose an evening delivery slot?,Customer Service,0
+s055,My complaint number 5512 was closed without any answer.,Customer Service,0
+s056,The wedding is in three hours and the rings you promised by nine are not here.,Customer Service,1
+s057,May I speak with somebody in Spanish?,Customer Service,0
+s058,"The box arrived with a dent but the content is fine, I only wanted to tell you.",Customer Service,0
+s059,How do I delete my account and personal data?,Customer Service,0
+s060,I never received the confirmation email for my order.,Customer Service,0
+s061,This is my last message before I report you to the consumer authority. Nine weeks without the wheelchair I paid for.,Customer Service,1
+s062,Please combine my two orders into one shipment.,Customer Service,0
+s063,Your phone line keeps me waiting for half an hour every time.,Customer Service,0
+s064,The gift message was left out of the parcel.,Customer Service,0
+s065,WHERE do I see my loyalty points??? Thanks!,Customer Service,0
+s066,The courier left my parcel in the rain.,Customer Service,0
+s067,Do you have a dress code for the store opening event?,General Inquiry,0
+s068,Are dogs allowed in your shops?,General Inquiry,0
+s069,Which charities do you support?,General Inquiry,0
+s070,Can I use a photo from your website in a school project?,General Inquiry,0
+s071,Who is the head of your company?,General Inquiry,0
+s072,Is there a map of all your locations?,General Inquiry,0
+s073,Do you gift wrap?,General Inquiry,0
+s074,What does the sign with the green leaf on your products mean?,General Inquiry,0
+s075,There is a lost child at the entrance of your main store and no member of staff in sight.,General Inquiry,1
+s076,Could you tell me what languages your staff speak?,General Inquiry,0
+s077,Are your stores accessible by wheelchair?,General Inquiry,0
+s078,I would like to know your policy on privacy and cookies.,General Inquiry,0
+s079,Do you plan to open a branch in Portugal?,General Inquiry,0
+s080,When do the winter sales usually begin?,General Inquiry,0
+s081,Is there a cafe in the store?,General Inquiry,0
+s082,I smell gas in your downtown store and people keep walking in. Who do I call?,General Inquiry,1
+s083,How can I become an affiliate?,General Inquiry,0
+s084,Do you publish a yearly report?,General Inquiry,0
+s085,VERY IMPORTANT!!! What music do you play in the shop? I love it.,General Inquiry,0
+s086,Can schools visit your warehouse?,General Inquiry,0
+s087,Is your packaging made from recycled paper?,General Inquiry,0
+s088,Where can I read your terms?,General Inquiry,0
+s089,Does the sofa fit through a door that is 75 centimeters wide?,Sales and Pre-Sales,0
+s090,I am choosing between the two robot vacuums. Which handles pet hair?,Sales and Pre-Sales,0
+s091,What discount do you give for 50 office chairs?,Sales and Pre-Sales,0
+s092,We will lose the hotel contract unless you confirm the price of 300 beds in the next half hour.,Sales and Pre-Sales,1
+s093,Is the projector bright enough for a room with windows?,Sales and Pre-Sales,0
+s094,Can I reserve the bicycle until my salary arrives?,Sales and Pre-Sales,0
+s095,Do you sell spare bulbs for the desk lamp?,Sales and Pre-Sales,0
+s096,Is a family plan cheaper than two single plans?,Sales and Pre-Sales,0
+s097,Could an adviser call me about a home cinema?,Sales and Pre-Sales,0
+s098,Will the black version come back before Christmas?,Sales and Pre-Sales,0
+s099,Can we rent the coffee machine before buying?,Sales and Pre-Sales,0
+s100,Does the laptop come with an office program?,Sales and Pre-Sales,0
+s101,The tender closes at five today and we still need your signed offer to submit it.,Sales and Pre-Sales,1
+s102,Is there a trial period for the photo service?,Sales and Pre-Sales,0
+s103,How much is delivery of a piano to an island?,Sales and Pre-Sales,0
+s104,What is the resale program for business customers?,Sales and Pre-Sales,0
+s105,Please send a catalog of garden furniture.,Sales and Pre-Sales,0
+s106,Are there lower prices for nurses?,Sales and Pre-Sales,0
+s107,Would the speaker work with my older television?,Sales and Pre-Sales,0
+s108,"URGENT!!! I cannot decide, red or yellow kettle?",Sales and Pre-Sales,0
+s109,Do you build kitchens to measure?,Sales and Pre-Sales,0
+s110,Can I buy the display model?,Sales and Pre-Sales,0
+s111,My new kettle smells of plastic. Is that normal at first?,Product Support,0
+s112,How do I set the language on the watch?,Product Support,0
+s113,The freezer drawer does not close fully since we moved it.,Product Support,0
+s114,The electric blanket gave my grandmother a shock and will not turn off.,Product Support,1
+s115,Which detergent can I use in this dishwasher?,Product Support,0
+s116,The remote control lost its pairing. How do I connect it again?,Product Support,0
+s117,The oven door exploded and there is glass near the children. Is the rest safe to touch?,Product Support,1
+s118,Where do I find the serial number on the drone?,Product Support,0
+s119,The treadmill stops after ten minutes.,Product Support,0
+s120,Can I get a replacement foot for the tripod?,Product Support,0
+s121,My camera shows a lens error when it is cold.,Product Support,0
+s122,"The carbon monoxide alarm I bought from you stays silent when I test it, and my family sleeps in that house tonight.",Product Support,1
+s123,How often must the water filter be changed?,Product Support,0
+s124,The keyboard types two letters when I press one.,Product Support,0
+s125,Is there a newer software version for the navigation device?,Product Support,0
+s126,The tent has no pegs. Does it need them?,Product Support,0
+s127,The air fryer shows E4 on the display.,Product Support,0
+s128,The stroller brake failed on a hill today. Other parents must be warned at once.,Product Support,1
+s129,HELP!!! How do I change the clock on the microwave?,Product Support,0
+s130,The sound of the soundbar is delayed.,Product Support,0
+s131,Can the jacket be washed at 40 degrees?,Product Support,0
+s132,One wheel of the suitcase is stiff.,Product Support,0
+s133,The search on your website finds nothing for any word.,Technical Support,0
+s134,My app stays on the loading screen after the last update.,Technical Support,0
+s135,"I cannot add a second address, the save button is gray.",Technical Support,0
+s136,Other customers' names and addresses appear when I open my profile. This must be stopped now.,Technical Support,1
+s137,The link in the confirmation email goes to an error page.,Technical Support,0
+s138,Notifications arrive twice on my phone.,Technical Support,0
+s139,The video guide does not play in my browser.,Technical Support,0
+s140,Our shop system sends the same order to your interface hundreds of times and will not stop.,Technical Support,1
+s141,Is there a way to sign in with my phone number?,Technical Support,0
+s142,The wish list disappeared after I signed out.,Technical Support,0
+s143,Filters on the category page reset themselves.,Technical Support,0
+s144,Dark mode makes the prices unreadable.,Technical Support,0
+s145,Criminals have taken over my account and are sending messages to my contacts from it.,Technical Support,1
+s146,The store finder shows my city in the wrong country.,Technical Support,0
+s147,I get a message that my session has expired every few minutes.,Technical Support,0
+s148,How can I connect your app with my calendar?,Technical Support,0
+s149,The barcode scanner in the app does not focus.,Technical Support,0
+s150,All customer records vanished from our dashboard after the update and we have no copy.,Technical Support,1
+s151,The verification link says it was already used.,Technical Support,0
+s152,PLEASE HELP!!! The font in the app is a little small for me.,Technical Support,0
+s153,Reviews are shown in another language.,Technical Support,0
+s154,My saved basket differs between phone and computer.,Technical Support,0
+s155,My work monitor is not detected after I changed desks.,IT Support,0
+s156,Please give the new trainee an account for the booking tool.,IT Support,0
+s157,The meeting room camera does not turn on.,IT Support,0
+s158,An employee opened an attachment and now every screen in accounting is locked with a demand for bitcoin.,IT Support,1
+s159,Could I get a second mouse for working from home?,IT Support,0
+s160,My office phone has no dial tone.,IT Support,0
+s161,I forgot the password of my work computer.,IT Support,0
+s162,The server room is flooding and the machines are still running.,IT Support,1
+s163,I need rights to install a font on my work laptop.,IT Support,0
+s164,The wifi on the third floor is weak.,IT Support,0
+s165,Can you restore a document I deleted last week?,IT Support,0
+s166,"My signature in the work email is old, how do I change it?",IT Support,0
+s167,The whole warehouse network is off and no truck can be loaded.,IT Support,1
+s168,Please move the shared calendar to the new team.,IT Support,0
+s169,My laptop fan is loud during calls.,IT Support,0
+s170,The badge reader at the side door reacts slowly.,IT Support,0
+s171,Our domain account for administrators was used from another country a minute ago and it was not us.,IT Support,1
+s172,The scanner sends files to a colleague instead of me.,IT Support,0
+s173,I would like a larger screen for drawing plans.,IT Support,0
+s174,"URGENT URGENT, what is the guest wifi called?",IT Support,0
+s175,My work tablet needs a new case.,IT Support,0
+s176,Which antivirus do we use at the company?,IT Support,0
+s177,Is there planned work on the website this weekend?,Service Outages and Maintenance,0
+s178,Your app has been slow since noon for everybody here. Is it known?,Service Outages and Maintenance,0
+s179,When will the photo service return after the maintenance?,Service Outages and Maintenance,0
+s180,The emergency call button service for elderly customers has been dead since four o'clock.,Service Outages and Maintenance,1
+s181,Please add me to the mailing list for status messages.,Service Outages and Maintenance,0
+s182,Was there an interruption on 3 May? Our report shows a gap.,Service Outages and Maintenance,0
+s183,The tracking page reports that it is under maintenance.,Service Outages and Maintenance,0
+s184,"None of our stores can sell anything, every till shows no connection to your service.",Service Outages and Maintenance,1
+s185,Will my smart lights work during the update on Friday?,Service Outages and Maintenance,0
+s186,The live chat has not been available for two days.,Service Outages and Maintenance,0
+s187,How long do your monthly updates normally take?,Service Outages and Maintenance,0
+s188,Your cloud is unreachable and the ventilation in our greenhouse depends on it. The plants die within the hour.,Service Outages and Maintenance,1
+s189,Could maintenance be done at night instead of during the day?,Service Outages and Maintenance,0
+s190,Voice assistant skills were gone for a few minutes yesterday.,Service Outages and Maintenance,0
+s191,Do you have a page that shows the current state of all systems?,Service Outages and Maintenance,0
+s192,Streaming stops in our whole region this evening.,Service Outages and Maintenance,0
+s193,Hospital orders cannot be sent because your platform has been offline all morning.,Service Outages and Maintenance,1
+s194,Is the store website closed for an update? It says come back later.,Service Outages and Maintenance,0
+s195,The last maintenance took longer than announced.,Service Outages and Maintenance,0
+s196,URGENT!!! Is the maintenance on the first or the second Sunday?,Service Outages and Maintenance,0
+s197,Your map service is missing for some users.,Service Outages and Maintenance,0
+s198,What caused the short interruption last night?,Service Outages and Maintenance,0
+s199,Where do I hand in my sick note?,Human Resources,0
+s200,When does the new pension plan begin?,Human Resources,0
+s201,I would like to change my working hours to part time.,Human Resources,0
+s202,A colleague was injured by the forklift and no one has called for help.,Human Resources,1
+s203,Is there a graduate scheme for engineers?,Human Resources,0
+s204,Please update my bank account for the payroll.,Human Resources,0
+s205,How do I register for the first aid course?,Human Resources,0
+s206,My manager touched me without my consent today. I need to report this right away.,Human Resources,1
+s207,Can I carry unused leave into next year?,Human Resources,0
+s208,My contract has the wrong start date.,Human Resources,0
+s209,Do you hire people over sixty?,Human Resources,0
+s210,Whom do I tell about a change of my family name?,Human Resources,0
+s211,I was dismissed this morning without notice and will lose my visa at midnight. I need a letter now.,Human Resources,1
+s212,What is the notice period during probation?,Human Resources,0
+s213,I want to apply as a driver. Do I need to send certificates?,Human Resources,0
+s214,Could I see the rules for working from abroad?,Human Resources,0
+s215,A coworker says he will bring a weapon tomorrow. Please act.,Human Resources,1
+s216,Is the canteen discount also for temporary staff?,Human Resources,0
+s217,I have not received the invitation to my interview.,Human Resources,0
+s218,IMPORTANT!!! When is the summer party?,Human Resources,0
+s219,May I take an unpaid month off next spring?,Human Resources,0
+s220,How are overtime hours recorded?,Human Resources,0
+s221,Please undo the double withdrawal before my mortgage is collected at midnight.,Billing and Payments,1
+s222,My late mother's card is still being billed by you and the bank is threatening us.,Billing and Payments,1
+s223,"I paid for a hospital bed, the payment vanished and the order was never created. We need the bed this evening.",Billing and Payments,1
+s224,"Somebody used my account to order gift cards for 2,000 dollars a few minutes ago.",Billing and Payments,1
+s225,This is my sixth email about the wrong debit. My lawyer will take over on Friday.,Billing and Payments,1
+s226,"The tip I added at checkout was counted twice, could you look at it when you have time?",Billing and Payments,0
+s227,What is the last day to pay the invoice without a fee?,Billing and Payments,0
+s228,The medicine box you exchanged has the wrong tablets inside. A child nearly took them.,Returns and Exchanges,1
+s229,"You have had my returned laptop for a month, will not refund me and no longer answer. I am going to the press.",Returns and Exchanges,1
+s230,The replacement crib also has a broken side and my newborn has nowhere safe to sleep.,Returns and Exchanges,1
+s231,I must have the exchanged suit by two o'clock for a funeral.,Returns and Exchanges,1
+s232,"The battery I am meant to send back is swollen and hot. I will not put it in a parcel, what now?",Returns and Exchanges,1
+s233,Is a return possible from another country?,Returns and Exchanges,0
+s234,Do I have to include the free gift when I return the main item?,Returns and Exchanges,0
+s235,My elderly father is trapped without his stairlift because your fitters left halfway. Send them back now.,Customer Service,1
+s236,The oxygen concentrator was sent to the wrong city and my wife has two hours left on the spare.,Customer Service,1
+s237,You handed my parcel with my passport in it to a stranger. I fly tomorrow.,Customer Service,1
+s238,Nobody has replied for eight days and the cake for tonight's party has still not come.,Customer Service,1
+s239,I was threatened by your courier at my own door and I am scared he will return.,Customer Service,1
+s240,Could you tell the courier to ring instead of knocking?,Customer Service,0
+s241,I would like to know which courier handles my order.,Customer Service,0
+s242,There is smoke coming out of your parking garage.,General Inquiry,1
+s243,Someone has collapsed next to the escalator in your Boston shop.,General Inquiry,1
+s244,A fake shop is using your name and is collecting card details from people right now.,General Inquiry,1
+s245,I found a bag with knives in the toilets of your store.,General Inquiry,1
+s246,Are there guided tours of the first shop?,General Inquiry,0
+s247,Can I get my company into your local market?,General Inquiry,0
+s248,"If I do not have the contract in twenty minutes, our order for 900 desks goes to your rival.",Sales and Pre-Sales,1
+s249,The minister visits at three and the rental screens we asked you to quote for have not been confirmed.,Sales and Pre-Sales,1
+s250,We are opening tomorrow and your sales team has not confirmed that the tills will be sold to us. Without them we cannot open.,Sales and Pre-Sales,1
+s251,Our budget of half a million dollars expires at midnight and your quote is still missing the signature.,Sales and Pre-Sales,1
+s252,Which of your printers is the quietest?,Sales and Pre-Sales,0
+s253,Does the desk come in walnut?,Sales and Pre-Sales,0
+s254,The gas stove you sold me will not shut off and the kitchen smells.,Product Support,1
+s255,"My hand is bleeding, the blender blade came loose while running.",Product Support,1
+s256,The pacemaker monitor shows an error and I feel dizzy.,Product Support,1
+s257,The wheelchair motor started by itself with my son in it.,Product Support,1
+s258,The space heater melted its plug and the wall is hot.,Product Support,1
+s259,The lid of the thermos is hard to open after washing.,Product Support,0
+s260,Which screws fit the wall mount?,Product Support,0
+s261,I can see strangers' medical documents in my download folder of your app.,Technical Support,1
+s262,Orders are being placed in my name and I am locked out of my own account.,Technical Support,1
+s263,The app sends our customers' passwords in plain text. This must be taken offline.,Technical Support,1
+s264,Since your update every price in our shop is zero and people are buying.,Technical Support,1
+s265,All our backups in your portal were deleted overnight and the audit is today.,Technical Support,1
+s266,The app asks me to rate it every time I open it.,Technical Support,0
+s267,Autofill puts my surname into the first name field.,Technical Support,0
+s268,A thief took my work laptop from the train an hour ago and it was not locked.,IT Support,1
+s269,I clicked on a strange link and now my mouse moves on its own.,IT Support,1
+s270,The backup of payroll failed and salaries must be sent out in thirty minutes.,IT Support,1
+s271,All phones in the emergency control room are dead.,IT Support,1
+s272,"The surgeon cannot open the patient file because her login is blocked, the operation has started.",IT Support,1
+s273,My headset only plays on one side.,IT Support,0
+s274,Can I get a longer network cable for my desk?,IT Support,0
+s275,Our clinic cannot reach your booking platform and patients are waiting in the hallway.,Service Outages and Maintenance,1
+s276,Your lock service is down and twenty guests are shut out of their rooms at night.,Service Outages and Maintenance,1
+s277,The fire alarm gateway lost its connection to you and the building is full.,Service Outages and Maintenance,1
+s278,Every one of our delivery vans lost navigation when your service stopped. Food is spoiling.,Service Outages and Maintenance,1
+s279,The payment service fell over on our biggest day of the year and nobody at your side picks up.,Service Outages and Maintenance,1
+s280,Do you announce maintenance in the app?,Service Outages and Maintenance,0
+s281,Is the import function paused tonight?,Service Outages and Maintenance,0
+s282,An apprentice fainted at the press and the foreman wants to keep it quiet.,Human Resources,1
+s283,I am being followed home by a colleague and it happened again this evening.,Human Resources,1
+s284,My work permit runs out tomorrow because the form was not signed by your office.,Human Resources,1
+s285,A team member wrote that he does not want to live any more. Whom do I contact at once?,Human Resources,1
+s286,Three of us were left without pay this month and one is being evicted today.,Human Resources,1
+s287,Is the language course paid for by the company?,Human Resources,0
+s288,Where can I see my remaining training budget?,Human Resources,0

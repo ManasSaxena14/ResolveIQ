@@ -15,6 +15,13 @@ To use a different knowledge base, replace the contents of `data/kb/` (PDF, TXT,
 and HTML are supported) and rebuild the index with `make index`. Check that the license of
 any public documentation allows reuse before copying it into the repository.
 
+## Shop tickets (`data/seed/`)
+
+`retail_tickets.csv` holds 288 tickets written for this project, about 29 per queue, 85 of
+them marked urgent. They train the [semantic model](../docs/semantic_model.md). The test
+tickets in `eval/ticket_testset.csv` were written separately, and a test checks that no
+ticket is in both files. They describe no real customer and are MIT licensed like the code.
+
 ## Ticket dataset (`data/raw/`, `data/processed/`)
 
 | Item | Value |
