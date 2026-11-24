@@ -112,6 +112,24 @@ risk:
   cost_ratios: [1, 2, 3, 5, 10, 20]
   alert_cost_ratio: 3
 
+# Decisions from the meaning of a ticket (src/resolveiq/semantic.py), on the same
+# embeddings as the help center search. Chosen on validation and on the dev half of
+# eval/ticket_testset.csv; see docs/semantic_model.md.
+semantic:
+  seed_path: data/seed/retail_tickets.csv
+  testset_path: eval/ticket_testset.csv
+  output_dir: models/semantic
+  neighbours: 20           # past tickets that vote
+  temperature: 0.02        # how quickly a past ticket's vote fades with distance
+  # Highest similarity to a past ticket. 98% of validation tickets are above 0.82 and
+  # every hand-written retail ticket of the dev half is below 0.81.
+  familiar_from: 0.75
+  familiar_full: 0.85
+  queue_c: 20
+  urgency_c: 5
+  folds: 5
+  review_target: 0.90
+
 service:
   # Limits protect the public demo. Longer tickets are rejected with HTTP 422.
   max_text_chars: 4000
@@ -127,11 +145,14 @@ service:
   # RESOLVEIQ_RUNTIME overrides this setting.
   runtime: full
   lite_dir: models/lite
+  decisions: semantic      # semantic | transformer
+  semantic_dir: models/semantic
   classifier_dir: models/classifier/production
   risk_dir: models/risk
   registry:
     classifier_name: resolveiq-ticket-classifier
     risk_name: resolveiq-escalation-risk
+    semantic_name: resolveiq-semantic
     alias: production
     cache_dir: models/registry
   request_log: logs/requests.db

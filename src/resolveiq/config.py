@@ -138,6 +138,26 @@ class ClassifierConfig(_StrictModel):
     output_dir: Path
 
 
+class SemanticConfig(_StrictModel):
+    seed_path: Path
+    testset_path: Path
+    output_dir: Path
+    neighbours: int = Field(gt=0)
+    temperature: float = Field(gt=0)
+    familiar_from: float = Field(ge=0, le=1)
+    familiar_full: float = Field(ge=0, le=1)
+    queue_c: float = Field(gt=0)
+    urgency_c: float = Field(gt=0)
+    folds: int = Field(ge=2)
+    review_target: float = Field(gt=0, le=1)
+
+    @model_validator(mode="after")
+    def _check_gate(self) -> SemanticConfig:
+        if self.familiar_from >= self.familiar_full:
+            raise ValueError("semantic.familiar_from must be below semantic.familiar_full")
+        return self
+
+
 class RiskLabelConfig(_StrictModel):
     source_column: str
     positive_values: list[str] = Field(min_length=1)
@@ -178,6 +198,7 @@ class RiskConfig(_StrictModel):
 class RegistryConfig(_StrictModel):
     classifier_name: str
     risk_name: str
+    semantic_name: str = "resolveiq-semantic"
     alias: str
     cache_dir: Path
 
@@ -196,6 +217,10 @@ class ServiceConfig(_StrictModel):
     model_source: Literal["registry", "local"]
     runtime: Literal["full", "lite"] = "full"
     lite_dir: Path = Path("models/lite")
+    # semantic: decide from the meaning of the ticket when models/semantic exists.
+    # transformer: always use the fine-tuned classifier and the XGBoost model alone.
+    decisions: Literal["semantic", "transformer"] = "transformer"
+    semantic_dir: Path = Path("models/semantic")
     classifier_dir: Path
     risk_dir: Path
     registry: RegistryConfig
@@ -239,6 +264,7 @@ class Settings(_StrictModel):
     rag: RagConfig
     llm: LLMConfig
     classifier: ClassifierConfig
+    semantic: SemanticConfig
     risk: RiskConfig
     service: ServiceConfig
     monitoring: MonitoringConfig

@@ -21,11 +21,12 @@ class Prediction:
 
 # Common function words that carry no routing signal on their own.
 # fmt: off
-_STOPWORDS = frozenset({
+STOPWORDS = frozenset({
     "the", "and", "for", "you", "your", "our", "are", "was", "were", "this", "that", "with",
     "have", "has", "had", "not", "but", "can", "could", "would", "should", "will", "from",
     "into", "about", "been", "they", "them", "their", "there", "what", "when", "which", "who",
-    "how", "all", "any", "its", "please", "thank", "thanks", "hello", "dear", "regards",
+    "how", "all", "any", "its", "out", "now", "just", "where",
+    "please", "thank", "thanks", "hello", "dear", "regards",
 })
 # fmt: on
 
@@ -44,7 +45,7 @@ def word_scores(
 
     def flush() -> None:
         word = current.lower()
-        if len(word) > 2 and word.isalpha() and word not in _STOPWORDS:
+        if len(word) > 2 and word.isalpha() and word not in STOPWORDS:
             words[word] = words.get(word, 0.0) + total
 
     for (start, end), score in zip(offsets, scores, strict=True):

@@ -12,6 +12,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+from weakref import WeakKeyDictionary
 
 import numpy as np
 
@@ -42,6 +43,16 @@ def shap_values(booster: Any, features: np.ndarray, feature_names: Sequence[str]
 MIN_CONTRIBUTION = 0.05
 
 
+_VOCABULARIES: WeakKeyDictionary[Any, np.ndarray] = WeakKeyDictionary()
+
+
+def _vocabulary(vectorizer: Any) -> np.ndarray:
+    """Terms by column. Building the list takes tens of milliseconds, so it is kept."""
+    if vectorizer not in _VOCABULARIES:
+        _VOCABULARIES[vectorizer] = vectorizer.get_feature_names_out()
+    return _VOCABULARIES[vectorizer]
+
+
 def text_model_terms(text_model: Any, text: str, k: int = 3) -> list[str]:
     """Words in ``text`` that raise the text model's escalation score the most.
 
@@ -52,7 +63,7 @@ def text_model_terms(text_model: Any, text: str, k: int = 3) -> list[str]:
     coefficients = text_model.named_steps["clf"].coef_[0]
     row = vectorizer.transform([text]).tocoo()
     contributions = row.data * coefficients[row.col]
-    vocabulary = vectorizer.get_feature_names_out()
+    vocabulary = _vocabulary(vectorizer)
     order = np.argsort(-contributions)
     return [str(vocabulary[row.col[i]]) for i in order[:k] if contributions[i] > 0]
 
@@ -67,7 +78,7 @@ def text_model_contributions(text_model: Any, text: str, k: int = 8) -> list[tup
     coefficients = text_model.named_steps["clf"].coef_[0]
     row = vectorizer.transform([text]).tocoo()
     contributions = row.data * coefficients[row.col]
-    vocabulary = vectorizer.get_feature_names_out()
+    vocabulary = _vocabulary(vectorizer)
     order = np.argsort(-np.abs(contributions))
     return [
         (str(vocabulary[row.col[i]]), round(float(contributions[i]), 4))

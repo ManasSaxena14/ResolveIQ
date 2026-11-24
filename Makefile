@@ -1,6 +1,6 @@
 PYTHON ?= python
 
-.PHONY: help install install-dev lint format test coverage index eval data baseline classifier evaluate-classifier risk-features risk evaluate-risk register api ui drift-reference drift benchmark evaluate-groups web-install web-dev web-build web-test space deploy-space oracle-push clean
+.PHONY: help install install-dev lint format test coverage index eval data baseline classifier evaluate-classifier semantic evaluate-semantic risk-features risk evaluate-risk register api ui drift-reference drift benchmark evaluate-groups web-install web-dev web-build web-test space deploy-space oracle-push clean
 
 help:
 	@echo "install      Install runtime dependencies and the package"
@@ -15,6 +15,8 @@ help:
 	@echo "baseline     Train the TF-IDF baseline classifier"
 	@echo "classifier   Fine-tune DistilBERT for every configured seed"
 	@echo "evaluate-classifier  Final test-set evaluation of all classifiers"
+	@echo "semantic     Train the semantic model that decides queues and risk"
+	@echo "evaluate-semantic  Final evaluation of the semantic model"
 	@echo "risk-features  Build escalation risk features from the ticket splits"
 	@echo "risk         Train the escalation risk models and choose the alert threshold"
 	@echo "evaluate-risk  Final test-set evaluation of the escalation risk model"
@@ -74,6 +76,12 @@ classifier:
 
 evaluate-classifier:
 	$(PYTHON) scripts/evaluate_classifier.py
+
+semantic:
+	$(PYTHON) scripts/train_semantic.py
+
+evaluate-semantic:
+	$(PYTHON) scripts/evaluate_semantic.py
 
 risk-features:
 	$(PYTHON) scripts/build_risk_features.py
