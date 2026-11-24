@@ -1,11 +1,11 @@
 {
   "name": "ResolveIQ",
   "short_name": "ResolveIQ",
-  "description": "Draft grounded replies, route tickets and predict escalation risk.",
+  "description": "Sort support tickets, score their risk and draft replies, with the reasons shown.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0d0d0b",
-  "theme_color": "#0d0d0b",
+  "background_color": "#edf2ee",
+  "theme_color": "#cfddd2",
   "icons": [
     { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
     { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
