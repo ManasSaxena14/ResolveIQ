@@ -4,54 +4,63 @@ The main user interface is a React and TypeScript single-page app in `frontend/`
 serves the built files next to the API, so one process and one port run the whole
 product. The Gradio page (`app.py`) stays as a lighter alternative.
 
-![ResolveIQ web app analyzing a double-charge ticket](images/web_app.jpg)
+![Triage page with the inbox ranked by risk and a double-charge ticket sorted into Billing and Payments](images/web_app.jpg)
 
 ## Design
 
-The interface is designed as a triage instrument rather than a generic dashboard. The full
-direction, tokens and motion rules are in [frontend/DESIGN.md](../frontend/DESIGN.md).
+The subject is a sorting office: routing a support ticket is sorting mail into one of ten
+queues. The full direction, tokens and rules are in
+[frontend/DESIGN.md](../frontend/DESIGN.md).
 
-- **Verdict first.** After analysis, one strip answers where the ticket goes, how risky it
-  is and whether a reply is ready; the evidence follows below.
-- **Type with roles.** Instrument Serif for headlines and verdicts, Geist for interface
-  text, Geist Mono with tabular digits for every number. The fonts are bundled with the
-  app, so no request goes to a font service.
-- **One signal color.** Lime marks focus, the primary action and the active page. Risk
-  keeps its own green, amber and red scale.
-- **Instruments, not charts.** The risk meter is a ruled 0 to 100 scale with the alert
-  threshold marked, sources carry match bars, and response time is one proportional bar
-  that also shows time spent outside the named steps.
-- **Two themes.** Paper (light) and Night (dark) follow the system setting and can be
-  switched from the rail.
-- **Motion that explains change.** Results rise in sequence, meters fill and the risk
-  number counts up once. All motion stops when the system asks for reduced motion.
-- **Every screen size.** A navigation rail on desktop, a top bar on tablets and a bottom
-  tab bar on phones; grids collapse to one column and tables scroll inside their card.
+- **The sorting rack** is the one memorable element: ten pigeonholes, one per queue. The
+  ticket's slip drops into its queue and every other slot fills in proportion to its
+  probability, so the rack is data, not decoration.
+- **The inbox comes first.** Triage opens on tickets ranked by risk and shows the riskiest
+  one already sorted, so the page explains itself without any typing.
+- **One typeface.** Archivo is bundled with the app, so no request goes to a font service.
+  Its width axis is condensed on the rack labels and wide in headings.
+- **Color with roles.** Violet marks actions and the selection; red, amber and green belong
+  to risk and status. Every text pair is at least 4.5:1 in both themes.
+- **Plain, honest wording.** Labels say what things are, and the About page puts every
+  result next to the simple method it has to beat, followed by the limits.
+- **Motion that explains change.** The slip drops once, and controls answer a press.
+  Reduced motion turns all of it off.
+- **Every screen size.** Two panes on desktop, one at a time on phones with a bottom tab
+  bar. Tables become one block per row and the rack lays its slots on their side.
 
-| Night theme, monitoring | Phone, analyze |
+| Night theme, About | Phone, a ticket |
 |---|---|
-| ![Monitoring dashboard in the Night theme](images/web_app_night.jpg) | ![Analyze page on a phone](images/web_app_phone.jpg) |
+| ![About page in the night theme](images/web_app_night.jpg) | ![A sorted ticket on a phone](images/web_app_phone.jpg) |
 
 ## Pages
 
 | Page | What it does | API calls |
 |---|---|---|
-| Analyze | Ticket form with type, channel and product, a character counter, example tickets and Ctrl or Cmd + Enter to submit. The verdict, category and risk appear as soon as they are computed and the draft is written out live. Citations become numbered chips that jump to their source, with a grounding line. A Why card highlights the words behind the category or the risk in the ticket itself. Step timings and feedback buttons follow | `POST /analyze/stream`, `POST /feedback` |
-| Batch | Drag and drop a CSV, download a sample file, see summary tiles and a ranked table with an alerts-only filter, export the ranking as CSV | `POST /batch` |
-| Monitoring | Volume, alert rate, review rate, latency and negative feedback, distributions of categories and draft outcomes, and the 50 most recent requests with their feedback | `GET /stats`, `GET /requests` |
+| Triage | An inbox of sample tickets ranked by risk with search and a flagged-only filter. Opening a ticket shows its message with the deciding words marked, the rack, the risk scale with its reasons, a drafted reply that is written out live with numbered citations and a grounding line, step timings and a vote. New tickets join the inbox | `POST /batch`, `POST /analyze/stream`, `POST /feedback` |
+| Batch | Choose or drop a CSV or score the sample, search and filter the ranking, export it as CSV | `POST /batch` |
+| Monitoring | Volume, flag rate, double-check rate, latency and votes marked wrong, tickets by queue and the 50 latest requests | `GET /stats`, `GET /requests` |
+| About | What happens to a ticket, how well each part works and what it cannot do | none |
 
-The navigation shows a live status from `GET /health` every 30 seconds (with model
-versions on hover) and switches between the Paper and Night themes.
+The header shows the server's state from `GET /health` every 30 seconds and switches
+between the day and night themes.
+
+Keyboard: `/` searches, `n` starts a new ticket, the arrow keys move through the inbox and
+Enter moves into the ticket. A skip link leads to the content.
 
 Behaviour worth knowing:
 
-- A `503` from `/analyze` is shown as a partial result: the draft card explains that the
-  language model is unavailable and still lists the retrieved sources, while the category
-  and risk cards render normally.
-- Validation errors from the API (empty text, unknown fields) are shown as readable
-  messages. Text over 4,000 characters is blocked before it is sent.
-- Pages are addressed by hash (`/#/batch`, `/#/monitoring`), so a refresh keeps the page
-  and no server-side routing is needed.
+- Opening Triage scores the sample inbox with one `/batch` call. A ticket is only analyzed
+  when it has stayed open for 300 ms, once per visit, so moving through the list is cheap.
+- A `503` from the API is shown as a partial result: the reply section explains that the
+  language model is unavailable and lists the articles found, while the queue and risk
+  stand.
+- When the server cannot be reached, the app says so, keeps checking and does again
+  whatever failed once it is back. On free hosting a slow first answer is reported as the
+  server waking up.
+- The risk model uses its own quick guess at the queue, so a reason can name a different
+  chance than the rack. The app says this next to such a reason.
+- Pages and tickets are addressed by hash (`/#/triage/<ticket>`, `/#/batch`), so links, a
+  refresh and the back button work and no server-side routing is needed.
 - No ticket text is stored in the browser. The theme choice is the only thing saved, in
   local storage.
 
@@ -84,20 +93,22 @@ frontend/
   vite.config.ts           dev proxy, build and test settings
   src/
     main.tsx               entry point
-    App.tsx                rail, top bar and tab bar navigation, health status, theme
-    index.css              design tokens for both themes and all component styles
+    App.tsx                header, tab bar, server state and theme
+    styles/                base (tokens, type, controls), shell, triage and pages
     api/types.ts           response types mirroring src/resolveiq/schemas.py
-    api/client.ts          fetch wrappers and ApiError
+    api/client.ts          fetch wrappers, the event stream and ApiError
+    lib/useTriage.ts       the inbox, its ranking and each ticket's analysis
+    lib/inbox.ts           sample tickets and form limits
+    lib/router.ts          hash routes
     lib/format.ts          formatting helpers (percent, durations, source titles, CSV)
-    lib/examples.ts        example tickets and form limits
-    components/            verdict strip, result cards, risk meter, timeline, logo
-    lib/useCountUp.ts      number count-up that respects reduced motion
-    pages/                 Analyze, Batch and Monitoring
-    test/                  test setup and fixtures
+    lib/highlight.ts       splits a message into marked and plain parts
+    components/            rack, risk scale, ticket list and text, draft, composer, logo
+    pages/                 Triage, Batch, Monitoring and About
+    test/                  test setup, fixtures and a stand-in API
 ```
 
-There is no UI component library and no router: the app has three pages and a small
-design system, and staying with React alone keeps the script at about 78 KB gzipped.
+There is no UI component library and no router package: the app has four pages and a small
+design system, and staying with React alone keeps the script at about 83 KB gzipped.
 
 ## Quality checks
 
@@ -105,11 +116,12 @@ design system, and staying with React alone keeps the script at about 78 KB gzip
 make web-test      # oxlint, TypeScript type check and Vitest
 ```
 
-Tests use Vitest, Testing Library and jsdom with `fetch` mocked. They cover the
-formatting helpers, the API client (partial results, validation messages, an unreachable
-server, unknown feedback IDs), the three result cards and the analyze flow from typing a
-ticket to storing feedback. CI runs lint, type check, tests and a production build in a
-separate `frontend` job.
+Tests use Vitest, Testing Library and jsdom with `fetch` mocked. They cover the helpers
+and routes, the API client (partial results, validation messages, streams, an unreachable
+server), each component, and whole pages against a stand-in API: the ranked inbox, sorting
+a ticket, keyboard use, writing a ticket, voting, failure and recovery, the waking server,
+batch scoring, monitoring and About. CI runs lint, type check, tests and a production
+build in a separate `frontend` job.
 
 When the API changes, update `api/types.ts` to match `schemas.py`; the type check then
 shows every place that needs to change.

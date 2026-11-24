@@ -14,7 +14,7 @@ explainable escalation prediction, delivered through a tested and monitored API.
 ![python](https://img.shields.io/badge/python-3.12-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 
-![ResolveIQ web app: a double-charge ticket with its retrieved help center sources, the Billing and Payments category and an 82% escalation risk with its reasons](docs/images/web_app.jpg)
+![ResolveIQ web app: the inbox ranked by risk beside a double-charge ticket, whose slip lies in the Billing and Payments slot of the sorting rack, with an 83% escalation risk and its reasons](docs/images/web_app.jpg)
 
 ## The problem
 
@@ -129,11 +129,12 @@ known at arrival; XGBoost with an 18-trial grid and calibration; an alert thresh
 a stated cost ratio; the top three SHAP reasons per ticket; batch scoring of a CSV.
 [docs/risk_model.md](docs/risk_model.md), [model card](docs/model_card_risk.md)
 
-**Web app.** A React and TypeScript app served by the API, designed as a triage
-instrument: a verdict strip that answers route, risk and reply first, a draft that streams
-in with numbered citation chips, a Why card that highlights the words behind each
-decision, a ruled risk meter, a Batch page that ranks a CSV by risk and a Monitoring
-dashboard, in Paper and Night themes from phone to desktop.
+**Web app.** A React and TypeScript app served by the API, designed as a sorting office:
+an inbox ranked by risk, a sorting rack that shows the probability of all ten queues and
+drops the ticket into its slot, the words behind each decision marked in the message, a
+risk scale with its flag threshold, and a reply that streams in with numbered citations. A
+Batch page ranks a CSV, Monitoring shows what was sorted, and About states the results and
+the limits. Keyboard driven, in day and night themes, from phone to desktop.
 [docs/frontend.md](docs/frontend.md)
 
 **Service and MLOps.** FastAPI endpoints `/analyze`, `/analyze/stream`, `/batch`,
@@ -203,6 +204,9 @@ tests/                    unit, component, contract and behaviour tests
 - The escalation label is a proxy (high priority); the data has no timestamps or
   customer history.
 - The fine-tuned classifier is below its TF-IDF baseline.
+- The models react to wording more than meaning: among the web app's sample tickets, an
+  urgent lockout scores 24% and is routed to Human Resources, and a polite question about
+  internships scores 62%.
 - Drafted reply quality has not been measured with a language model yet.
 - English only. ResolveIQ is a drafting and triage aid: a person reviews every reply and
   decision.

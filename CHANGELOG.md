@@ -2,6 +2,34 @@
 
 All notable changes to this project are documented in this file.
 
+## [1.6.0] - 2026-11-24
+
+### Added
+
+- Web app redesigned as a sorting office. Triage opens on an inbox of twelve sample
+  tickets ranked by risk, next to the ticket being sorted
+- Sorting rack: one pigeonhole per queue, filled in proportion to its probability, with
+  the ticket's slip dropping into the chosen one
+- Words behind the queue or the risk marked in the message itself, switchable in place
+- About page with how it works, the measured results next to the simple baselines, and
+  the limits
+- Keyboard control: `/` searches, `n` starts a ticket, arrow keys move, Enter opens
+- Every ticket, page and new-ticket form has its own address, so links and the back
+  button work
+- Work that failed while the server was away is done again when it returns
+
+### Changed
+
+- `category.top` in the API lists all ten queues instead of three
+- One bundled typeface (Archivo, whose width axis replaces three families), a new palette
+  for both themes, and a new logo, icons and share image
+- Wide tables turn into one block per row on phones
+- The app says plainly where the models are weak instead of overstating their results
+
+### Removed
+
+- The single-ticket Analyze page, its verdict strip and the count-up animation
+
 ## [1.5.0] - 2026-11-20
 
 ### Added
