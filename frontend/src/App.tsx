@@ -1,25 +1,24 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { getHealth } from './api/client'
 import type { HealthResponse } from './api/types'
-import { Wordmark } from './components/Logo'
-import { AnalyzePage } from './pages/AnalyzePage'
+import { Logo } from './components/Logo'
+import { href, useRoute, type PageKey } from './lib/router'
+import { useTriage } from './lib/useTriage'
+import { AboutPage } from './pages/AboutPage'
 import { BatchPage } from './pages/BatchPage'
 import { MonitoringPage } from './pages/MonitoringPage'
+import { TriagePage } from './pages/TriagePage'
 
-const PAGES = {
-  analyze: { label: 'Analyze', index: '01', component: AnalyzePage },
-  batch: { label: 'Batch', index: '02', component: BatchPage },
-  monitoring: { label: 'Monitoring', index: '03', component: MonitoringPage },
-} as const
-
-type PageKey = keyof typeof PAGES
 type Theme = 'light' | 'dark'
-const PAGE_KEYS = Object.keys(PAGES) as PageKey[]
 
-function pageFromHash(): PageKey {
-  const key = window.location.hash.replace('#/', '')
-  return key in PAGES ? (key as PageKey) : 'analyze'
-}
+const NAV: { key: PageKey; label: string }[] = [
+  { key: 'triage', label: 'Triage' },
+  { key: 'batch', label: 'Batch' },
+  { key: 'monitoring', label: 'Monitoring' },
+  { key: 'about', label: 'About' },
+]
+
+const WAKING_AFTER_MS = 2500
 
 function readTheme(): Theme | null {
   try {
@@ -29,8 +28,6 @@ function readTheme(): Theme | null {
     return null
   }
 }
-
-const WAKING_AFTER_MS = 2500
 
 /**
  * Polls /health. On free hosting the API sleeps when idle and takes up to a minute to
@@ -71,99 +68,30 @@ function useHealth() {
     }
   }, [])
 
-  return { health, down, waking }
+  return { health, down, waking: waking && !health }
 }
 
-function Status({
-  health,
-  down,
-  waking,
-}: {
-  health: HealthResponse | null
-  down: boolean
-  waking: boolean
-}) {
-  if (waking && !health) {
-    return (
-      <span className="status degraded">
-        <span className="light" />
-        <span className="status-label">Waking up</span>
-      </span>
-    )
-  }
-  if (down) {
-    return (
-      <span className="status down">
-        <span className="light" />
-        <span className="status-label">API offline</span>
-      </span>
-    )
-  }
-  if (!health) {
-    return (
-      <span className="status">
-        <span className="light" />
-        <span className="status-label">Connecting</span>
-      </span>
-    )
-  }
-  const missing = Object.entries(health.components)
-    .filter(([, ok]) => !ok)
-    .map(([name]) => name.replace('_', ' '))
-  const title = Object.entries(health.versions)
-    .map(([k, v]) => `${k}: ${v}`)
-    .join('\n')
-  return (
-    <span className={`status ${health.status}`} title={title}>
-      <span className="light" />
-      <span className="status-label">
-        {health.status === 'ok' ? 'All systems ready' : `Degraded: ${missing.join(', ')}`}
-      </span>
-    </span>
-  )
-}
-
-function ThemeButton({ dark, onToggle }: { dark: boolean; onToggle: () => void }) {
-  return (
-    <button
-      type="button"
-      className="icon-btn"
-      onClick={onToggle}
-      aria-label={`Switch to ${dark ? 'light' : 'dark'} theme`}
-      title={dark ? 'Paper theme' : 'Night theme'}
-    >
-      {dark ? (
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-          <circle cx="12" cy="12" r="4" />
-          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
-        </svg>
-      ) : (
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-          <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
-        </svg>
-      )}
-    </button>
-  )
-}
-
-function Brand() {
-  return (
-    <a className="brand" href="#/analyze" aria-label="ResolveIQ home">
-      <Wordmark />
-    </a>
-  )
+function statusOf({ health, down, waking }: ReturnType<typeof useHealth>): { text: string; tone: string } {
+  if (waking) return { text: 'Waking up', tone: 'wait' }
+  if (down) return { text: 'Offline', tone: 'bad' }
+  if (!health) return { text: 'Connecting', tone: 'wait' }
+  return health.status === 'ok' ? { text: 'Ready', tone: 'good' } : { text: 'Partly ready', tone: 'wait' }
 }
 
 export default function App() {
-  const [page, setPage] = useState<PageKey>(pageFromHash)
+  const route = useRoute()
+  const server = useHealth()
+  const triage = useTriage()
   const [theme, setTheme] = useState<Theme | null>(readTheme)
-  const { health, down, waking } = useHealth()
+  const status = statusOf(server)
 
+  const online = !!server.health && !server.down
+  const wasOnline = useRef(online)
+  const { recover } = triage
   useEffect(() => {
-    const onHash = () => setPage(pageFromHash())
-    window.addEventListener('hashchange', onHash)
-    return () => window.removeEventListener('hashchange', onHash)
-  }, [])
+    if (online && !wasOnline.current) recover()
+    wasOnline.current = online
+  }, [online, recover])
 
   useEffect(() => {
     if (theme) document.documentElement.dataset.theme = theme
@@ -171,96 +99,78 @@ export default function App() {
   }, [theme])
 
   useEffect(() => {
-    document.title = `${PAGES[page].label} | ResolveIQ`
-  }, [page])
+    document.title = `${NAV.find((n) => n.key === route.page)?.label} | ResolveIQ`
+  }, [route.page])
 
   const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false
   const dark = (theme ?? (prefersDark ? 'dark' : 'light')) === 'dark'
-
   const toggleTheme = () => {
     const next: Theme = dark ? 'light' : 'dark'
     setTheme(next)
     try {
       window.localStorage.setItem('resolveiq-theme', next)
     } catch {
-      // Storage can be unavailable (private windows); the toggle still works for this visit.
+      // Storage can be unavailable (private windows); the switch still works for this visit.
     }
   }
 
-  const go = (key: PageKey) => {
-    window.history.pushState(null, '', `#/${key}`)
-    setPage(key)
-    window.scrollTo({ top: 0 })
-  }
-
-  const navItems = (showIndex: boolean) =>
-    PAGE_KEYS.map((key) => (
-      <button
-        key={key}
-        type="button"
-        className="nav-item"
-        aria-current={page === key ? 'page' : undefined}
-        onClick={() => go(key)}
-      >
-        {showIndex && <span className="index">{PAGES[key].index}</span>}
-        {PAGES[key].label}
-      </button>
-    ))
-
-  const Page = PAGES[page].component
+  const links = NAV.map(({ key, label }) => (
+    <a key={key} href={href(key)} aria-current={route.page === key ? 'page' : undefined}>
+      {label}
+    </a>
+  ))
 
   return (
-    <div className="shell">
-      <aside className="rail">
-        <Brand />
-        <nav className="nav" aria-label="Main">
-          {navItems(true)}
+    <div className="app">
+      <a className="skip" href="#main" onClick={(e) => { e.preventDefault(); document.getElementById('main')?.focus() }}>
+        Skip to content
+      </a>
+      <header className="topbar">
+        <a className="brand" href={href('triage')}>
+          <Logo />
+          <span>ResolveIQ</span>
+        </a>
+        <nav className="nav" aria-label="Pages">
+          {links}
         </nav>
-        <div className="rail-foot">
-          <Status health={health} down={down} waking={waking} />
-          <div className="rail-foot-row">
-            <span className="eyebrow">v1.5</span>
-            <ThemeButton dark={dark} onToggle={toggleTheme} />
-          </div>
+        <span className="status" data-tone={status.tone}>
+          {status.text}
+        </span>
+        <button
+          type="button"
+          className="theme"
+          onClick={toggleTheme}
+          aria-label={dark ? 'Use the day theme' : 'Use the night theme'}
+          title={dark ? 'Day theme' : 'Night theme'}
+        >
+          <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true">
+            {dark ? (
+              <>
+                <circle cx="10" cy="10" r="3.5" />
+                <path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.3 4.3l1.4 1.4M14.3 14.3l1.4 1.4M4.3 15.7l1.4-1.4M14.3 5.7l1.4-1.4" />
+              </>
+            ) : (
+              <path d="M16.5 11.6A7 7 0 1 1 8.4 3.5a5.5 5.5 0 0 0 8.1 8.1z" />
+            )}
+          </svg>
+        </button>
+      </header>
+
+      {server.waking && (
+        <div className="wake" role="status">
+          The free server is waking up after a quiet spell. This takes up to a minute, then everything is fast.
         </div>
-      </aside>
+      )}
 
-      <div className="main">
-        <header className="topbar">
-          <Brand />
-          <nav className="nav" aria-label="Main">
-            {navItems(false)}
-          </nav>
-          <div className="topbar-end">
-            <Status health={health} down={down} waking={waking} />
-            <ThemeButton dark={dark} onToggle={toggleTheme} />
-          </div>
-        </header>
+      <main id="main" tabIndex={-1}>
+        {route.page === 'triage' && <TriagePage triage={triage} item={route.item} />}
+        {route.page === 'batch' && <BatchPage />}
+        {route.page === 'monitoring' && <MonitoringPage />}
+        {route.page === 'about' && <AboutPage />}
+      </main>
 
-        {waking && !health && (
-          <div className="wake-banner" role="status">
-            <span className="wake-dots" aria-hidden="true">
-              <i />
-              <i />
-              <i />
-            </span>
-            The free server is waking up after a quiet period. This takes up to a minute
-            once; everything after that is fast. You can start typing now.
-          </div>
-        )}
-
-        <main className="page" key={page}>
-          <Page />
-        </main>
-
-        <footer className="footer">
-          Demo on synthetic data. Do not enter personal data. Replies are drafts for a human agent and
-          are never sent automatically.
-        </footer>
-      </div>
-
-      <nav className="tabbar" aria-label="Main">
-        {navItems(true)}
+      <nav className="tabbar" aria-label="Pages">
+        {links}
       </nav>
     </div>
   )

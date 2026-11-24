@@ -1,9 +1,10 @@
-import { useRef, useState, type CSSProperties, type DragEvent } from 'react'
+import { useMemo, useRef, useState, type DragEvent } from 'react'
 import { ApiError, scoreBatch } from '../api/client'
 import type { BatchResponse } from '../api/types'
-import { SAMPLE_CSV, percent, riskLevel, toCsv } from '../lib/format'
+import { SAMPLE_CSV, percent, toCsv } from '../lib/format'
 
 const MAX_BYTES = 2_000_000
+const PAGE_SIZE = 25
 
 function download(name: string, content: string) {
   const url = URL.createObjectURL(new Blob([content], { type: 'text/csv' }))
@@ -15,218 +16,219 @@ function download(name: string, content: string) {
 }
 
 export function BatchPage() {
-  const [file, setFile] = useState<File | null>(null)
   const [result, setResult] = useState<BatchResponse | null>(null)
+  const [fileName, setFileName] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [dragging, setDragging] = useState(false)
-  const [alertsOnly, setAlertsOnly] = useState(false)
+  const [query, setQuery] = useState('')
+  const [flaggedOnly, setFlaggedOnly] = useState(false)
+  const [page, setPage] = useState(0)
   const input = useRef<HTMLInputElement>(null)
 
-  const choose = (selected: File | undefined) => {
-    setResult(null)
+  const score = async (file: File | undefined) => {
     setError('')
-    if (!selected) return
-    if (!selected.name.toLowerCase().endsWith('.csv')) {
-      setError('Choose a CSV file.')
-      return
+    if (!file) return
+    if (!file.name.toLowerCase().endsWith('.csv')) return setError('That file is not a CSV. Save it as CSV and choose it again.')
+    if (file.size > MAX_BYTES) return setError('That file is over 2 MB. Split it and score the parts.')
+    setLoading(true)
+    setFileName(file.name)
+    try {
+      setResult(await scoreBatch(file))
+      setPage(0)
+    } catch (err) {
+      setResult(null)
+      setError(err instanceof ApiError ? err.message : 'The file could not be scored. Try again.')
+    } finally {
+      setLoading(false)
+      if (input.current) input.current.value = ''
     }
-    if (selected.size > MAX_BYTES) {
-      setError('The file is larger than 2 MB.')
-      return
-    }
-    setFile(selected)
   }
+
+  const items = useMemo(() => {
+    const needle = query.trim().toLowerCase()
+    return (result?.items ?? []).filter(
+      (i) =>
+        (!flaggedOnly || i.alert) &&
+        (!needle || `${i.id} ${i.reasons.join(' ')}`.toLowerCase().includes(needle)),
+    )
+  }, [result, query, flaggedOnly])
+  const pages = Math.max(1, Math.ceil(items.length / PAGE_SIZE))
+  const shown = items.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)
 
   const onDrop = (event: DragEvent) => {
     event.preventDefault()
     setDragging(false)
-    choose(event.dataTransfer.files[0])
-  }
-
-  const run = async () => {
-    if (!file) return
-    setLoading(true)
-    setError('')
-    try {
-      setResult(await scoreBatch(file))
-    } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'The file could not be scored.')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const items = result ? result.items.filter((item) => !alertsOnly || item.alert) : []
-  // The batch response carries no threshold; the lowest alerting score bounds it.
-  const threshold = result
-    ? Math.min(...result.items.filter((i) => i.alert).map((i) => i.escalation_probability), 1)
-    : 0.5
-
-  const exportResults = () => {
-    if (!result) return
-    download(
-      'resolveiq_ranked.csv',
-      toCsv(
-        ['rank', 'id', 'escalation_probability', 'alert', 'reasons'],
-        result.items.map((i) => [i.rank, i.id, i.escalation_probability, i.alert ? 1 : 0, i.reasons.join('; ')]),
-      ),
-    )
+    void score(event.dataTransfer.files[0])
   }
 
   return (
-    <>
-      <header className="page-header">
+    <div className="page">
+      <div className="page-head">
         <div>
-          <span className="eyebrow">02 / Batch</span>
-          <h1>
-            Rank the queue. <em>Worst first.</em>
-          </h1>
-          <p>Upload a CSV of tickets and get them ordered by escalation risk, with the reasons for each.</p>
+          <h1>Batch</h1>
+          <p className="secondary muted">
+            {result
+              ? `${fileName}: ${result.count.toLocaleString()} tickets, ${result.alerts.toLocaleString()} flagged.`
+              : 'Score a file of tickets and get them back riskiest first.'}
+          </p>
         </div>
-        <button type="button" className="btn btn-sm" onClick={() => download('sample_tickets.csv', SAMPLE_CSV)}>
-          Download sample CSV
+        <button type="button" className="button primary" onClick={() => input.current?.click()} disabled={loading}>
+          {loading ? 'Scoring' : 'Choose CSV'}
         </button>
-      </header>
-
-      <div className="card" style={{ marginBottom: 16 }}>
-        <label
-          className={`dropzone${dragging ? ' active' : ''}`}
-          onDragOver={(e) => {
-            e.preventDefault()
-            setDragging(true)
-          }}
-          onDragLeave={() => setDragging(false)}
-          onDrop={onDrop}
-        >
-          <input
-            ref={input}
-            type="file"
-            accept=".csv,text/csv"
-            aria-label="Tickets CSV"
-            onChange={(e) => choose(e.target.files?.[0])}
-          />
-          <span className="eyebrow">{file ? 'Ready to score' : 'CSV intake'}</span>
-          <span className="dropzone-title">{file ? file.name : 'Drop a CSV here, or click to choose'}</span>
-          <span className="small muted">
-            Columns: <span className="mono">body</span> or <span className="mono">text</span> required;{' '}
-            <span className="mono">subject</span>, <span className="mono">type</span> and{' '}
-            <span className="mono">id</span> optional. Up to 2 MB and 2,000 rows.
-          </span>
-        </label>
-        <div className="actions">
-          <button type="button" className="btn btn-primary" disabled={!file || loading} onClick={run}>
-            <span className="dot" aria-hidden="true" />
-            {loading ? 'Scoring...' : 'Score tickets'}
-          </button>
-          {file && (
-            <button
-              type="button"
-              className="btn"
-              onClick={() => {
-                setFile(null)
-                setResult(null)
-                if (input.current) input.current.value = ''
-              }}
-            >
-              Clear
-            </button>
-          )}
-        </div>
-        {error && (
-          <div className="alert-banner error" role="alert" style={{ marginTop: 14 }}>
-            <span className="mark" aria-hidden="true" />
-            <span>{error}</span>
-          </div>
-        )}
+        <input
+          ref={input}
+          type="file"
+          accept=".csv,text/csv"
+          aria-label="Tickets CSV"
+          className="visually-hidden"
+          tabIndex={-1}
+          onChange={(e) => void score(e.target.files?.[0])}
+        />
       </div>
 
-      {result && (
-        <>
-          <div className="card tiles reveal">
-            <div className="tile">
-              <div className="eyebrow">Tickets scored</div>
-              <div className="tile-value">{result.count.toLocaleString()}</div>
-              <div className="tile-sub">from {file?.name ?? 'the upload'}</div>
-            </div>
-            <div className="tile">
-              <div className="eyebrow">Alerts</div>
-              <div className="tile-value" style={{ color: result.alerts ? 'var(--high)' : undefined }}>
-                {result.alerts.toLocaleString()}
-              </div>
-              <div className="tile-sub">{percent(result.alerts / Math.max(result.count, 1))} of tickets</div>
-            </div>
-            <div className="tile">
-              <div className="eyebrow">Highest risk</div>
-              <div className="tile-value">{percent(result.items[0]?.escalation_probability ?? 0)}</div>
-              <div className="tile-sub">
-                ticket <span className="mono">{result.items[0]?.id}</span>
-              </div>
-            </div>
-          </div>
+      {error && (
+        <div className="notice" role="alert">
+          <p>{error}</p>
+        </div>
+      )}
 
-          <div className="card reveal" style={{ '--i': 1 } as CSSProperties}>
-            <div className="card-header">
-              <h2 className="card-title">Ranked tickets</h2>
-              <div style={{ display: 'flex', gap: 8 }}>
+      <div
+        className="frame"
+        data-dragging={dragging || undefined}
+        onDragOver={(e) => {
+          e.preventDefault()
+          setDragging(true)
+        }}
+        onDragLeave={() => setDragging(false)}
+        onDrop={onDrop}
+      >
+        <div className="toolbar">
+          <label className="search">
+            <span className="visually-hidden">Search results</span>
+            <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+              <circle cx="9" cy="9" r="5.5" />
+              <path d="m13.5 13.5 4 4" />
+            </svg>
+            <input
+              type="search"
+              placeholder="Search results"
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value)
+                setPage(0)
+              }}
+            />
+          </label>
+          <button
+            type="button"
+            className="button"
+            aria-pressed={flaggedOnly}
+            onClick={() => {
+              setFlaggedOnly((v) => !v)
+              setPage(0)
+            }}
+          >
+            Flagged only
+          </button>
+          <button
+            type="button"
+            className="button toolbar-end"
+            disabled={!result}
+            onClick={() =>
+              result &&
+              download(
+                'resolveiq_ranked.csv',
+                toCsv(
+                  ['rank', 'id', 'escalation_probability', 'flagged', 'reasons'],
+                  result.items.map((i) => [i.rank, i.id, i.escalation_probability, i.alert ? 1 : 0, i.reasons.join('; ')]),
+                ),
+              )
+            }
+          >
+            Export CSV
+          </button>
+        </div>
+        <div className="table-scroll">
+          <table className="results">
+            <thead>
+              <tr>
+                <th scope="col" className="num">
+                  Rank
+                </th>
+                <th scope="col">Ticket</th>
+                <th scope="col">Risk</th>
+                <th scope="col">Why</th>
+              </tr>
+            </thead>
+            <tbody>
+              {shown.map((item) => (
+                <tr key={`${item.rank}-${item.id}`}>
+                  <td className="num">{item.rank}</td>
+                  <td className="nowrap">{item.id}</td>
+                  <td className="nowrap">
+                    <span className="ticket-risk" data-level={!item.alert ? 'low' : item.escalation_probability >= 0.6 ? 'high' : 'medium'}>
+                      {percent(item.escalation_probability)}
+                    </span>
+                    {item.alert && <span className="secondary"> flagged</span>}
+                  </td>
+                  <td>{item.reasons.join('. ') || 'Nothing raises the risk.'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {!shown.length && (
+          <div className="frame-empty">
+            {result ? (
+              <>
+                <p>No result matches.</p>
                 <button
                   type="button"
-                  className="btn btn-sm"
-                  aria-pressed={alertsOnly}
-                  onClick={() => setAlertsOnly((v) => !v)}
+                  className="button"
+                  onClick={() => {
+                    setQuery('')
+                    setFlaggedOnly(false)
+                  }}
                 >
-                  Alerts only
+                  Show all results
                 </button>
-                <button type="button" className="btn btn-sm" onClick={exportResults}>
-                  Export CSV
-                </button>
-              </div>
-            </div>
-            <div className="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th className="num">Rank</th>
-                    <th>Ticket</th>
-                    <th>Risk</th>
-                    <th>Alert</th>
-                    <th>Top reasons</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {items.map((item) => {
-                    const level = riskLevel(item.escalation_probability, threshold)
-                    return (
-                      <tr key={`${item.rank}-${item.id}`}>
-                        <td className="num faint">{String(item.rank).padStart(2, '0')}</td>
-                        <td className="mono" style={{ whiteSpace: 'nowrap' }}>
-                          {item.id}
-                        </td>
-                        <td>
-                          <div className="risk-cell">
-                            <span>{percent(item.escalation_probability)}</span>
-                            <div className={`bar ${level}`}>
-                              <span style={{ width: percent(item.escalation_probability) }} />
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          {item.alert ? (
-                            <span className="badge badge-dot badge-high">Alert</span>
-                          ) : (
-                            <span className="badge badge-neutral">No</span>
-                          )}
-                        </td>
-                        <td className="small">{item.reasons.join('; ') || <span className="faint">None</span>}</td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            </div>
+              </>
+            ) : (
+              <>
+                <p>
+                  Drop a CSV here, or score the sample. It needs a <code>body</code> column; <code>subject</code>,{' '}
+                  <code>type</code> and <code>id</code> are optional. Up to 2 MB and 2,000 rows.
+                </p>
+                <div className="row">
+                  <button
+                    type="button"
+                    className="button"
+                    disabled={loading}
+                    onClick={() => void score(new File([SAMPLE_CSV], 'sample_tickets.csv', { type: 'text/csv' }))}
+                  >
+                    Score the sample
+                  </button>
+                  <button type="button" className="button" onClick={() => download('sample_tickets.csv', SAMPLE_CSV)}>
+                    Download the sample
+                  </button>
+                </div>
+              </>
+            )}
           </div>
-        </>
-      )}
-    </>
+        )}
+        <div className="pager">
+          <button type="button" className="button" disabled={page === 0} onClick={() => setPage((p) => p - 1)}>
+            Previous
+          </button>
+          <span className="secondary muted">
+            Page {page + 1} of {pages}
+          </span>
+          <button type="button" className="button" disabled={page >= pages - 1} onClick={() => setPage((p) => p + 1)}>
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
   )
 }

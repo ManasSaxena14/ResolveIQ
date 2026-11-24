@@ -47,7 +47,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   try {
     response = await fetch(`${BASE}${path}`, init)
   } catch {
-    throw new ApiError(0, 'The ResolveIQ API cannot be reached. Is the server running?')
+    throw new ApiError(0, 'The server cannot be reached. Check your connection and try again.')
   }
   const body: unknown = await response.json().catch(() => null)
   if (!response.ok) throw new ApiError(response.status, detailMessage(body, response.status))
@@ -69,7 +69,7 @@ export async function analyzeTicket(payload: AnalyzeRequest): Promise<AnalyzeRes
       body: JSON.stringify(payload),
     })
   } catch {
-    throw new ApiError(0, 'The ResolveIQ API cannot be reached. Is the server running?')
+    throw new ApiError(0, 'The server cannot be reached. Check your connection and try again.')
   }
   const body: unknown = await response.json().catch(() => null)
   // 503 still carries the category and risk; only the draft is missing.
@@ -111,7 +111,7 @@ export async function analyzeTicketStream(
       body: JSON.stringify(payload),
     })
   } catch {
-    throw new ApiError(0, 'The ResolveIQ API cannot be reached. Is the server running?')
+    throw new ApiError(0, 'The server cannot be reached. Check your connection and try again.')
   }
   if (!response.ok || !response.body) {
     const body: unknown = await response.json().catch(() => null)
