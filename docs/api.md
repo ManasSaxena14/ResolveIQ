@@ -105,6 +105,8 @@ still returned:
 }
 ```
 
+`category.top` lists all ten queues, most likely first; the example shows three.
+
 `draft_reply.status` is one of:
 
 | Status | Meaning | HTTP |

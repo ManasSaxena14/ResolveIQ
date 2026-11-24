@@ -45,7 +45,7 @@ from resolveiq.schemas import (
 
 logger = logging.getLogger(__name__)
 
-TOP_CATEGORIES = 3
+TOP_CATEGORIES = 10  # every queue, so the web app can draw the whole sorting rack
 MAX_QUESTION_CHARS = 4000
 
 
