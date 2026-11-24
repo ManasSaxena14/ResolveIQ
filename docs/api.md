@@ -105,7 +105,8 @@ still returned:
 }
 ```
 
-`category.top` lists all ten queues, most likely first; the example shows three.
+`category.top` lists all ten queues, most likely first; the example shows three. The example was recorded with
+the earlier models.
 
 `draft_reply.status` is one of:
 
@@ -137,12 +138,10 @@ invented reference.
 }
 ```
 
-`category` comes from gradient times input on the DistilBERT embeddings for the predicted
-queue, merged into whole words and scaled so the strongest is 1. In the lite runtime
-(`RESOLVEIQ_RUNTIME=lite`), which has no gradients, it comes from the TF-IDF queue model
-instead. `risk` gives each term's
-exact contribution to the risk model's text score in log-odds; negative terms lower the
-risk.
+Both are found by taking each word out and measuring the change: `category` is scaled so
+the strongest word is 1, `risk` is in log-odds and negative words lower the risk. For
+tickets close to past ones, `risk` gives each term's exact contribution to the risk model's
+text score instead. See [semantic_model.md](semantic_model.md).
 
 ## POST /analyze/stream
 
@@ -150,7 +149,7 @@ Same request body as `/analyze`. The response is `text/event-stream`:
 
 | Event | Data | When |
 |---|---|---|
-| `analysis` | `request_id`, `category`, `risk`, `highlights`, `versions` | After about 50 ms |
+| `analysis` | `request_id`, `category`, `risk`, `highlights`, `versions` | After about 0.3 s |
 | `sources` | The retrieved help center sources | When retrieval found relevant articles |
 | `token` | `{"text": "..."}`, a piece of the draft | While the language model writes |
 | `done` | `{"response": <the /analyze response>, "partial": false}` | At the end |

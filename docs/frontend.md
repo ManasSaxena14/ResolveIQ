@@ -4,7 +4,7 @@ The main user interface is a React and TypeScript single-page app in `frontend/`
 serves the built files next to the API, so one process and one port run the whole
 product. The Gradio page (`app.py`) stays as a lighter alternative.
 
-![Triage page with the inbox ranked by risk and a double-charge ticket sorted into Billing and Payments](images/web_app.jpg)
+![Triage page with the inbox ranked by risk and a lockout ticket sorted into Service Outages and Maintenance](images/web_app.jpg)
 
 ## Design
 
@@ -57,8 +57,8 @@ Behaviour worth knowing:
 - When the server cannot be reached, the app says so, keeps checking and does again
   whatever failed once it is back. On free hosting a slow first answer is reported as the
   server waking up.
-- The risk model uses its own quick guess at the queue, so a reason can name a different
-  chance than the rack. The app says this next to such a reason.
+- For tickets close to past ones, the XGBoost part of the risk uses its own quick guess at
+  the queue, so a reason can name a different chance than the rack. The app says so.
 - Pages and tickets are addressed by hash (`/#/triage/<ticket>`, `/#/batch`), so links, a
   refresh and the back button work and no server-side routing is needed.
 - No ticket text is stored in the browser. The theme choice is the only thing saved, in

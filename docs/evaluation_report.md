@@ -4,6 +4,10 @@ Every number in this report comes from a logged run in this repository: MLflow
 experiments `rag`, `classifier` and `escalation-risk`, and the files under `results/`.
 Cells that could not be measured say so and why. Nothing is copied from elsewhere.
 
+The tables B to D are of the fine-tuned classifier and the risk model alone. The service
+now decides with the [semantic model](semantic_model.md), whose evaluation is in its own
+document and in `results/semantic/`.
+
 ## 1. Goal and data
 
 ResolveIQ takes one support ticket and returns a cited draft reply, the routing queue and
@@ -131,14 +135,14 @@ With 39% positives, ratios of 10 : 1 and above alert on most tickets, so 3 : 1 i
 
 | Measure | Value | How measured |
 |---|---|---|
-| Median and 95th percentile response time, local Mac | 43.9 ms and 49.8 ms | 50 `/analyze` requests over HTTP, `scripts/benchmark_api.py`, results in `results/system/api_benchmark_local.json` |
-| Same, in process, 400 tickets | 40.1 ms and 51.7 ms | `scripts/replay_tickets.py`, `results/system/replay_latency.json` |
+| Median and 95th percentile response time, local Mac | 289 ms and 441 ms | 25 `/analyze` requests over HTTP on a busy machine, `scripts/benchmark_api.py`, results in `results/system/api_benchmark_local.json` |
+| Same, in process, 400 tickets | 254 ms and 512 ms | `scripts/replay_tickets.py`, `results/system/replay_latency.json` |
 | Median and 95th percentile response time, public demo | not measured | the demo is not deployed yet; see [deployment.md](deployment.md) |
-| Memory at idle and under load | 589 MB idle, 759 MB peak | psutil on the API process during the 50 requests |
+| Memory at idle and under load | 589 MB idle, 759 MB peak, with the earlier models | psutil on the API process during 50 requests |
 | Test coverage | 88% of `resolveiq`, 224 tests | `pytest --cov=resolveiq` |
 
 Measured on an Apple M3 laptop with 8 GB of memory, with the classifier on the MPS
-backend. These times **exclude generation**: all 50 benchmark tickets come from the
+backend (embedder) and the semantic model. These times **exclude generation**: the benchmark tickets come from the
 public ticket dataset, which is about software and IT services, and the refusal rule
 correctly found nothing in the Altura retail help center for any of them. With an
 answer, the time is dominated by the language model, which is not measured here.
@@ -150,15 +154,15 @@ The only group the ticket data allows is ticket type
 
 | Ticket type | Tickets | Classifier macro F1 | High priority | Risk PR-AUC | Alert rate | High priority caught |
 |---|---|---|---|---|---|---|
-| Incident | 1,005 | 0.5164 | 41.9% | 0.7918 | 64.5% | 91.7% |
-| Problem | 486 | 0.5303 | 38.7% | 0.7460 | 54.1% | 83.5% |
-| Change | 274 | 0.4970 | 41.6% | 0.7637 | 61.7% | 84.2% |
-| Request | 686 | 0.4781 | 33.1% | 0.6533 | 55.7% | 81.1% |
-| All | 2,451 | 0.5213 | 38.8% | 0.7489 | 59.7% | 86.6% |
+| Incident | 1,005 | 0.7191 | 41.9% | 0.9287 | 59.6% | 97.2% |
+| Problem | 486 | 0.8105 | 38.7% | 0.9336 | 56.0% | 97.3% |
+| Change | 274 | 0.6955 | 41.6% | 0.8944 | 62.8% | 96.5% |
+| Request | 686 | 0.7250 | 33.1% | 0.8346 | 45.5% | 86.3% |
+| All | 2,451 | 0.7376 | 38.8% | 0.9052 | 55.3% | 94.5% |
 
-The classifier is similar across types. The risk model is clearly weaker on Request
-tickets (PR-AUC 0.65 against 0.79 for incidents) and raises more false alarms there. See
-failure case 4.
+These are with the semantic model. Risk is still weakest on Request tickets. With the
+earlier models the gap was larger (PR-AUC 0.65 against 0.79 for incidents); failure case 4
+describes that.
 
 ## 4. Plots
 

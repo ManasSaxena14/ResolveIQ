@@ -6,36 +6,43 @@ const REPO = 'https://github.com/ManasSaxena14/ResolveIQ'
 /** The classifier's real output for the first sample ticket. */
 const EXAMPLE: Category = {
   label: 'Billing and Payments',
-  confidence: 0.9922,
+  confidence: 0.9862,
   needs_review: false,
   top: [
-    { label: 'Billing and Payments', probability: 0.9922 },
-    { label: 'Returns and Exchanges', probability: 0.0027 },
-    { label: 'Human Resources', probability: 0.002 },
-    { label: 'Technical Support', probability: 0.0009 },
-    { label: 'Product Support', probability: 0.0006 },
-    { label: 'Customer Service', probability: 0.0005 },
-    { label: 'IT Support', probability: 0.0003 },
-    { label: 'Sales and Pre-Sales', probability: 0.0003 },
+    { label: 'Billing and Payments', probability: 0.9862 },
+    { label: 'Customer Service', probability: 0.0058 },
+    { label: 'Returns and Exchanges', probability: 0.0056 },
+    { label: 'Sales and Pre-Sales', probability: 0.0014 },
+    { label: 'Technical Support', probability: 0.0006 },
     { label: 'Service Outages and Maintenance', probability: 0.0003 },
-    { label: 'General Inquiry', probability: 0.0001 },
+    { label: 'Human Resources', probability: 0.0001 },
+    { label: 'General Inquiry', probability: 0 },
+    { label: 'IT Support', probability: 0 },
+    { label: 'Product Support', probability: 0 },
   ],
 }
 
 const RESULTS = [
   {
     part: 'Choosing the queue',
-    measure: 'Macro F1, ten queues',
-    baseline: '0.633, TF-IDF',
-    ours: '0.521, DistilBERT',
-    note: 'It names the right queue for 47% of tickets and is still behind the simple method.',
+    measure: 'Right queue, 40 shop tickets',
+    baseline: '17, DistilBERT',
+    ours: '34',
+    note: 'When it was sure enough to send a ticket on, it was right 14 out of 14 times.',
   },
   {
     part: 'Scoring the risk',
-    measure: 'PR-AUC',
-    baseline: '0.744, logistic regression',
-    ours: '0.749, XGBoost',
-    note: 'The flag catches 87% of high-priority tickets and is raised on 60% of all tickets.',
+    measure: 'ROC-AUC, same 40 tickets',
+    baseline: '0.527, XGBoost',
+    ours: '0.922',
+    note: 'It flags 5 of 8 urgent tickets and 3 of 32 calm ones. The earlier model flagged 36 of all 40.',
+  },
+  {
+    part: 'Public dataset',
+    measure: 'Queue accuracy, 2,451 tickets',
+    baseline: '47%, DistilBERT',
+    ours: '75%',
+    note: 'Most of these nearly repeat a training ticket. On the least similar ones it is right 32% of the time.',
   },
   {
     part: 'Finding articles',
@@ -77,11 +84,11 @@ export function AboutPage() {
           </li>
           <li>
             <h3>A queue is chosen</h3>
-            <p>A fine-tuned DistilBERT model weighs all ten queues. When it is unsure, it asks for a person.</p>
+            <p>Its meaning is compared with past tickets and with examples from the shop. When that is unsure, it asks for a person.</p>
           </li>
           <li>
             <h3>The risk is scored</h3>
-            <p>A calibrated XGBoost model estimates how likely the ticket is to escalate and names its reasons.</p>
+            <p>Similar past tickets, urgent examples and an XGBoost model estimate how likely it is to escalate, with reasons.</p>
           </li>
           <li>
             <h3>A reply is written</h3>
@@ -96,7 +103,7 @@ export function AboutPage() {
       <section>
         <h2>How well it works</h2>
         <p className="measure">
-          Measured once on tickets the models had never seen, next to the simplest method that could work.
+          Measured once on tickets the models had never seen, next to the models they replaced.
         </p>
         <div className="frame">
           <div className="table-scroll">
@@ -105,7 +112,7 @@ export function AboutPage() {
                 <tr>
                   <th scope="col">Part</th>
                   <th scope="col">Measure</th>
-                  <th scope="col">Simple method</th>
+                  <th scope="col">Earlier model</th>
                   <th scope="col">ResolveIQ</th>
                   <th scope="col">In plain words</th>
                 </tr>
@@ -115,7 +122,7 @@ export function AboutPage() {
                   <tr key={r.part}>
                     <td className="strong">{r.part}</td>
                     <td data-label="Measure">{r.measure}</td>
-                    <td data-label="Simple method">{r.baseline}</td>
+                    <td data-label="Earlier model">{r.baseline}</td>
                     <td data-label="ResolveIQ">{r.ours}</td>
                     <td>{r.note}</td>
                   </tr>
@@ -125,7 +132,7 @@ export function AboutPage() {
           </div>
         </div>
         <p>
-          <a href={`${REPO}/blob/main/docs/evaluation_report.md`}>Read the full evaluation</a>
+          <a href={`${REPO}/blob/main/docs/semantic_model.md`}>Read the full evaluation</a>
         </p>
       </section>
 
@@ -135,9 +142,10 @@ export function AboutPage() {
           <li>The tickets and help articles are invented, so these numbers do not predict a real company's results.</li>
           <li>The data has no record of real escalations. High priority stands in for them.</li>
           <li>
-            The models react to wording more than meaning. A lockout that sounds calm can score low, and a polite question
-            can score high.
+            The shop tickets were written for this project and 40 is a small sample, so the true share of right queues
+            could be anywhere from 71% to 93%.
           </li>
+          <li>Urgent tickets in calm business language can be missed, so the order of the inbox is a help, not a promise.</li>
           <li>Reply quality has not been measured with a language model yet.</li>
           <li>It reads English only, and it never sends anything on its own.</li>
         </ul>

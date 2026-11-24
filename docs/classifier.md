@@ -1,5 +1,9 @@
 # Ticket Classifier
 
+> The service no longer uses this classifier by default. The
+> [semantic model](semantic_model.md) replaced it; this document remains the record of the
+> fine-tuning experiment.
+
 This document describes Phase 2 of ResolveIQ: a fine-tuned transformer that reads a
 support ticket and predicts which queue (department) should handle it, with a
 confidence score and a flag for human review when the model is unsure.

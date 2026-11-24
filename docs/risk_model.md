@@ -1,5 +1,8 @@
 # Escalation Risk Model
 
+> The service combines this model with the [semantic model](semantic_model.md), which also
+> sets the production alert threshold (0.15). The numbers below are of this model alone.
+
 This document describes Phase 3 of ResolveIQ: a gradient-boosted tree model that
 estimates, at the moment a ticket arrives, how likely it is to escalate, raises an
 alert above a cost-based threshold, and explains each score with its top three reasons.

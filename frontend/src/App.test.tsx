@@ -144,7 +144,7 @@ describe('Other pages', () => {
     window.history.replaceState(null, '', '#/about')
     start()
 
-    expect(await screen.findByText(/right queue for 47% of tickets/)).toBeInTheDocument()
+    expect(await screen.findByText(/right 14 out of 14 times/)).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'What it cannot do' })).toBeInTheDocument()
   })
 })

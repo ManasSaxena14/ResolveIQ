@@ -13,8 +13,8 @@ and an MLOps layer tracks, tests and monitors all of them.
              | RAG reply    |   | Category      |   | Escalation risk |
              | (Phase 1)    |   | (Phase 2)     |   | (Phase 3)       |
              +--------------+   +---------------+   +-----------------+
-             Chroma + BM25      Fine-tuned          XGBoost + SHAP
-             language model     DistilBERT          cost-based threshold
+             Chroma + BM25      Semantic model      Semantic model
+             language model     review flag         + XGBoost, SHAP
 
              MLOps layer: MLflow tracking, SQLite request log, drift reports, CI (Phase 4)
 ```

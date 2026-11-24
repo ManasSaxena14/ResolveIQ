@@ -23,16 +23,17 @@ Port 5001 is used because macOS reserves 5000 for AirPlay.
 
 ## Model registry
 
-`scripts/register_models.py` logs the production classifier and risk model as MLflow
-models, registers them as `resolveiq-ticket-classifier` and `resolveiq-escalation-risk`,
+`scripts/register_models.py` logs the production classifier, risk and semantic models as MLflow
+models, registers them as `resolveiq-ticket-classifier`, `resolveiq-escalation-risk` and
+`resolveiq-semantic`,
 and moves the `production` alias to the new version. Version tags record the git commit
 and the validation score.
 
 With `service.model_source: registry` the service resolves the alias at startup,
 downloads that version once into `models/registry/<name>/<version>` and loads it. If
 the registry is unavailable, as on a hosted demo, it logs a warning and loads the
-folders in `service.classifier_dir` and `service.risk_dir`. `/health` shows which
-source was used, for example `distilbert-base-uncased-seed-42 (resolveiq-ticket-classifier/v1)`.
+folders in `service.classifier_dir`, `service.risk_dir` and `service.semantic_dir`. `/health` shows which
+source was used, for example `semantic-8711d86 (resolveiq-semantic/v1)`.
 
 Promoting a new model is two commands: train and evaluate it, then run
 `python scripts/register_models.py`. Rolling back is moving the alias to the previous
@@ -89,14 +90,15 @@ Both samples replay 400 tickets from the held-out test split through the service
 
 | Sample | text_length PSI | confidence PSI | risk_score PSI | category PSI | Drifted | Retrain |
 |---|---|---|---|---|---|---|
-| Random test tickets ([report](../results/monitoring/drift_report_test_split.html)) | 0.022 | 0.019 | 0.035 | 0.018 | none | no |
-| Only Technical Support and IT Support tickets ([report](../results/monitoring/drift_report_shifted.html)) | 0.049 | 0.412 | 0.076 | 0.448 | confidence, category | yes |
+| Random test tickets ([report](../results/monitoring/drift_report_test_split.html)) | 0.022 | 0.021 | 0.021 | 0.023 | none | no |
+| Only Technical Support and IT Support tickets ([report](../results/monitoring/drift_report_shifted.html)) | 0.049 | 0.025 | 0.092 | 0.936 | category | no |
 
 The random sample comes from the same distribution as the reference, so nothing drifts.
 The shifted sample simulates a week in which only technical tickets arrive: the category
-mix and the classifier's confidence move far from the reference and the rule asks for
-retraining. The risk score test is significant (p = 0.0002) but its PSI is 0.076, so it
-is not counted.
+mix moves far from the reference. One drifted feature of four is below the 50% of the
+retrain rule, so it does not ask for retraining; the semantic model stays as confident on
+these tickets as on the rest, unlike the classifier it replaced. The risk score test is
+significant (p = 0.000004) but its PSI is 0.092, so it is not counted.
 
 Note: the reference risk scores come from the validation split, on which the probability
 calibrator was fitted. Their distribution is therefore slightly better calibrated than on

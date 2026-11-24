@@ -2,6 +2,32 @@
 
 All notable changes to this project are documented in this file.
 
+## [1.7.0] - 2026-11-25
+
+### Added
+
+- Semantic model that decides the queue and the risk from the meaning of a ticket: similar
+  past tickets for familiar ones, linear models trained on 288 hand-written shop tickets
+  for the rest. On 40 holdout shop tickets it chooses 34 right queues (17 before) and
+  orders urgency with a ROC-AUC of 0.922 (0.527 before)
+- Hand-written shop test set of 80 tickets, half of it held out, and an evaluation that
+  breaks the public test split down by similarity to the training tickets
+- `make semantic` and `make evaluate-semantic`, the `resolveiq-semantic` registry entry,
+  a model card and `service.decisions` to switch back
+- Reasons that quote similar past tickets or the closest urgent example
+
+### Changed
+
+- The production alert threshold is 0.15. Calm tickets are flagged far less often, and
+  some urgent tickets in calm language are no longer flagged
+- Highlights come from removing words, which raises the median response to about 0.3 s
+- The lite bundle no longer contains DistilBERT: 50 MB instead of 105 MB
+- The About page reports the new results with their limits
+
+### Fixed
+
+- Explaining a ticket no longer rebuilds the TF-IDF vocabulary each time
+
 ## [1.6.0] - 2026-11-24
 
 ### Added

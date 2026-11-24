@@ -14,7 +14,7 @@ explainable escalation prediction, delivered through a tested and monitored API.
 ![python](https://img.shields.io/badge/python-3.12-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 
-![ResolveIQ web app: the inbox ranked by risk beside a double-charge ticket, whose slip lies in the Billing and Payments slot of the sorting rack, with an 83% escalation risk and its reasons](docs/images/web_app.jpg)
+![ResolveIQ web app: the inbox ranked by risk beside a lockout ticket, whose slip lies in the Service Outages slot of the sorting rack, with an 82% escalation risk and its reason](docs/images/web_app.jpg)
 
 ## The problem
 
@@ -25,8 +25,8 @@ three in one call and shows its evidence, so the agent stays in charge:
 | Output | Approach |
 |---|---|
 | Draft reply with page-level citations | Retrieval-augmented generation over the help center |
-| Ticket category with confidence and a review flag | Fine-tuned DistilBERT classifier |
-| Escalation probability with top reasons | Calibrated XGBoost with SHAP explanations |
+| Ticket category with confidence and a review flag | Similar past tickets and linear models on sentence embeddings |
+| Escalation probability with top reasons | The same embeddings stacked with calibrated XGBoost and SHAP |
 
 Replies are drafts for a person to edit. Nothing is sent automatically.
 
@@ -39,8 +39,8 @@ Replies are drafts for a person to edit. Nothing is sent automatically.
                            |                 |                  |
                  +---------+-----+   +-------+-------+   +------+----------+
                  | Draft reply   |   | Category      |   | Escalation risk |
-                 | Chroma + BM25 |   | DistilBERT    |   | XGBoost + SHAP  |
-                 | language model|   | review flag   |   | cost threshold  |
+                 | Chroma + BM25 |   | Semantic model|   | Semantic model  |
+                 | language model|   | review flag   |   | + XGBoost, SHAP |
                  +---------------+   +---------------+   +-----------------+
                            |                 |                  |
                         +-----------------------------------------+
@@ -61,9 +61,11 @@ failure cases are in [docs/evaluation_report.md](docs/evaluation_report.md).
 | Component | Baseline | ResolveIQ model | Notes |
 |---|---|---|---|
 | Retrieval (40-question set, holdout) | | 7 of 7 sources found, 0 false refusals | The similarity rule refused 0 of 3 out-of-scope holdout questions |
-| Classifier, macro F1 (10 queues) | TF-IDF 0.6333 | DistilBERT 0.5213 (3 seeds: 0.5192 +/- 0.0025) | The transformer is below the baseline; see the analysis |
-| Escalation risk, PR-AUC | Base rate 0.3876, logistic regression 0.7435 | XGBoost, calibrated 0.7489 | Alert catches 86.6% of high-priority tickets at a 3 : 1 cost ratio |
-| API response time, local | | 43.9 ms median, 49.8 ms p95 | 50 requests, without the language model step |
+| Right queue, 40 holdout shop tickets | DistilBERT 17 | Semantic model 34 | 14 of 14 right when sent on without review |
+| Urgency, ROC-AUC, same tickets | XGBoost 0.527 | Semantic model 0.922 | 5 of 8 urgent and 3 of 32 calm tickets flagged |
+| Classifier, macro F1 (10 queues, public dataset) | TF-IDF 0.6333, DistilBERT 0.5213 | Semantic model 0.7376 | Mostly recognizes rewordings of training tickets; [breakdown](docs/semantic_model.md) |
+| Escalation risk, PR-AUC (public dataset) | Base rate 0.3876, XGBoost 0.7489 | Semantic model 0.9052 | Same caution; 0.497 on the least familiar tickets |
+| API response time, local | | 289 ms median, 441 ms p95 | 25 requests on a busy 8 GB laptop, without the language model step |
 | Tests | | 88% coverage | Run in CI on every push |
 
 Answer correctness of the drafted replies needs a language model and hand labeling and
@@ -82,7 +84,7 @@ make install-dev                 # packages, the package itself, pre-commit hook
 cp .env.example .env             # add an API key only for a hosted language model
 make index                       # build the knowledge base index
 make data risk-features risk     # ticket data and the escalation risk model
-make baseline classifier evaluate-classifier   # classifier (about 1 hour per seed)
+make semantic                    # the model that decides queues and risk (about 5 minutes)
 make web-install web-build      # React web app (needs Node.js 20 or later)
 make api                         # app and API on http://127.0.0.1:8000, API docs at /docs
 ```
@@ -103,8 +105,8 @@ curl -s http://127.0.0.1:8000/analyze -H "content-type: application/json" \
 Live demo: not deployed yet. Two free options, both without Docker
 ([docs/deployment.md](docs/deployment.md)):
 
-- **Render**: `render.yaml` runs a lite build of the API (the same models as 8-bit ONNX,
-  no PyTorch, 363 MB at peak, starts in about 3 seconds) plus the web app as a static site
+- **Render**: `render.yaml` runs a lite build of the API (an 8-bit ONNX embedder, no
+  PyTorch, a 50 MB bundle with a 257 MB memory footprint) plus the web app as a static site
   that never sleeps and tells visitors when the API is waking. A free GitHub Actions job
   can keep the API awake.
 - **Oracle Cloud Always Free**: a server that never sleeps, with 12 GB of memory and
@@ -118,6 +120,11 @@ chunking; ChromaDB plus BM25 fused with reciprocal rank fusion; optional cross-e
 reranking; a refusal rule on retrieval similarity; a grounded prompt with citations and a
 prompt-injection guard; one setting switches between Ollama and hosted providers.
 [docs/rag_pipeline.md](docs/rag_pipeline.md)
+
+**Semantic model.** Decides queue and risk from a ticket's embedding: similar past tickets
+for familiar ones, linear models trained on hand-written shop tickets for the rest, with
+calibrated confidence, review thresholds and explanations.
+[docs/semantic_model.md](docs/semantic_model.md), [model card](docs/model_card_semantic.md)
 
 **Ticket classifier.** 16,337 tickets from a pinned public dataset with PII masking and
 deduplication; TF-IDF baseline; DistilBERT fine-tuned with a plain PyTorch loop; a review
@@ -168,8 +175,9 @@ app.py                    Gradio page, a lighter alternative to the web app
 configs/config.yaml       all settings, validated at load time
 deploy/                   free deployments: Oracle Cloud server setup (Render uses render.yaml)
 data/kb/                  synthetic help center for the fictional retailer Altura
+data/seed/                hand-written shop tickets that train the semantic model
 docs/                     architecture, component docs, model cards, evaluation report
-eval/                     RAG test set and evaluation script
+eval/                     RAG and ticket test sets and the RAG evaluation script
 frontend/                 React and TypeScript web app served by the API
 scripts/                  offline jobs: index, training, evaluation, registry, drift, benchmarks
 src/resolveiq/
@@ -178,6 +186,7 @@ src/resolveiq/
   registry.py             MLflow model registry and Hub downloads
   rag/                    ingestion, retrieval, generation and evaluation
   classifier/             data preparation, baseline, fine-tuning, calibration, prediction
+  semantic.py             queue and risk from the meaning of a ticket
   risk/                   escalation features, training, evaluation, explanations, scoring
   api/                    FastAPI application
   ui/                     Gradio page and its formatting helpers
@@ -203,10 +212,10 @@ tests/                    unit, component, contract and behaviour tests
   a real company's support traffic.
 - The escalation label is a proxy (high priority); the data has no timestamps or
   customer history.
-- The fine-tuned classifier is below its TF-IDF baseline.
-- The models react to wording more than meaning: among the web app's sample tickets, an
-  urgent lockout scores 24% and is routed to Human Resources, and a polite question about
-  internships scores 62%.
+- The shop tickets that train and test the semantic model were written by one author, the
+  holdout has 40 of them, and urgent tickets in calm business language can be missed.
+- On the public dataset the score mostly rewards recognizing reworded tickets, and the
+  fine-tuned DistilBERT stays below its TF-IDF baseline.
 - Drafted reply quality has not been measured with a language model yet.
 - English only. ResolveIQ is a drafting and triage aid: a person reviews every reply and
   decision.

@@ -18,7 +18,7 @@ make install                 # runtime packages and the package itself
 cp .env.example .env         # add a key only if you use a hosted language model
 make index                   # build the knowledge base index (about 1 minute)
 make data risk-features risk # data and the risk model (a few minutes)
-make baseline classifier evaluate-classifier   # classifier (about 1 hour per seed on a laptop)
+make semantic                    # queue and risk decisions (about 5 minutes)
 make web-install web-build   # React web app, needs Node.js 20 or later
 make api                     # app and API on http://127.0.0.1:8000, API docs at /docs
 make ui                      # optional: Gradio page on http://127.0.0.1:7860
@@ -100,7 +100,7 @@ The trained models are not in git. From the project folder on your computer:
 make oracle-push HOST=ubuntu@<PUBLIC_IP>
 ```
 
-This builds the web app, copies `models/classifier/production`, `models/risk` and
+This builds the web app, copies `models/semantic`, `models/risk` and
 `frontend/dist` (never sync-tool duplicates or hidden files) and starts the service. Run it
 again after retraining a model.
 
@@ -141,9 +141,9 @@ Things to know:
 
 The no-card option. Render's free web services have 512 MB of memory and sleep after 15 minutes without
 traffic. The full service needs about 760 MB, so Render runs the **lite runtime**: the same
-models as 8-bit ONNX graphs with a precomputed index and no PyTorch. It uses 347 MB at idle
-and 363 MB under load, starts in about 2.6 seconds once the container is up, and agrees
-with the full models closely (see [model_card_lite.md](model_card_lite.md)).
+embedder as an 8-bit ONNX graph with a precomputed index and the semantic model, without
+PyTorch. The bundle is 50 MB, the process has a memory footprint of 257 MB after 40
+analyses and a batch, and it agrees with the full models closely (see [model_card_lite.md](model_card_lite.md)).
 
 `render.yaml` defines two free services:
 
