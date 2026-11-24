@@ -1,0 +1,215 @@
+/* App frame: top bar, wake notice, bottom navigation on narrow screens, page layout. */
+
+.app {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.skip {
+  position: absolute;
+  left: 16px;
+  top: -80px;
+  z-index: 40;
+  padding: 12px 16px;
+  background: var(--stamp);
+  color: var(--on-stamp);
+}
+.skip:focus {
+  top: 8px;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  min-height: var(--bar-height);
+  padding: 0 24px;
+  background: var(--steel);
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  color: var(--ink);
+  font-size: 1.25rem;
+  font-weight: 600;
+  font-stretch: 120%;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+.brand:hover {
+  color: var(--ink);
+}
+.logo {
+  flex: none;
+  display: block;
+}
+.logo-tile {
+  fill: #123b2c;
+}
+.logo-letter {
+  stroke: #ffffff;
+}
+.logo-dot {
+  fill: #b0a6ff;
+}
+:root[data-theme='dark'] .logo-tile {
+  fill: #e6f0e9;
+}
+:root[data-theme='dark'] .logo-letter {
+  stroke: #123b2c;
+}
+:root[data-theme='dark'] .logo-dot {
+  fill: #4331c4;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .logo-tile {
+    fill: #e6f0e9;
+  }
+  :root:not([data-theme='light']) .logo-letter {
+    stroke: #123b2c;
+  }
+  :root:not([data-theme='light']) .logo-dot {
+    fill: #4331c4;
+  }
+}
+
+.nav {
+  display: flex;
+  align-self: stretch;
+  gap: 4px;
+}
+.nav a,
+.tabbar a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid transparent;
+  color: var(--ink);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+.nav a:hover {
+  border-bottom-color: var(--line);
+}
+.nav a[aria-current='page'] {
+  border-bottom-color: var(--stamp);
+  font-weight: 600;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+.status::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--medium);
+}
+.status[data-tone='good']::before {
+  background: var(--low);
+}
+.status[data-tone='bad']::before {
+  background: var(--high);
+}
+
+.theme {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: var(--radius);
+  background: none;
+  cursor: pointer;
+}
+.theme svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.theme:hover {
+  background: var(--ground);
+}
+
+.wake {
+  padding: 12px 24px;
+  background: var(--stamp-soft);
+  border-bottom: 1px solid var(--line);
+  font-size: 0.875rem;
+}
+
+main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.page-head h1 + p {
+  margin-top: 4px;
+}
+
+.tabbar {
+  display: none;
+}
+
+@media (max-width: 767.98px) {
+  .topbar {
+    gap: 8px;
+    padding: 0 8px 0 16px;
+  }
+  .topbar .nav {
+    display: none;
+  }
+  .wake {
+    padding: 12px 16px;
+  }
+  main {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
+  .tabbar {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 20;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    min-height: 56px;
+    padding-bottom: env(safe-area-inset-bottom);
+    background: var(--steel);
+    border-top: 1px solid var(--line);
+  }
+  .tabbar a {
+    padding: 0 4px;
+    min-height: 56px;
+  }
+  .tabbar a[aria-current='page'] {
+    border-top-color: var(--stamp);
+    font-weight: 600;
+  }
+}

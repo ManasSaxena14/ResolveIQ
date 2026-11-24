@@ -9,6 +9,11 @@ export function percent(value: number | null | undefined, digits = 0): string {
   return `${(value * 100).toFixed(digits)}%`
 }
 
+/** A percentage that never rounds a real chance down to nothing. */
+export function share(value: number): string {
+  return value > 0 && value < 0.01 ? 'under 1%' : percent(value)
+}
+
 export function milliseconds(value: number | null | undefined): string {
   if (value === null || value === undefined) return '-'
   if (value >= 1000) return `${(value / 1000).toFixed(1)} s`
@@ -29,7 +34,9 @@ export function sourceUrl(file: string): string {
 export function sourceTitle(file: string): string {
   const name = file.split('/').pop() ?? file
   const stem = name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ').trim()
-  return stem.charAt(0).toUpperCase() + stem.slice(1)
+  return (stem.charAt(0).toUpperCase() + stem.slice(1)).replace(/\baltura( plus)?\b/i, (name) =>
+    name.replace(/\b[a-z]/g, (letter) => letter.toUpperCase()),
+  )
 }
 
 export function sourceSection(file: string): string {

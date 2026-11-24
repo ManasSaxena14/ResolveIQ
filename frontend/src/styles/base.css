@@ -1,0 +1,367 @@
+/* ResolveIQ foundations: tokens, type and controls. The direction is in DESIGN.md. */
+
+:root {
+  color-scheme: light;
+  --ground: #edf2ee;
+  --paper: #ffffff;
+  --steel: #cfddd2;
+  --bay: #b5c8ba;
+  --line: #b9c9be;
+  --line-soft: #d9e3dc;
+  --ink: #123b2c;
+  --muted: #48665a;
+  --stamp: #4331c4;
+  --stamp-press: #35269f;
+  --on-stamp: #ffffff;
+  --stamp-soft: #e6e3fa;
+  --high: #b3261e;
+  --medium: #875400;
+  --low: #1d6b45;
+  --high-mark: #f07a6c;
+  --low-mark: #63bd8c;
+  --queue-mark: #8d80f2;
+  --slip: #ffffff;
+  --shadow: 0 2px 12px rgb(18 59 44 / 0.07);
+
+  --font: 'Archivo Variable', 'Archivo', system-ui, sans-serif;
+  --fast: 100ms;
+  --quick: 150ms;
+  --calm: 300ms;
+  --radius: 4px;
+  --bar-height: 64px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --ground: #0e2a20;
+    --paper: #163a2d;
+    --steel: #1f4838;
+    --bay: #0a2219;
+    --line: #34604e;
+    --line-soft: #27503f;
+    --ink: #e6f0e9;
+    --muted: #a9c2b4;
+    --stamp: #b0a6ff;
+    --stamp-press: #c8c1ff;
+    --on-stamp: #17104f;
+    --stamp-soft: #2c3a6b;
+    --high: #ff9a8c;
+    --medium: #f0bf62;
+    --low: #84d9aa;
+    --high-mark: #e0604f;
+    --low-mark: #4da878;
+    --queue-mark: #7c70e6;
+    --slip: #e6f0e9;
+    --shadow: none;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --ground: #0e2a20;
+  --paper: #163a2d;
+  --steel: #1f4838;
+  --bay: #0a2219;
+  --line: #34604e;
+  --line-soft: #27503f;
+  --ink: #e6f0e9;
+  --muted: #a9c2b4;
+  --stamp: #b0a6ff;
+  --stamp-press: #c8c1ff;
+  --on-stamp: #17104f;
+  --stamp-soft: #2c3a6b;
+  --high: #ff9a8c;
+  --medium: #f0bf62;
+  --low: #84d9aa;
+  --high-mark: #e0604f;
+  --low-mark: #4da878;
+  --queue-mark: #7c70e6;
+  --slip: #e6f0e9;
+  --shadow: none;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font: 400 1rem/1.55 var(--font);
+  font-stretch: 100%;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+dl,
+dd,
+figure {
+  margin: 0;
+}
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+/* Headings run wide; labels on the rack run narrow. */
+h1,
+h2 {
+  font-weight: 600;
+  font-stretch: 116%;
+  letter-spacing: -0.012em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+h1 {
+  font-size: 1.5rem;
+}
+h2 {
+  font-size: 1.5rem;
+}
+h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.secondary {
+  font-size: 0.875rem;
+}
+.meta {
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+.muted {
+  color: var(--muted);
+}
+.strong {
+  font-weight: 600;
+}
+.nowrap {
+  white-space: nowrap;
+}
+.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+a {
+  color: var(--stamp);
+  text-underline-offset: 3px;
+}
+a:hover {
+  color: var(--stamp-press);
+}
+
+:focus-visible {
+  outline: 3px solid var(--stamp);
+  outline-offset: 2px;
+}
+h2:focus,
+main:focus {
+  outline: none;
+}
+
+::selection {
+  background: var(--stamp);
+  color: var(--on-stamp);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  font-stretch: inherit;
+  color: inherit;
+}
+
+code {
+  font: inherit;
+  font-weight: 600;
+}
+kbd {
+  display: inline-block;
+  min-width: 20px;
+  padding: 0 4px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--paper);
+  font: inherit;
+  text-align: center;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform var(--fast) ease-out;
+}
+.button:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+.button:active {
+  transform: translateY(1px);
+}
+.button[aria-pressed='true'] {
+  border-color: var(--stamp);
+  background: var(--stamp-soft);
+  color: var(--ink);
+}
+.button:disabled {
+  border-color: var(--line-soft);
+  color: var(--muted);
+  cursor: not-allowed;
+}
+.button.primary {
+  border-color: var(--stamp);
+  background: var(--stamp);
+  color: var(--on-stamp);
+}
+.button.primary:hover {
+  border-color: var(--stamp-press);
+  background: var(--stamp-press);
+}
+.button.primary:disabled {
+  border-color: var(--line);
+  background: var(--steel);
+  color: var(--muted);
+}
+.link {
+  min-height: 24px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--stamp);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.notice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid var(--high);
+  border-radius: var(--radius);
+  background: var(--paper);
+}
+.field-error {
+  color: var(--high);
+  font-size: 0.875rem;
+}
+
+.search {
+  position: relative;
+  flex: 1 1 160px;
+  min-width: 0;
+}
+.search svg {
+  position: absolute;
+  left: 12px;
+  top: 14px;
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 2;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+.search input {
+  width: 100%;
+  padding-left: 36px;
+}
+input,
+select,
+textarea {
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+}
+input::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline-offset: 0;
+}
+[aria-invalid='true'] {
+  border-color: var(--high);
+}
+
+/* Risk is the only thing colored red, amber or green. The number is always there too. */
+.ticket-risk {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.ticket-risk[data-level='high'] {
+  color: var(--high);
+}
+.ticket-risk[data-level='medium'] {
+  color: var(--medium);
+}
+.ticket-risk[data-level='low'] {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -83,3 +83,25 @@ export function jsonResponse(body: unknown, status = 200): Response {
     headers: { 'Content-Type': 'application/json' },
   })
 }
+
+export const HEALTH = {
+  status: 'ok',
+  components: { retriever: true, classifier: true },
+  versions: { risk: 'xgboost' },
+  index: { files: 31, chunks: 31 },
+  uptime_seconds: 1,
+}
+
+type Reply = Response | Promise<Response>
+
+/** A fetch that answers by path, so a whole page can run against a stand-in API. */
+export function apiFetch(routes: Record<string, () => Reply>) {
+  const calls: string[] = []
+  const handler = (input: RequestInfo | URL): Promise<Response> => {
+    const path = String(input).replace(/^https?:\/\/[^/]+/, '').split('?')[0]
+    calls.push(path)
+    const route = routes[path]
+    return route ? Promise.resolve(route()) : Promise.resolve(jsonResponse({ detail: 'Not found' }, 404))
+  }
+  return { handler, calls }
+}
