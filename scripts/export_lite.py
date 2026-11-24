@@ -5,14 +5,15 @@ without PyTorch, sentence-transformers or ChromaDB, so it fits small free hosts.
 script, run once on a development machine with the full dependencies, writes:
 
     models/lite/
+      semantic/                  the semantic model, unchanged, or without one
       classifier.onnx, classifier_tokenizer.json, classifier_meta.json
       embedder.onnx, embedder_tokenizer.json
       kb_index.npz, bm25_corpus.json, index_manifest.json
       risk/                      the escalation risk bundle, unchanged
       lite_meta.json             versions, sizes and the agreement checks below
 
-It then checks that the lite models agree with the originals: classifier label
-agreement and accuracy on validation tickets, embedding cosine similarity, and the
+It then checks that the lite models agree with the originals: queue label agreement
+and accuracy on validation tickets, embedding cosine similarity, and the
 retrieval results of the RAG dev questions.
 
 Usage:
@@ -46,11 +47,13 @@ from resolveiq.lite import (
     INDEX_FILE,
     LITE_META,
     RISK_DIR,
+    SEMANTIC_DIR,
     NumpyVectorStore,
     OnnxClassifier,
     OnnxEmbedder,
 )
 from resolveiq.registry import clean_copy, resolve_model_dir
+from resolveiq.semantic import SemanticClassifier, SemanticModel, TextEncoder, semantic_ready
 
 RISK_FILES = ["xgboost.json", "calibrator.joblib", "queue_model.joblib", "text_model.joblib",
               "risk_meta.json"]  # fmt: skip
@@ -163,8 +166,25 @@ def check_classifier(settings: Settings, lite: OnnxClassifier, model_dir: Path, 
 
     tickets = load_split(settings.resolve(settings.classifier.processed_dir), "validation")[:n]
     texts = [t.text for t in tickets]
-    full = TicketClassifier.load(model_dir).predict(texts)
-    small = lite.predict(texts)
+    return compare(tickets, TicketClassifier.load(model_dir).predict(texts), lite.predict(texts))
+
+
+def check_semantic(settings: Settings, lite: OnnxEmbedder, out_dir: Path, n: int) -> dict:
+    """The semantic model on the 8-bit embedder against the same model on the original."""
+    from resolveiq.classifier.data import load_split
+    from resolveiq.rag.embeddings import SentenceTransformerEmbedder
+
+    tickets = load_split(settings.resolve(settings.classifier.processed_dir), "validation")[:n]
+    texts = [t.text for t in tickets]
+    model = SemanticModel.load(out_dir / SEMANTIC_DIR)
+    original = SentenceTransformerEmbedder(settings.rag.embedding_model)
+    full, small = (
+        SemanticClassifier(model, TextEncoder(e)).predict(texts) for e in (original, lite)
+    )
+    return compare(tickets, full, small)
+
+
+def compare(tickets: list, full: list, small: list) -> dict:
     agree = np.mean([a.label == b.label for a, b in zip(full, small, strict=True)])
     full_acc = np.mean([p.label == t.label for p, t in zip(full, tickets, strict=True)])
     lite_acc = np.mean([p.label == t.label for p, t in zip(small, tickets, strict=True)])
@@ -209,14 +229,19 @@ def main() -> int:
     out_dir.mkdir(parents=True)
     started = time.perf_counter()
 
-    classifier_dir = resolve_model_dir(settings, "classifier").path
+    semantic_dir = resolve_model_dir(settings, "semantic").path
+    semantic = settings.service.decisions == "semantic" and semantic_ready(semantic_dir)
+    classifier_dir = None if semantic else resolve_model_dir(settings, "classifier").path
     risk_dir = resolve_model_dir(settings, "risk").path
     with tempfile.TemporaryDirectory() as tmp:
-        print("Exporting the classifier")
-        export_classifier(classifier_dir, out_dir, Path(tmp))
+        if classifier_dir is not None:
+            print("Exporting the classifier")
+            export_classifier(classifier_dir, out_dir, Path(tmp))
         print("Exporting the embedder")
         export_embedder(settings.rag.embedding_model, out_dir, Path(tmp))
 
+    if semantic:
+        clean_copy(semantic_dir, out_dir / SEMANTIC_DIR)
     (out_dir / RISK_DIR).mkdir()
     staged = clean_copy(risk_dir, out_dir / RISK_DIR)
     for path in staged.iterdir():
@@ -228,18 +253,25 @@ def main() -> int:
     index = build_lite_index(settings, embedder, out_dir)
 
     print("Checking the lite models against the originals")
-    import joblib
+    if classifier_dir is None:
+        classifier_check = check_semantic(settings, embedder, out_dir, args.check_tickets)
+    else:
+        import joblib
 
-    queue_model = joblib.load(out_dir / RISK_DIR / "queue_model.joblib")
-    classifier_check = check_classifier(
-        settings, OnnxClassifier.load(out_dir, queue_model), classifier_dir, args.check_tickets
-    )
+        queue_model = joblib.load(out_dir / RISK_DIR / "queue_model.joblib")
+        classifier_check = check_classifier(
+            settings, OnnxClassifier.load(out_dir, queue_model), classifier_dir, args.check_tickets
+        )
     embedder_check = check_embedder(settings, embedder)
 
     sizes = {p.name: round(p.stat().st_size / 1e6, 1) for p in out_dir.glob("*.onnx")}
     meta = {
         "embedding_model": settings.rag.embedding_model,
-        "classifier": json.loads((out_dir / CLASSIFIER_META).read_text())["train_config"],
+        "classifier": (
+            {}
+            if classifier_dir is None
+            else json.loads((out_dir / CLASSIFIER_META).read_text())["train_config"]
+        ),
         "risk_version": json.loads((out_dir / RISK_DIR / "risk_meta.json").read_text())["version"],
         "index": index,
         "onnx_mb": sizes,

@@ -51,6 +51,13 @@ def _python_model(kind: str) -> Any:
                 from resolveiq.classifier.predict import TicketClassifier
 
                 self.model = TicketClassifier.load(model_dir)
+            elif kind == "semantic":
+                from resolveiq.rag.embeddings import SentenceTransformerEmbedder
+                from resolveiq.semantic import SemanticClassifier, SemanticModel, TextEncoder
+
+                model = SemanticModel.load(model_dir)
+                encoder = TextEncoder(SentenceTransformerEmbedder(model.params.embedding_model))
+                self.model = SemanticClassifier(model, encoder)
             else:
                 from resolveiq.risk.predict import RiskModel
 
@@ -59,7 +66,7 @@ def _python_model(kind: str) -> Any:
         def predict(self, context: Any, model_input: Any, params: Any = None) -> Any:
             subjects = model_input.get("subject", [""] * len(model_input))
             bodies = model_input["body"]
-            if kind == "classifier":
+            if kind in ("classifier", "semantic"):
                 return [
                     self.model.predict_ticket(body, subject).label
                     for subject, body in zip(subjects, bodies, strict=True)
@@ -71,6 +78,10 @@ def _python_model(kind: str) -> Any:
             ]
 
     return ResolveIQModel()
+
+
+def registered_name(settings: Settings, kind: str) -> str:
+    return getattr(settings.service.registry, f"{kind}_name")
 
 
 def register_model(
@@ -86,7 +97,7 @@ def register_model(
     from resolveiq.tracking import tracked_run
 
     registry = settings.service.registry
-    name = registry.classifier_name if kind == "classifier" else registry.risk_name
+    name = registered_name(settings, kind)
     with tempfile.TemporaryDirectory() as tmp:
         staged = clean_copy(model_dir, Path(tmp) / model_dir.name)
         with tracked_run(settings, experiment, run_name=f"register-{kind}", tags=tags):
@@ -105,9 +116,17 @@ def register_model(
     return version
 
 
-HUB_ENV_VARS = {"classifier": "RESOLVEIQ_CLASSIFIER_REPO", "risk": "RESOLVEIQ_RISK_REPO"}
+HUB_ENV_VARS = {
+    "classifier": "RESOLVEIQ_CLASSIFIER_REPO",
+    "risk": "RESOLVEIQ_RISK_REPO",
+    "semantic": "RESOLVEIQ_SEMANTIC_REPO",
+}
 LITE_REPO_ENV_VAR = "RESOLVEIQ_LITE_REPO"
-META_FILES = {"classifier": "classifier_meta.json", "risk": "risk_meta.json"}
+META_FILES = {
+    "classifier": "classifier_meta.json",
+    "risk": "risk_meta.json",
+    "semantic": "semantic_meta.json",
+}
 
 
 def fetch_from_hub(settings: Settings, environ: Any = None) -> list[str]:
@@ -115,8 +134,8 @@ def fetch_from_hub(settings: Settings, environ: Any = None) -> list[str]:
 
     Used by the hosted demo, where ``models/`` is not part of the repository.
     The Hugging Face repository of each model is read from the environment
-    (``RESOLVEIQ_CLASSIFIER_REPO``, ``RESOLVEIQ_RISK_REPO``). Returns the kinds
-    that were downloaded.
+    (``RESOLVEIQ_CLASSIFIER_REPO``, ``RESOLVEIQ_RISK_REPO``,
+    ``RESOLVEIQ_SEMANTIC_REPO``). Returns the kinds that were downloaded.
     """
     import os
 
@@ -137,8 +156,7 @@ def fetch_from_hub(settings: Settings, environ: Any = None) -> list[str]:
         return downloaded
     for kind, variable in HUB_ENV_VARS.items():
         repo_id = environ.get(variable, "").strip()
-        field = "classifier_dir" if kind == "classifier" else "risk_dir"
-        local = settings.resolve(getattr(settings.service, field))
+        local = settings.resolve(getattr(settings.service, f"{kind}_dir"))
         if not repo_id or (local / META_FILES[kind]).is_file():
             continue
         from huggingface_hub import snapshot_download
@@ -158,7 +176,7 @@ def resolve_model_dir(settings: Settings, kind: str) -> ResolvedModel:
     registry still starts.
     """
     service = settings.service
-    local = settings.resolve(service.classifier_dir if kind == "classifier" else service.risk_dir)
+    local = settings.resolve(getattr(service, f"{kind}_dir"))
     if service.model_source == "registry":
         try:
             return _download_from_registry(settings, kind)
@@ -172,7 +190,7 @@ def _download_from_registry(settings: Settings, kind: str) -> ResolvedModel:
     from mlflow import MlflowClient
 
     registry = settings.service.registry
-    name = registry.classifier_name if kind == "classifier" else registry.risk_name
+    name = registered_name(settings, kind)
     mlflow.set_tracking_uri(resolve_tracking_uri(settings.tracking.tracking_uri))
     version = MlflowClient().get_model_version_by_alias(name, registry.alias).version
     cache = settings.resolve(registry.cache_dir) / name / str(version)

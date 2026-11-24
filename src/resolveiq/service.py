@@ -115,6 +115,7 @@ class Copilot:
             INDEX_FILE,
             LITE_META,
             RISK_DIR,
+            SEMANTIC_DIR,
             NumpyVectorStore,
             OnnxClassifier,
             OnnxEmbedder,
@@ -136,8 +137,18 @@ class Copilot:
             )
         meta = json.loads((lite_dir / LITE_META).read_text(encoding="utf-8"))
         risk_model = RiskModel.load(lite_dir / RISK_DIR)
-        classifier = OnnxClassifier.load(lite_dir, queue_model=risk_model.queue_model)
         embedder = OnnxEmbedder.load(lite_dir, rag.embedding_model, rag.query_prefix)
+        train = meta.get("classifier", {})
+        semantic = _semantic_pair(settings, lite_dir / SEMANTIC_DIR, embedder, risk_model, 12)
+        if semantic is not None:
+            classifier, decision_risk = semantic
+            classifier_version = classifier.model.params.version
+        else:
+            decision_risk = risk_model
+            classifier = OnnxClassifier.load(lite_dir, queue_model=risk_model.queue_model)
+            classifier_version = (
+                f"{train.get('model_name', 'distilbert')}-seed-{train.get('seed', '?')} (onnx int8)"
+            )
         retriever = Retriever(
             embedder=embedder,
             store=NumpyVectorStore.load(lite_dir / INDEX_FILE),
@@ -154,18 +165,16 @@ class Copilot:
             settings_snapshot={"runtime": "lite", "top_k": rag.top_k, "hybrid": rag.hybrid},
         )
         manifest = read_manifest(lite_dir) or {}
-        train = meta.get("classifier", {})
         versions = {
             "embedder": f"{rag.embedding_model} (onnx int8)",
             "llm": f"{llm.provider}/{llm.active.model}" if with_llm else "disabled",
-            "classifier": f"{train.get('model_name', 'distilbert')}-seed-{train.get('seed', '?')}"
-            " (onnx int8)",
-            "risk": f"{risk_model.version} (lite)",
+            "classifier": classifier_version,
+            "risk": f"{decision_risk.version} (lite)",
         }
         return cls(
             answer_engine=answer_engine,
             classifier=classifier,
-            risk_model=risk_model,
+            risk_model=decision_risk,
             versions=versions,
             request_log=RequestLog(settings.resolve(settings.service.request_log)),
             max_text_chars=settings.service.max_text_chars,
@@ -182,16 +191,8 @@ class Copilot:
         """Load every model named in the config. Slow: call once per process."""
         if settings.service.runtime == "lite":
             return cls.from_lite(settings, with_llm)
-        from resolveiq.classifier.predict import TicketClassifier
         from resolveiq.rag.generate import AnswerEngine
         from resolveiq.rag.ingest import read_manifest
-        from resolveiq.registry import resolve_model_dir
-        from resolveiq.risk.predict import RiskModel
-
-        classifier_dir = resolve_model_dir(settings, "classifier")
-        risk_dir = resolve_model_dir(settings, "risk")
-        classifier = TicketClassifier.load(classifier_dir.path)
-        risk_model = RiskModel.load(risk_dir.path)
 
         try:
             answer_engine: AnswerEngine | None = AnswerEngine.from_settings(settings, with_llm)
@@ -199,13 +200,15 @@ class Copilot:
             logger.warning("Reply drafting is disabled: %s", exc)
             answer_engine = None
 
+        embedder = getattr(getattr(answer_engine, "retriever", None), "embedder", None)
+        classifier, risk_model, decision_versions = load_decisions(settings, embedder)
+
         manifest = read_manifest(settings.resolve(settings.paths.index_dir)) or {}
         llm = settings.llm
         versions = {
             "embedder": settings.rag.embedding_model,
             "llm": f"{llm.provider}/{llm.active.model}" if with_llm else "disabled",
-            "classifier": _classifier_version(classifier_dir.path, classifier_dir.version),
-            "risk": f"{risk_model.version} ({risk_dir.source})",
+            **decision_versions,
         }
         return cls(
             answer_engine=answer_engine,
@@ -530,6 +533,79 @@ class Copilot:
 
 def _sources(sources: list[Any]) -> list[SourceOut]:
     return [SourceOut(file=s.file, page=s.page, score=s.score) for s in sources]
+
+
+def load_decisions(settings: Settings, embedder: Any = None) -> tuple[Any, Any, dict[str, str]]:
+    """The classifier and risk model the full service uses, and their versions.
+
+    With ``service.decisions: semantic`` and a trained semantic model, both decide from the
+    ticket's meaning. Otherwise the fine-tuned transformer and XGBoost are used alone.
+    """
+    from resolveiq.registry import resolve_model_dir
+    from resolveiq.risk.predict import RiskModel
+
+    risk_dir = resolve_model_dir(settings, "risk")
+    risk_model: Any = RiskModel.load(risk_dir.path)
+    if settings.service.decisions == "semantic":
+        semantic_dir = resolve_model_dir(settings, "semantic")
+        if embedder is None:
+            from resolveiq.rag.embeddings import SentenceTransformerEmbedder
+
+            embedder = SentenceTransformerEmbedder(
+                settings.rag.embedding_model, settings.rag.query_prefix
+            )
+        pair = _semantic_pair(settings, semantic_dir.path, embedder, risk_model)
+        if pair is not None:
+            classifier, risk = pair
+            source = "" if semantic_dir.version == "local" else f" ({semantic_dir.version})"
+            return (
+                classifier,
+                risk,
+                {
+                    "classifier": f"{classifier.model.params.version}{source}",
+                    "risk": f"{risk.version} ({risk_dir.source})",
+                },
+            )
+    from resolveiq.classifier.predict import TicketClassifier
+
+    classifier_dir = resolve_model_dir(settings, "classifier")
+    return (
+        TicketClassifier.load(classifier_dir.path),
+        risk_model,
+        {
+            "classifier": _classifier_version(classifier_dir.path, classifier_dir.version),
+            "risk": f"{risk_model.version} ({risk_dir.source})",
+        },
+    )
+
+
+def _semantic_pair(
+    settings: Settings, model_dir: Any, embedder: Any, risk_model: Any, max_words: int = 20
+) -> tuple[Any, Any] | None:
+    """The semantic classifier and risk model, or None when they are off or not trained.
+
+    ``max_words`` limits how many words are tested for the highlights, which matters on
+    hosts with a fraction of a CPU.
+    """
+    from resolveiq.semantic import (
+        SemanticClassifier,
+        SemanticModel,
+        SemanticRisk,
+        TextEncoder,
+        semantic_ready,
+    )
+
+    if settings.service.decisions != "semantic":
+        return None
+    if not semantic_ready(model_dir):
+        logger.warning("No semantic model in %s; using the transformer classifier", model_dir)
+        return None
+    model = SemanticModel.load(model_dir)
+    encoder = TextEncoder(embedder)
+    return (
+        SemanticClassifier(model, encoder, max_words),
+        SemanticRisk(model, encoder, risk_model, max_words),
+    )
 
 
 def _classifier_version(model_dir: Any, registry_version: str) -> str:

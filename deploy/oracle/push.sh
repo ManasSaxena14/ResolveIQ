@@ -10,12 +10,12 @@ set -euo pipefail
 HOST="${1:?Usage: push.sh ubuntu@SERVER_IP}"
 APP_DIR="${APP_DIR:-/opt/resolveiq}"
 
-for path in models/classifier/production/classifier_meta.json models/risk/risk_meta.json \
+for path in models/semantic/semantic_meta.json models/risk/risk_meta.json \
             frontend/dist/index.html; do
   [[ -f "$path" ]] || { echo "Missing $path. Train the models and run make web-build." >&2; exit 1; }
 done
 
 RSYNC=(rsync -azR --delete --exclude '* [0-9]*' --exclude '.*'
        --rsync-path='sudo rsync')
-"${RSYNC[@]}" models/classifier/production/ models/risk/ frontend/dist/ "$HOST:$APP_DIR/"
+"${RSYNC[@]}" models/semantic/ models/risk/ frontend/dist/ "$HOST:$APP_DIR/"
 ssh "$HOST" "sudo chown -R resolveiq:resolveiq $APP_DIR/models $APP_DIR/frontend/dist && sudo systemctl restart resolveiq && echo 'Service restarted'"

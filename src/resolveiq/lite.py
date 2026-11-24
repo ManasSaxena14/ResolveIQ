@@ -4,15 +4,16 @@ The full service needs PyTorch, sentence-transformers and ChromaDB, about 760 MB
 of memory and several seconds to start. The lite runtime serves the same models
 without any of them:
 
-* the fine-tuned DistilBERT classifier and the bge-small embedder run as ONNX
-  graphs with 8-bit weights through ``onnxruntime``;
+* the bge-small embedder runs as an ONNX graph with 8-bit weights through
+  ``onnxruntime``, and the semantic model on top of it is plain NumPy (bundles
+  without one carry the fine-tuned DistilBERT classifier as a second graph);
 * the knowledge base embeddings are computed once by ``scripts/export_lite.py``
   and loaded from a NumPy file, searched by a dot product;
 * the escalation risk model is the same XGBoost bundle as in the full service.
 
 Nothing here imports torch, transformers, sentence_transformers or chromadb.
-Category highlights come from the TF-IDF queue model inside the risk bundle,
-because ONNX graphs have no gradients; the API documentation says so.
+The DistilBERT graph has no gradients, so its highlights come from the TF-IDF queue
+model inside the risk bundle.
 """
 
 from __future__ import annotations
@@ -40,6 +41,7 @@ EMBEDDER_TOKENIZER = "embedder_tokenizer.json"
 INDEX_FILE = "kb_index.npz"
 LITE_META = "lite_meta.json"
 RISK_DIR = "risk"
+SEMANTIC_DIR = "semantic"
 
 
 def _session(path: Path) -> Any:
@@ -252,8 +254,12 @@ class NumpyVectorStore:
 
 
 def lite_ready(lite_dir: Path) -> bool:
-    required = [CLASSIFIER_FILE, CLASSIFIER_META, EMBEDDER_FILE, INDEX_FILE, LITE_META]
+    from resolveiq.semantic import semantic_ready
+
+    has_classifier = all((lite_dir / n).is_file() for n in (CLASSIFIER_FILE, CLASSIFIER_META))
+    required = [EMBEDDER_FILE, INDEX_FILE, LITE_META]
     return (
         all((lite_dir / name).is_file() for name in required)
+        and (has_classifier or semantic_ready(lite_dir / SEMANTIC_DIR))
         and (lite_dir / RISK_DIR / "risk_meta.json").is_file()
     )

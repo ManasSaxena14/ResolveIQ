@@ -1,10 +1,10 @@
-"""Register the production classifier and risk model in the MLflow model registry.
+"""Register the production classifier, risk and semantic models in the MLflow model registry.
 
 Each model folder is logged as an MLflow model, registered under the names in
 ``service.registry`` and given the ``production`` alias, which the API loads.
 
 Usage:
-    python scripts/register_models.py [--only classifier|risk]
+    python scripts/register_models.py [--only classifier|risk|semantic]
 """
 
 from __future__ import annotations
@@ -14,14 +14,14 @@ import json
 import sys
 
 from resolveiq.config import load_config
-from resolveiq.registry import register_model
+from resolveiq.registry import META_FILES, register_model
 from resolveiq.tracking import git_commit
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", help="Path to a config file")
-    parser.add_argument("--only", choices=["classifier", "risk"])
+    parser.add_argument("--only", choices=["classifier", "risk", "semantic"])
     args = parser.parse_args()
 
     settings = load_config(args.config)
@@ -32,11 +32,12 @@ def main() -> int:
     jobs = {
         "classifier": (settings.resolve(service.classifier_dir), "classifier"),
         "risk": (settings.resolve(service.risk_dir), "escalation-risk"),
+        "semantic": (settings.resolve(service.semantic_dir), "semantic"),
     }
     for kind, (model_dir, experiment) in jobs.items():
         if args.only and kind != args.only:
             continue
-        meta_name = "classifier_meta.json" if kind == "classifier" else "risk_meta.json"
+        meta_name = META_FILES[kind]
         if not (model_dir / meta_name).is_file():
             print(f"{model_dir} has no trained {kind}; train it first.", file=sys.stderr)
             return 1

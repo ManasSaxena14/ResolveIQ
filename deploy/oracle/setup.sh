@@ -113,7 +113,7 @@ fi
 sed "s|@DOMAIN@|$DOMAIN|g" "$APP_DIR/deploy/oracle/Caddyfile" | sudo tee /etc/caddy/Caddyfile >/dev/null
 sudo systemctl reload caddy || sudo systemctl restart caddy
 
-if [[ -f "$APP_DIR/models/classifier/production/classifier_meta.json" &&
+if [[ -f "$APP_DIR/models/semantic/semantic_meta.json" &&
       -f "$APP_DIR/models/risk/risk_meta.json" ]]; then
   say "Starting ResolveIQ"
   sudo systemctl restart resolveiq

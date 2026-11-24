@@ -22,19 +22,16 @@ import numpy as np
 from sklearn.metrics import accuracy_score, f1_score
 
 from resolveiq.classifier.data import load_split
-from resolveiq.classifier.predict import TicketClassifier
 from resolveiq.config import load_config
-from resolveiq.registry import resolve_model_dir
 from resolveiq.risk.evaluate import pr_auc
 from resolveiq.risk.features import label_from_priority
-from resolveiq.risk.predict import RiskModel
+from resolveiq.service import load_decisions
 
 
 def main() -> int:
     settings = load_config()
     tickets = load_split(settings.resolve(settings.classifier.processed_dir), "test")
-    classifier = TicketClassifier.load(resolve_model_dir(settings, "classifier").path)
-    risk_model = RiskModel.load(resolve_model_dir(settings, "risk").path)
+    classifier, risk_model, _ = load_decisions(settings)
 
     texts = [t.text for t in tickets]
     predicted = [p.label for p in classifier.predict(texts)]

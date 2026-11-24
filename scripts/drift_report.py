@@ -31,13 +31,10 @@ from resolveiq.monitoring.logging import RequestLog
 
 def build_reference(settings: Settings, split: str) -> Path:
     from resolveiq.classifier.data import load_split
-    from resolveiq.classifier.predict import TicketClassifier
-    from resolveiq.registry import resolve_model_dir
-    from resolveiq.risk.predict import RiskModel
+    from resolveiq.service import load_decisions
 
     tickets = load_split(settings.resolve(settings.classifier.processed_dir), split)
-    classifier = TicketClassifier.load(resolve_model_dir(settings, "classifier").path)
-    risk_model = RiskModel.load(resolve_model_dir(settings, "risk").path)
+    classifier, risk_model, _ = load_decisions(settings)
     texts = [t.text for t in tickets]
     print(f"Scoring {len(texts)} {split} tickets")
     predictions = classifier.predict(texts)

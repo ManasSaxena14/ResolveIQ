@@ -50,4 +50,4 @@ def test_push_never_copies_duplicates_or_hidden_files():
 
     assert "--exclude '* [0-9]*'" in push
     assert "--exclude '.*'" in push
-    assert "models/classifier/production/" in push and "models/risk/" in push
+    assert "models/semantic/" in push and "models/risk/" in push

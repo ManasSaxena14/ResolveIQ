@@ -7,10 +7,11 @@ are left out. Requires a Hugging Face account and a write token, either from
 Usage:
     python scripts/publish_models.py classifier --repo-id <user>/resolveiq-ticket-classifier
     python scripts/publish_models.py risk --repo-id <user>/resolveiq-escalation-risk
+    python scripts/publish_models.py semantic --repo-id <user>/resolveiq-semantic
     python scripts/publish_models.py lite --repo-id <user>/resolveiq-lite
 
 A hosted demo downloads the published models at startup when the
-RESOLVEIQ_CLASSIFIER_REPO and RESOLVEIQ_RISK_REPO variables are set
+RESOLVEIQ_SEMANTIC_REPO and RESOLVEIQ_RISK_REPO variables are set
 (see docs/deployment.md).
 """
 
@@ -28,9 +29,10 @@ from resolveiq.registry import META_FILES, clean_copy
 CARDS = {
     "classifier": "model_card_classifier.md",
     "risk": "model_card_risk.md",
+    "semantic": "model_card_semantic.md",
     "lite": "model_card_lite.md",
 }
-FOLDERS = {"classifier": "classifier_dir", "risk": "risk_dir", "lite": "lite_dir"}
+FOLDERS = {kind: f"{kind}_dir" for kind in CARDS}
 MARKERS = {**META_FILES, "lite": "lite_meta.json"}
 
 
