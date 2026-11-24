@@ -1,18 +1,18 @@
 {
   "url": "http://127.0.0.1:8000",
-  "requests": 50,
+  "requests": 25,
   "status_codes": {
-    "200": 50
+    "200": 25
   },
-  "p50_ms": 43.9,
-  "p95_ms": 49.8,
-  "memory_idle_mb": 588.5,
-  "memory_peak_mb": 758.5,
+  "p50_ms": 288.8,
+  "p95_ms": 440.7,
+  "memory_idle_mb": null,
+  "memory_peak_mb": null,
   "llm_configured": true,
   "versions": {
     "embedder": "BAAI/bge-small-en-v1.5",
     "llm": "ollama/llama3.2",
-    "classifier": "distilbert-base-uncased-seed-42 (resolveiq-ticket-classifier/v1)",
-    "risk": "xgboost-943a93b (registry)"
+    "classifier": "semantic-8711d86 (resolveiq-semantic/v1)",
+    "risk": "semantic-8711d86 + xgboost-943a93b (registry)"
   }
 }

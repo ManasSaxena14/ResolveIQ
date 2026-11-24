@@ -1,0 +1,139 @@
+{
+  "versions": {
+    "classifier": "semantic-8711d86",
+    "risk": "semantic-8711d86 + xgboost-943a93b (registry)"
+  },
+  "test": {
+    "before": {
+      "queue_accuracy": 0.4725,
+      "queue_macro_f1": 0.5213,
+      "sent_on_without_review": 0.1632,
+      "accuracy_without_review": 0.8675,
+      "risk": {
+        "pr_auc": 0.7489,
+        "recall_at_precision": 0.6316,
+        "brier": 0.1664,
+        "roc_auc": 0.8208,
+        "positive_rate": 0.3876
+      },
+      "alert_caught": 0.8663,
+      "alert_rate": 0.5965
+    },
+    "semantic": {
+      "queue_accuracy": 0.7483,
+      "queue_macro_f1": 0.7376,
+      "sent_on_without_review": 0.7213,
+      "accuracy_without_review": 0.8959,
+      "risk": {
+        "pr_auc": 0.9052,
+        "recall_at_precision": 0.9168,
+        "brier": 0.1036,
+        "roc_auc": 0.9287,
+        "positive_rate": 0.3876
+      },
+      "alert_caught": 0.9453,
+      "alert_rate": 0.5528
+    }
+  },
+  "retail": {
+    "dev": {
+      "before": {
+        "tickets": 40,
+        "queue_right": 16,
+        "queue_accuracy_95ci": [
+          0.263,
+          0.554
+        ],
+        "sent_on_without_review": 13,
+        "right_without_review": 10,
+        "urgent": 12,
+        "risk_roc_auc": 0.4821,
+        "urgent_flagged": 8,
+        "calm_flagged": 26
+      },
+      "semantic": {
+        "tickets": 40,
+        "queue_right": 31,
+        "queue_accuracy_95ci": [
+          0.625,
+          0.877
+        ],
+        "sent_on_without_review": 16,
+        "right_without_review": 16,
+        "urgent": 12,
+        "risk_roc_auc": 0.9018,
+        "urgent_flagged": 9,
+        "calm_flagged": 3
+      }
+    },
+    "holdout": {
+      "before": {
+        "tickets": 40,
+        "queue_right": 17,
+        "queue_accuracy_95ci": [
+          0.285,
+          0.578
+        ],
+        "sent_on_without_review": 10,
+        "right_without_review": 8,
+        "urgent": 8,
+        "risk_roc_auc": 0.5273,
+        "urgent_flagged": 8,
+        "calm_flagged": 28
+      },
+      "semantic": {
+        "tickets": 40,
+        "queue_right": 34,
+        "queue_accuracy_95ci": [
+          0.709,
+          0.929
+        ],
+        "sent_on_without_review": 14,
+        "right_without_review": 14,
+        "urgent": 8,
+        "risk_roc_auc": 0.9219,
+        "urgent_flagged": 5,
+        "calm_flagged": 3
+      }
+    }
+  },
+  "bands": [
+    {
+      "from": 0.0,
+      "to": 0.9,
+      "tickets": 376,
+      "before_queue_accuracy": 0.3005,
+      "before_risk_pr_auc": 0.5377,
+      "semantic_queue_accuracy": 0.3191,
+      "semantic_risk_pr_auc": 0.4973
+    },
+    {
+      "from": 0.9,
+      "to": 0.95,
+      "tickets": 565,
+      "before_queue_accuracy": 0.3664,
+      "before_risk_pr_auc": 0.5992,
+      "semantic_queue_accuracy": 0.4956,
+      "semantic_risk_pr_auc": 0.7217
+    },
+    {
+      "from": 0.95,
+      "to": 0.98,
+      "tickets": 651,
+      "before_queue_accuracy": 0.5069,
+      "before_risk_pr_auc": 0.8374,
+      "semantic_queue_accuracy": 0.8909,
+      "semantic_risk_pr_auc": 0.9712
+    },
+    {
+      "from": 0.98,
+      "to": 1.0,
+      "tickets": 859,
+      "before_queue_accuracy": 0.5914,
+      "before_risk_pr_auc": 0.8964,
+      "semantic_queue_accuracy": 0.9942,
+      "semantic_risk_pr_auc": 0.9992
+    }
+  ],
+  "retail_max_familiarity": 0.8505
+}

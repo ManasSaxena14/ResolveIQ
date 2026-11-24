@@ -3,9 +3,8 @@
   "n_current": 401,
   "psi_threshold": 0.2,
   "p_value": 0.05,
-  "share_drifted": 0.5,
+  "share_drifted": 0.25,
   "drifted": [
-    "confidence",
     "category"
   ],
   "features": [
@@ -24,34 +23,34 @@
       "name": "confidence",
       "kind": "numeric",
       "test": "Kolmogorov-Smirnov",
-      "statistic": 0.1451,
-      "p_value": 1e-06,
-      "psi": 0.4121,
-      "drifted": true,
-      "reference_summary": "median 0.514 (IQR 0.408 to 0.709)",
-      "current_summary": "median 0.488 (IQR 0.39 to 0.578)"
+      "statistic": 0.0558,
+      "p_value": 0.223306,
+      "psi": 0.0248,
+      "drifted": false,
+      "reference_summary": "median 0.777 (IQR 0.495 to 0.969)",
+      "current_summary": "median 0.813 (IQR 0.535 to 0.978)"
     },
     {
       "name": "risk_score",
       "kind": "numeric",
       "test": "Kolmogorov-Smirnov",
-      "statistic": 0.1143,
-      "p_value": 0.000222,
-      "psi": 0.0758,
+      "statistic": 0.1368,
+      "p_value": 4e-06,
+      "psi": 0.0921,
       "drifted": false,
-      "reference_summary": "median 0.283 (IQR 0.147 to 0.632)",
-      "current_summary": "median 0.389 (IQR 0.187 to 0.721)"
+      "reference_summary": "median 0.21 (IQR 0.0443 to 0.757)",
+      "current_summary": "median 0.425 (IQR 0.0543 to 0.912)"
     },
     {
       "name": "category",
       "kind": "categorical",
       "test": "Chi-square",
-      "statistic": 117.8876,
+      "statistic": 243.3968,
       "p_value": 0.0,
-      "psi": 0.448,
+      "psi": 0.9363,
       "drifted": true,
-      "reference_summary": "Technical Support 20%, Product Support 19%, IT Support 17%",
-      "current_summary": "Technical Support 33%, IT Support 29%, Product Support 16%"
+      "reference_summary": "Technical Support 31%, Product Support 20%, Customer Service 16%",
+      "current_summary": "Technical Support 61%, IT Support 22%, Product Support 6%"
     }
   ],
   "feedback": {
@@ -60,8 +59,6 @@
     "down": 0,
     "down_rate": 0.0
   },
-  "retrain": true,
-  "retrain_reasons": [
-    "2 of 4 monitored features drifted (50%, limit 50%): confidence, category"
-  ]
+  "retrain": false,
+  "retrain_reasons": []
 }

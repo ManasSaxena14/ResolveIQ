@@ -21,34 +21,34 @@
       "name": "confidence",
       "kind": "numeric",
       "test": "Kolmogorov-Smirnov",
-      "statistic": 0.0352,
-      "p_value": 0.772152,
-      "psi": 0.0189,
+      "statistic": 0.0678,
+      "p_value": 0.079702,
+      "psi": 0.0212,
       "drifted": false,
-      "reference_summary": "median 0.514 (IQR 0.408 to 0.709)",
-      "current_summary": "median 0.501 (IQR 0.415 to 0.686)"
+      "reference_summary": "median 0.777 (IQR 0.495 to 0.969)",
+      "current_summary": "median 0.835 (IQR 0.525 to 0.981)"
     },
     {
       "name": "risk_score",
       "kind": "numeric",
       "test": "Kolmogorov-Smirnov",
-      "statistic": 0.0563,
-      "p_value": 0.215194,
-      "psi": 0.0347,
+      "statistic": 0.0393,
+      "p_value": 0.646058,
+      "psi": 0.021,
       "drifted": false,
-      "reference_summary": "median 0.283 (IQR 0.147 to 0.632)",
-      "current_summary": "median 0.32 (IQR 0.168 to 0.641)"
+      "reference_summary": "median 0.21 (IQR 0.0443 to 0.757)",
+      "current_summary": "median 0.227 (IQR 0.0395 to 0.851)"
     },
     {
       "name": "category",
       "kind": "categorical",
       "test": "Chi-square",
-      "statistic": 6.1794,
-      "p_value": 0.721839,
-      "psi": 0.0177,
+      "statistic": 8.005,
+      "p_value": 0.533639,
+      "psi": 0.0227,
       "drifted": false,
-      "reference_summary": "Technical Support 20%, Product Support 19%, IT Support 17%",
-      "current_summary": "Technical Support 22%, IT Support 21%, Product Support 18%"
+      "reference_summary": "Technical Support 31%, Product Support 20%, Customer Service 16%",
+      "current_summary": "Technical Support 33%, Product Support 17%, Customer Service 14%"
     }
   ],
   "feedback": {

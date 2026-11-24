@@ -2,7 +2,7 @@
   "split": "test",
   "queues": "all",
   "requests": 400,
-  "p50_ms": 40.1,
-  "p95_ms": 51.7,
+  "p50_ms": 254.4,
+  "p95_ms": 511.6,
   "steps": "retrieval, classifier, risk (no language model)"
 }
